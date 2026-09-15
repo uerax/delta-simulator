@@ -6,3 +6,11 @@
 - 描述：
   1. 新增 `.gitignore` 文件，自动忽略 `project.private.config.json`（微信开发者工具本地私有配置）、`node_modules/`、`miniprogram_npm/`、日志与系统临时文件。
   2. 完成项目首次提交（commit hash: `baae024`，包含离线小游戏大厅、双游戏页面、Storage持久化层、官方排错手册及 MCP 配置）。
+
+## [2026-09-15] 烽火地带 6 大核心战术地图纯净底图提取与生成
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 从官方 Leaflet 切片服务提取 Zoom=2 瓦片，在本地高精度拼接生成 6 大核心战术地图底图。
+  2. 严格按要求剥离点位与分层，输出 1024x1024 适中轻量纯净底图至 `miniprogram/assets/maps/`（6张底图总大小仅 760KB）。
+  3. 创建地图清单元数据 `map_manifest.json`，提供地图名称、文件路径、规格及描述。

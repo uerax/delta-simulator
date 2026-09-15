@@ -1,0 +1,943 @@
+{
+  "fenghuoSummary": [
+    {
+      "key": "daba",
+      "name": "零号大坝",
+      "width": 81086.304688,
+      "height": 80988.5,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        "B1(地下通道)",
+        "1F(行政辖区)",
+        "2F(行政辖区)"
+      ],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "key": "cgxg",
+      "name": "长弓溪谷",
+      "width": 112800,
+      "height": 112800,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        "1F(钻石皇后酒店)",
+        "2F(钻石皇后酒店)"
+      ],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "key": "htjd",
+      "name": "航天基地",
+      "width": 65442.871094,
+      "height": 65442.871094,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "key": "bks",
+      "name": "巴克什",
+      "width": 60000,
+      "height": 60000,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        "B1(皇家博物馆)",
+        "1F(皇家博物馆)",
+        "2F(皇家博物馆)"
+      ],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "key": "cxjy",
+      "name": "潮汐监狱",
+      "width": 36596.421875,
+      "height": 36596.421875,
+      "minZoom": 2.5,
+      "initZoom": 2.5,
+      "floors": [
+        "1F(潮汐监狱)",
+        "2F(潮汐监狱)",
+        "3F(潮汐监狱)",
+        "4F(潮汐监狱)"
+      ],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    },
+    {
+      "key": "az3",
+      "name": "AZ3",
+      "width": 80999.179688,
+      "height": 80831.398438,
+      "minZoom": 2.6,
+      "initZoom": 2.6,
+      "floors": [
+        "1_1F(RBMK反应堆)",
+        "1_2F(RBMK反应堆)",
+        "1_3F(RBMK反应堆)"
+      ],
+      "categories": [
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        },
+        {
+          "count": 0,
+          "items": []
+        }
+      ]
+    }
+  ],
+  "fenghuoItemCount": 0,
+  "fenghuoItems": [],
+  "iconUrls": {
+    "0": {
+      "titleType": "all",
+      "title": "全部",
+      "typeList": [
+        {
+          "name": "保险箱",
+          "lang": "lang_bxg",
+          "idType": 1,
+          "num": 6,
+          "icon": "nav_bxx"
+        },
+        {
+          "name": "小保险箱",
+          "lang": "lang_xbxx",
+          "idType": 2,
+          "num": 4,
+          "icon": "nav_xbxx"
+        },
+        {
+          "name": "服务器",
+          "lang": "lang_fwq",
+          "idType": 3,
+          "num": 19,
+          "icon": "nav_fwq"
+        },
+        {
+          "name": "电脑",
+          "lang": "lang_dn",
+          "idType": 4,
+          "num": 6,
+          "icon": "nav_dn"
+        },
+        {
+          "name": "电脑机箱",
+          "lang": "lang_dnjx",
+          "idType": 5,
+          "num": 33,
+          "icon": "nav_dnjx"
+        },
+        {
+          "name": "电脑包",
+          "lang": "lang_dnb",
+          "idType": 5,
+          "num": 10,
+          "icon": "nav_dsb"
+        },
+        {
+          "name": "武器箱",
+          "lang": "lang_wqx",
+          "idType": 6,
+          "num": 3,
+          "icon": "nav_wqx"
+        },
+        {
+          "name": "大武器箱",
+          "lang": "lang_dwqx",
+          "idType": 7,
+          "num": 18,
+          "icon": "nav_dwqx"
+        },
+        {
+          "name": "弹药箱",
+          "lang": "lang_dyx",
+          "idType": 8,
+          "num": 19,
+          "icon": "nav_dyx"
+        },
+        {
+          "name": "工具柜",
+          "lang": "lang_gjg",
+          "idType": 9,
+          "num": 51,
+          "icon": "nav_gjg"
+        },
+        {
+          "name": "收纳盒",
+          "lang": "lang_dgjh",
+          "idType": 10,
+          "num": 31,
+          "icon": "nav_dgjx"
+        },
+        {
+          "name": "一件衣服",
+          "lang": "lang_yf",
+          "idType": 12,
+          "num": 20,
+          "icon": "nav_yf"
+        },
+        {
+          "name": "军用医疗包",
+          "lang": "lang_ylb",
+          "idType": 13,
+          "num": 3,
+          "icon": "nav_ylb"
+        },
+        {
+          "name": "医疗物资堆",
+          "lang": "lang_ylwzd",
+          "idType": 14,
+          "num": 14,
+          "icon": "nav_ylwzd"
+        },
+        {
+          "name": "旅行包",
+          "lang": "lang_lxd",
+          "idType": 15,
+          "num": 46,
+          "icon": "nav_lxd"
+        },
+        {
+          "name": "手提箱",
+          "lang": "lang_stx",
+          "idType": 16,
+          "num": 17,
+          "icon": "nav_stx"
+        },
+        {
+          "name": "储物柜",
+          "lang": "lang_cwg",
+          "idType": 17,
+          "num": 31,
+          "icon": "nav_cwg"
+        },
+        {
+          "name": "高级储物箱",
+          "lang": "lang_gjcwx",
+          "idType": 18,
+          "num": 11,
+          "icon": "nav_gjcwx"
+        },
+        {
+          "name": "抽屉柜",
+          "lang": "lang_ctg",
+          "idType": 19,
+          "num": 20,
+          "icon": "nav_ctg"
+        },
+        {
+          "name": "登山包",
+          "lang": "lang_dsb",
+          "idType": 20,
+          "num": 5,
+          "icon": "nav_dsb"
+        },
+        {
+          "name": "快递箱",
+          "lang": "lang_kdx",
+          "idType": 21,
+          "num": 82,
+          "icon": "nav_kdx"
+        },
+        {
+          "name": "航空储物箱",
+          "lang": "lang_hkcwx",
+          "idType": 22,
+          "num": 3,
+          "icon": "nav_hkcwx"
+        },
+        {
+          "name": "垃圾桶",
+          "lang": "lang_ljx",
+          "idType": 23,
+          "num": 21,
+          "icon": "nav_ljx"
+        },
+        {
+          "name": "搅拌车",
+          "lang": "lang_snc",
+          "idType": 24,
+          "num": 8,
+          "icon": "nav_snc"
+        },
+        {
+          "name": "野外物资箱",
+          "lang": "lang_ywwzx",
+          "idType": 25,
+          "num": 19,
+          "icon": "nav_ywwzx"
+        },
+        {
+          "name": "鸟窝",
+          "lang": "lang_nw",
+          "idType": 25,
+          "num": 18,
+          "icon": "nav_nw"
+        },
+        {
+          "name": "藏匿物",
+          "lang": "lang_cnw",
+          "idType": 25,
+          "num": 35,
+          "icon": "nav_cnw"
+        },
+        {
+          "name": "高级旅行箱",
+          "lang": "lang_gjlxx",
+          "idType": 25,
+          "num": 11,
+          "icon": "nav_xlx"
+        },
+        {
+          "name": "废料桶",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 3,
+          "icon": "nav_flt"
+        },
+        {
+          "name": "工业金属储物箱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 29,
+          "icon": "nav_gyjscwx"
+        },
+        {
+          "name": "屏蔽箱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 17,
+          "icon": "nav_pbx"
+        },
+        {
+          "name": "放射性储物箱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 11,
+          "icon": "nav_fsxcwx"
+        },
+        {
+          "name": "辐射废料箱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 10,
+          "icon": "nav_fsflx"
+        },
+        {
+          "name": "核燃料背包",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 32,
+          "icon": "nav_hrlbb"
+        },
+        {
+          "name": "托卡马克面板",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_tkmkmb"
+        },
+        {
+          "name": "乏燃料堆体",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_frldt"
+        },
+        {
+          "name": "燃料储罐",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_rlcg"
+        },
+        {
+          "name": "应急仓",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 2,
+          "icon": "nav_yjc"
+        },
+        {
+          "name": "仿星控制柱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_fxkzz"
+        },
+        {
+          "name": "反应堆基座",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_fydjz"
+        },
+        {
+          "name": "药品保温箱",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 16,
+          "icon": "nav_ypbwx"
+        },
+        {
+          "name": "污水净化器",
+          "lang": "lang_mt",
+          "idType": 25,
+          "num": 1,
+          "icon": "nav_wsjhq"
+        },
+        {
+          "name": "出生点",
+          "idType": 26,
+          "num": 14,
+          "icon": "nav_csd"
+        },
+        {
+          "name": "付费撤离点",
+          "idType": 27,
+          "num": 1,
+          "icon": "nav_ffcld"
+        },
+        {
+          "name": "概率撤离点",
+          "idType": 27,
+          "num": 1,
+          "icon": "nav_sjcld"
+        },
+        {
+          "name": "常规撤离点",
+          "idType": 27,
+          "num": 4,
+          "icon": "nav_cgcld"
+        },
+        {
+          "name": "条件撤离点",
+          "idType": 27,
+          "num": 3,
+          "icon": "nav_tjcld"
+        },
+        {
+          "name": "行动接取站",
+          "idType": 30,
+          "num": 20,
+          "icon": "nav_xdjqz"
+        },
+        {
+          "name": "高价值接取站",
+          "idType": 30,
+          "num": 2,
+          "icon": "nav_xdjqzgjz"
+        }
+      ]
+    },
+    "1": {
+      "titleType": "wzd",
+      "title": "物资点",
+      "typeList": [
+        {
+          "name": "保险箱",
+          "lang": "lang_bxg",
+          "idType": 1,
+          "num": 15,
+          "icon": "nav_bxx"
+        },
+        {
+          "name": "小保险箱",
+          "lang": "lang_xbxx",
+          "idType": 2,
+          "num": 3,
+          "icon": "nav_xbxx"
+        },
+        {
+          "name": "服务器",
+          "lang": "lang_fwq",
+          "idType": 3,
+          "num": 9,
+          "icon": "nav_fwq"
+        },
+        {
+          "name": "电脑",
+          "lang": "lang_dn",
+          "idType": 4,
+          "num": 18,
+          "icon": "nav_dn"
+        },
+        {
+          "name": "电脑机箱",
+          "lang": "lang_dnjx",
+          "idType": 5,
+          "num": 20,
+          "icon": "nav_dnjx"
+        },
+        {
+          "name": "武器箱",
+          "lang": "lang_wqx",
+          "idType": 6,
+          "num": 3,
+          "icon": "nav_wqx"
+        },
+        {
+          "name": "大武器箱",
+          "lang": "lang_dwqx",
+          "idType": 7,
+          "num": 11,
+          "icon": "nav_dwqx"
+        },
+        {
+          "name": "弹药箱",
+          "lang": "lang_dyx",
+          "idType": 8,
+          "num": 13,
+          "icon": "nav_dyx"
+        },
+        {
+          "name": "工具柜",
+          "lang": "lang_gjg",
+          "idType": 9,
+          "num": 21,
+          "icon": "nav_gjg"
+        },
+        {
+          "name": "收纳盒",
+          "lang": "lang_dgjh",
+          "idType": 10,
+          "num": 24,
+          "icon": "nav_dgjx"
+        },
+        {
+          "name": "一件衣服",
+          "lang": "lang_yf",
+          "idType": 12,
+          "num": 23,
+          "icon": "nav_yf"
+        },
+        {
+          "name": "军用医疗包",
+          "lang": "lang_ylb",
+          "idType": 13,
+          "num": 9,
+          "icon": "nav_ylb"
+        },
+        {
+          "name": "医疗物资堆",
+          "lang": "lang_ylwzd",
+          "idType": 14,
+          "num": 5,
+          "icon": "nav_ylwzd"
+        },
+        {
+          "name": "旅行包",
+          "lang": "lang_lxd",
+          "idType": 15,
+          "num": 23,
+          "icon": "nav_lxd"
+        },
+        {
+          "name": "手提箱",
+          "lang": "lang_stx",
+          "idType": 16,
+          "num": 8,
+          "icon": "nav_stx"
+        },
+        {
+          "name": "储物柜",
+          "lang": "lang_cwg",
+          "idType": 17,
+          "num": 13,
+          "icon": "nav_cwg"
+        },
+        {
+          "name": "高级储物箱",
+          "lang": "lang_gjcwx",
+          "idType": 18,
+          "num": 2,
+          "icon": "nav_gjcwx"
+        },
+        {
+          "name": "抽屉柜",
+          "lang": "lang_ctg",
+          "idType": 19,
+          "num": 6,
+          "icon": "nav_ctg"
+        },
+        {
+          "name": "登山包",
+          "lang": "lang_dsb",
+          "idType": 20,
+          "num": 1,
+          "icon": "nav_dsb"
+        },
+        {
+          "name": "快递箱",
+          "lang": "lang_kdx",
+          "idType": 21,
+          "num": 8,
+          "icon": "nav_kdx"
+        },
+        {
+          "name": "航空储物箱",
+          "lang": "lang_hkcwx",
+          "idType": 22,
+          "num": 6,
+          "icon": "nav_hkcwx"
+        },
+        {
+          "name": "垃圾桶",
+          "lang": "lang_ljx",
+          "idType": 23,
+          "num": 5,
+          "icon": "nav_ljx"
+        },
+        {
+          "name": "搅拌车",
+          "lang": "lang_snc",
+          "idType": 24,
+          "num": 6,
+          "icon": "nav_snc"
+        },
+        {
+          "name": "野外物资箱",
+          "lang": "lang_ywwzx",
+          "idType": 25,
+          "num": 13,
+          "icon": "nav_ywwzx"
+        },
+        {
+          "name": "鸟窝",
+          "lang": "lang_nw",
+          "idType": 25,
+          "num": 24,
+          "icon": "nav_nw"
+        },
+        {
+          "name": "藏匿物",
+          "lang": "lang_cnw",
+          "idType": 25,
+          "num": 10,
+          "icon": "nav_cnw"
+        },
+        {
+          "name": "高级旅行箱",
+          "lang": "lang_gjlxx",
+          "idType": 25,
+          "num": 6,
+          "icon": "nav_xlx"
+        },
+        {
+          "name": "金币堆",
+          "lang": "lang_gjlxx",
+          "idType": 25,
+          "num": 20,
+          "icon": "nav_jbd"
+        }
+      ]
+    },
+    "2": {
+      "titleType": "csd",
+      "title": "出生点",
+      "typeList": [
+        {
+          "name": "出生点",
+          "idType": 26,
+          "num": 14,
+          "icon": "nav_csd"
+        }
+      ]
+    },
+    "3": {
+      "titleType": "cld",
+      "title": "撤离点",
+      "typeList": [
+        {
+          "name": "付费撤离点",
+          "idType": 27,
+          "num": 1,
+          "icon": "nav_ffcld"
+        },
+        {
+          "name": "常规撤离点",
+          "idType": 27,
+          "num": 2,
+          "icon": "nav_cgcld"
+        },
+        {
+          "name": "概率撤离点",
+          "idType": 27,
+          "num": 2,
+          "icon": "nav_sjcld"
+        },
+        {
+          "name": "条件撤离点",
+          "idType": 27,
+          "num": 2,
+          "icon": "nav_tjcld"
+        },
+        {
+          "name": "电梯撤离点",
+          "idType": 27,
+          "num": 1,
+          "icon": "nav_dtcld"
+        }
+      ]
+    },
+    "4": {
+      "titleType": "首领",
+      "title": "首领",
+      "typeList": [
+        {
+          "name": "首领",
+          "idType": 29,
+          "num": 1,
+          "icon": "nav_boss"
+        }
+      ]
+    },
+    "5": {
+      "titleType": "xdjqz",
+      "title": "行动接取站",
+      "typeList": [
+        {
+          "name": "行动接取站",
+          "idType": 30,
+          "num": 20,
+          "icon": "nav_xdjqz"
+        },
+        {
+          "name": "高价值接取站",
+          "idType": 30,
+          "num": 2,
+          "icon": "nav_xdjqzgjz"
+        }
+      ]
+    },
+    "罗非鱼": "tilapia",
+    "白条鱼": "sharpbelly",
+    "横纹鲃鱼": "striped_barb",
+    "红尾鱼": "redtail",
+    "花鲢鱼": "bighead_carp",
+    "青鱼": "black_carp",
+    "条纹鲈": "striped_bass",
+    "鲻鱼": "mullet",
+    "梭鲈": "zander",
+    "短吻多鳍鱼": "shortnose_bichir",
+    "翘嘴鲌": "culter",
+    "长颈鹿鲶": "giraffe_catfish",
+    "恩氏多鳍鱼": "endlicheri",
+    "狗鱼": "pike",
+    "巨型褐鳟": "brown_trout",
+    "幼鲨": "shark",
+    "电脑": "dn",
+    "保险箱": "bxx",
+    "一件衣服": "yf",
+    "快递箱": "kdx",
+    "登山包": "dsb",
+    "藏匿物": "cnw",
+    "电脑机箱": "dnjx",
+    "鸟窝": "nw",
+    "手提箱": "stx",
+    "野外物资箱": "ywwzx",
+    "小保险箱": "xbxx",
+    "大武器箱": "dwqx",
+    "旅行包": "lxd",
+    "高级储物箱": "gjcwx",
+    "高级旅行箱": "xlx",
+    "军用医疗包": "ylb",
+    "医疗物资堆": "ylwzd",
+    "垃圾桶": "ljx",
+    "服务器": "fwq",
+    "收纳盒": "dgjx",
+    "工具柜": "gjg",
+    "弹药箱": "dyx",
+    "航空储物箱": "hkcwx",
+    "抽屉柜": "ctg",
+    "储物柜": "cwg",
+    "武器箱": "wqx",
+    "搅拌车": "snc",
+    "金币堆": "jbd",
+    "房卡房间": "tyfk",
+    "密码房": "mmf",
+    "出生点": "csd",
+    "付费撤离点": "ffcld",
+    "常规撤离点": "cgcld",
+    "概率撤离点": "sjcld",
+    "条件撤离点": "cgcld",
+    "电梯撤离点": "dtwz",
+    "[卫队长官]赛伊德": "boss",
+    "行动接取站": "xdjqz",
+    "高价值接取站": "xdjqzgjz",
+    "横纹鱼": "striped_barb",
+    "红宝石鱼": "red_jewel",
+    "长吻象鼻鱼": "elephantfish",
+    "非洲蝴蝶鱼": "african_butterflyfish",
+    "蓝宝石雷龙鱼": "blue_snakehead",
+    "镜鲤": "mirror_carp",
+    "铂金银龙鱼": "platinum_arowana",
+    "虎鱼": "tigerfish",
+    "北非胡子鲶": "african_catfish",
+    "大西洋鲑": "atlantic_salmon",
+    "大眼海鲢": "atlantic_tarpon",
+    "列车撤离点": "lccld",
+    "[地狱黑鲨]雷斯—酒店守卫者": "boss",
+    "[地狱黑鲨]雷斯—雷达站摧毁者": "boss",
+    "电脑包": "dsb",
+    "拉闸撤离点": "dtcld",
+    "丢包撤离点": "tjcld",
+    "行动撤离点": "tjcld",
+    "三角蚌": "sjb",
+    "马桶": "mt",
+    "延迟撤离点": "yscld",
+    "辐射石斑鱼": "grouper",
+    "工业金属储物箱": "gyjscwx",
+    "燃料储罐": "rlcg",
+    "应急仓": "yjc",
+    "反应堆基座": "fydjz",
+    "仿星控制柱": "fxkzz",
+    "核燃料背包": "hrlbb",
+    "污水净化器": "wsjhq",
+    "托卡马克面板": "tkmkmb",
+    "辐射废料箱": "fsflx",
+    "屏蔽箱": "pbx",
+    "放射性储物箱": "fsxcwx",
+    "防护服": "fhf",
+    "药品保温箱": "ypbwx",
+    "废料桶": "flt",
+    "乏燃料堆体": "frldt",
+    "密钥": "my",
+    "清洗间": "qxj"
+  },
+  "warSummary": []
+}

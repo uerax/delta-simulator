@@ -1,0 +1,68 @@
+[
+  {
+    "key": "daba",
+    "name": "零号大坝",
+    "layer": "map_db",
+    "fileName": "map_daba.jpg",
+    "path": "/assets/maps/map_daba.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 158.2,
+    "desc": "阿萨拉核心水利枢纽，行政辖区、变电站与大坝主桥"
+  },
+  {
+    "key": "cgxg",
+    "name": "长弓溪谷",
+    "layer": "map_yc",
+    "fileName": "map_cgxg.jpg",
+    "path": "/assets/maps/map_cgxg.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 136.7,
+    "desc": "溪谷地形，钻石皇后酒店、雷达站、葡萄庄园与沿河村落"
+  },
+  {
+    "key": "htjd",
+    "name": "航天基地",
+    "layer": "map_htjd",
+    "fileName": "map_htjd.jpg",
+    "path": "/assets/maps/map_htjd.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 138.1,
+    "desc": "重型发射中心与工业厂区，跨海长桥与核心测试发射塔"
+  },
+  {
+    "key": "bks",
+    "name": "巴克什",
+    "layer": "map_bks2",
+    "fileName": "map_bks.jpg",
+    "path": "/assets/maps/map_bks.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 116.1,
+    "desc": "沙漠繁华商贸古城，皇家博物馆、巴扎集市与古建筑群"
+  },
+  {
+    "key": "cxjy",
+    "name": "潮汐监狱",
+    "layer": "map_cxjy",
+    "fileName": "map_cxjy.jpg",
+    "path": "/assets/maps/map_cxjy.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 98.0,
+    "desc": "孤岛重型海上监狱，环形海域、水下排污管与多层监区"
+  },
+  {
+    "key": "az3",
+    "name": "AZ3",
+    "layer": "map_az3",
+    "fileName": "map_az3.jpg",
+    "path": "/assets/maps/map_az3.jpg",
+    "width": 1024,
+    "height": 1024,
+    "sizeKb": 113.2,
+    "desc": "核能重工业遗址，RBMK反应堆、压水堆、老科学院与冷却塔"
+  }
+]

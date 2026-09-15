@@ -1,0 +1,1170 @@
+{
+  "summary": {
+    "fenghuoMapCount": 6,
+    "warMapCount": 14,
+    "totalItemTypes": 59,
+    "base64IconCount": 30,
+    "pngIconCount": 29
+  },
+  "fenghuoMaps": [
+    {
+      "key": "daba",
+      "name": "零号大坝",
+      "layer": "map_db",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_db/{z}_{x}_{y}.jpg",
+      "tileValid": true,
+      "width": 81086.304688,
+      "height": 80988.5,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        {
+          "floor_f": "B1",
+          "floor_name": "地下通道"
+        },
+        {
+          "floor_f": "1F",
+          "floor_name": "行政辖区"
+        },
+        {
+          "floor_f": "2F",
+          "floor_name": "行政辖区"
+        }
+      ],
+      "pointCount": 417
+    },
+    {
+      "key": "cgxg",
+      "name": "长弓溪谷",
+      "layer": "map_cgxg",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_cgxg/{z}_{x}_{y}.jpg",
+      "tileValid": false,
+      "width": 112800,
+      "height": 112800,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        {
+          "floor_f": "1F",
+          "floor_name": "钻石皇后酒店"
+        },
+        {
+          "floor_f": "2F",
+          "floor_name": "钻石皇后酒店"
+        }
+      ],
+      "pointCount": 539
+    },
+    {
+      "key": "htjd",
+      "name": "航天基地",
+      "layer": "map_htjd",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_htjd/{z}_{x}_{y}.jpg",
+      "tileValid": true,
+      "width": 65442.871094,
+      "height": 65442.871094,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [],
+      "pointCount": 291
+    },
+    {
+      "key": "bks",
+      "name": "巴克什",
+      "layer": "map_bks",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_bks/{z}_{x}_{y}.jpg",
+      "tileValid": true,
+      "width": 60000,
+      "height": 60000,
+      "minZoom": 3,
+      "initZoom": 3,
+      "floors": [
+        {
+          "floor_f": "B1",
+          "floor_name": "皇家博物馆"
+        },
+        {
+          "floor_f": "1F",
+          "floor_name": "皇家博物馆"
+        },
+        {
+          "floor_f": "2F",
+          "floor_name": "皇家博物馆"
+        }
+      ],
+      "pointCount": 518
+    },
+    {
+      "key": "cxjy",
+      "name": "潮汐监狱",
+      "layer": "map_cxjy",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_cxjy/{z}_{x}_{y}.jpg",
+      "tileValid": true,
+      "width": 36596.421875,
+      "height": 36596.421875,
+      "minZoom": 2.5,
+      "initZoom": 2.5,
+      "floors": [
+        {
+          "floor_f": "1F",
+          "floor_name": "潮汐监狱"
+        },
+        {
+          "floor_f": "2F",
+          "floor_name": "潮汐监狱"
+        },
+        {
+          "floor_f": "3F",
+          "floor_name": "潮汐监狱"
+        },
+        {
+          "floor_f": "4F",
+          "floor_name": "潮汐监狱"
+        }
+      ],
+      "pointCount": 523
+    },
+    {
+      "key": "az3",
+      "name": "AZ3",
+      "layer": "map_az3",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_az3/{z}_{x}_{y}.jpg",
+      "tileValid": true,
+      "width": 80999.179688,
+      "height": 80831.398438,
+      "minZoom": 2.6,
+      "initZoom": 2.6,
+      "floors": [
+        {
+          "floor_f": "1_1F",
+          "floor_name": "RBMK反应堆"
+        },
+        {
+          "floor_f": "1_2F",
+          "floor_name": "RBMK反应堆"
+        },
+        {
+          "floor_f": "1_3F",
+          "floor_name": "RBMK反应堆"
+        }
+      ],
+      "pointCount": 1230
+    }
+  ],
+  "warMaps": [
+    {
+      "key": "pc",
+      "name": "攀升",
+      "layer": "map_pc",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_pc/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "ljd",
+      "name": "临界点",
+      "layer": "map_ljd",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_ljd/{z}_{x}_{y}.jpg",
+      "tileValid": false
+    },
+    {
+      "key": "gc",
+      "name": "贯穿",
+      "layer": "map_gc",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_gc/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "jq",
+      "name": "烬区",
+      "layer": "map_jq",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_jq/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "qhz",
+      "name": "堑壕战",
+      "layer": "map_qhz",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_qhz/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "df",
+      "name": "刀锋",
+      "layer": "map_df",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_df/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "dg",
+      "name": "断轨",
+      "layer": "map_dg",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_dg/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "hdz",
+      "name": "风暴眼",
+      "layer": "map_hdz",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_hdz/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "jzt",
+      "name": "金字塔",
+      "layer": "map_jzt",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_jzt/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "dc",
+      "name": "断层",
+      "layer": "map_dc",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_dc/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "yz",
+      "name": "余震",
+      "layer": "map_yz",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_yz/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "wmsyh",
+      "name": "乌姆斯运河",
+      "layer": "map_wmsyh",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_wmsyh/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "dsc",
+      "name": "克劳狄斗兽场",
+      "layer": "map_dsc",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_dsc/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    },
+    {
+      "key": "mgjcq",
+      "name": "摩格旧城区",
+      "layer": "map_mgjcq",
+      "tileUrlTemplate": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/map_mgjcq/{z}_{x}_{y}.jpg",
+      "tileValid": true
+    }
+  ],
+  "items": [
+    {
+      "name": "保险箱",
+      "iconKey": "nav_bxx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/bxx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "小保险箱",
+      "iconKey": "nav_xbxx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/xbxx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "服务器",
+      "iconKey": "nav_fwq",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "电脑",
+      "iconKey": "nav_dn",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dn.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "电脑机箱",
+      "iconKey": "nav_dnjx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dnjx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "武器箱",
+      "iconKey": "nav_wqx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "大武器箱",
+      "iconKey": "nav_dwqx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dwqx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "弹药箱",
+      "iconKey": "nav_dyx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dyx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "工具柜",
+      "iconKey": "nav_gjg",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/gjg.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "收纳盒",
+      "iconKey": "nav_dgjx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "一件衣服",
+      "iconKey": "nav_yf",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "军用医疗包",
+      "iconKey": "nav_ylb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/ylb.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "医疗物资堆",
+      "iconKey": "nav_ylwzd",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/ylwzd.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "旅行包",
+      "iconKey": "nav_lxd",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/lxd.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "手提箱",
+      "iconKey": "nav_stx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "储物柜",
+      "iconKey": "nav_cwg",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "高级储物箱",
+      "iconKey": "nav_gjcwx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/gjcwx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "抽屉柜",
+      "iconKey": "nav_ctg",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/ctg.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "登山包",
+      "iconKey": "nav_dsb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dsb.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "快递箱",
+      "iconKey": "nav_kdx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/kdx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "航空储物箱",
+      "iconKey": "nav_hkcwx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/hkcwx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "垃圾桶",
+      "iconKey": "nav_ljx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/ljx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "搅拌车",
+      "iconKey": "nav_snc",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/snc.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "野外物资箱",
+      "iconKey": "nav_ywwzx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/ywwzx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "鸟窝",
+      "iconKey": "nav_nw",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/nw.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "藏匿物",
+      "iconKey": "nav_cnw",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/cnw.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "高级旅行箱",
+      "iconKey": "nav_xlx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/xlx.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "金币堆",
+      "iconKey": "nav_jbd",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/jbd.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "零号大坝",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "出生点",
+      "iconKey": "nav_csd",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "出生点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "付费撤离点",
+      "iconKey": "nav_ffcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "常规撤离点",
+      "iconKey": "nav_cgcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "概率撤离点",
+      "iconKey": "nav_sjcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "条件撤离点",
+      "iconKey": "nav_tjcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "零号大坝",
+        "巴克什",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "电梯撤离点",
+      "iconKey": "nav_dtcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "零号大坝",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "首领",
+      "iconKey": "nav_boss",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "首领"
+      ],
+      "maps": [
+        "零号大坝",
+        "长弓溪谷",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "行动接取站",
+      "iconKey": "nav_xdjqz",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "行动接取站"
+      ],
+      "maps": [
+        "零号大坝",
+        "巴克什",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "高价值接取站",
+      "iconKey": "nav_xdjqzgjz",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "行动接取站"
+      ],
+      "maps": [
+        "零号大坝",
+        "巴克什",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "列车撤离点",
+      "iconKey": "nav_lccld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "长弓溪谷"
+      ]
+    },
+    {
+      "name": "电脑包",
+      "iconKey": "nav_dsb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/dsb.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "航天基地",
+        "巴克什",
+        "潮汐监狱",
+        "AZ3"
+      ]
+    },
+    {
+      "name": "拉闸撤离点",
+      "iconKey": "nav_dtcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "航天基地",
+        "巴克什",
+        "潮汐监狱"
+      ]
+    },
+    {
+      "name": "丢包撤离点",
+      "iconKey": "nav_tjcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "航天基地",
+        "潮汐监狱"
+      ]
+    },
+    {
+      "name": "行动撤离点",
+      "iconKey": "nav_hjcld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "航天基地"
+      ]
+    },
+    {
+      "name": "三角蚌",
+      "iconKey": "nav_sjb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/sjb.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "潮汐监狱"
+      ]
+    },
+    {
+      "name": "马桶",
+      "iconKey": "nav_mt",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/mt.png",
+      "isBase64": false,
+      "categories": [
+        "全部",
+        "物资点"
+      ],
+      "maps": [
+        "潮汐监狱"
+      ]
+    },
+    {
+      "name": "延迟撤离点",
+      "iconKey": "nav_yscld",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部",
+        "撤离点"
+      ],
+      "maps": [
+        "潮汐监狱"
+      ]
+    },
+    {
+      "name": "废料桶",
+      "iconKey": "nav_flt",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "工业金属储物箱",
+      "iconKey": "nav_gyjscwx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "屏蔽箱",
+      "iconKey": "nav_pbx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "放射性储物箱",
+      "iconKey": "nav_fsxcwx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/fsxcwx.png",
+      "isBase64": false,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "辐射废料箱",
+      "iconKey": "nav_fsflx",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/fsflx.png",
+      "isBase64": false,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "核燃料背包",
+      "iconKey": "nav_hrlbb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/hrlbb.png",
+      "isBase64": false,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "托卡马克面板",
+      "iconKey": "nav_tkmkmb",
+      "iconUrl": "https://game.gtimg.cn/images/dfm/cp/a20240729directory/tkmkmb.png",
+      "isBase64": false,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "乏燃料堆体",
+      "iconKey": "nav_frldt",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "燃料储罐",
+      "iconKey": "nav_rlcg",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "应急仓",
+      "iconKey": "nav_yjc",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "仿星控制柱",
+      "iconKey": "nav_fxkzz",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "反应堆基座",
+      "iconKey": "nav_fydjz",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "药品保温箱",
+      "iconKey": "nav_ypbwx",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    },
+    {
+      "name": "污水净化器",
+      "iconKey": "nav_wsjhq",
+      "iconUrl": "[base64_data_image]",
+      "isBase64": true,
+      "categories": [
+        "全部"
+      ],
+      "maps": [
+        "AZ3"
+      ]
+    }
+  ]
+}

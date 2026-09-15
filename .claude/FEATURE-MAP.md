@@ -23,6 +23,18 @@
   - 战绩持久化：`recordReactionResult`, `recordSchulteResult`, `getTodayRecord`, `getGameStats`
   - 系统偏好：`getSettings`, `saveSettings`
   - 存储清空：`clearAll`
+- **三角洲战术物资资源库**：
+  - 地图底图资源目录：`miniprogram/assets/maps/`（6大核心战术地图 1024x1024 纯净底图，总体积 760KB）
+  - 地图元数据清单：`miniprogram/assets/maps/map_manifest.json`
+  - 图标资源分级目录：`miniprogram/assets/icons/`
+    - 物资与搜集容器：`miniprogram/assets/icons/containers/` (30 个)
+    - 出生点：`miniprogram/assets/icons/spawns/` (1 个)
+    - 撤离点：`miniprogram/assets/icons/extractions/` (9 个)
+    - 任务与接取站：`miniprogram/assets/icons/tasks/` (2 个)
+    - 首领Boss：`miniprogram/assets/icons/bosses/` (1 个)
+    - 特种/辐射设施：`miniprogram/assets/icons/facilities/` (14 个)
+  - 分类索引清单：`miniprogram/assets/icons/icon_manifest.json`
+  - 数据爬取与导出脚本：`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`
