@@ -27,3 +27,14 @@
   6. 高精度并发下载全部 359 张高清透明背景道具图片至 `miniprogram/assets/items/{collection,consume,keys}/`，下载成功率 100%。
   7. 生成结构化元数据清单 `miniprogram/assets/items/item_manifest.json` 及自动化爬虫脚本 `scripts/crawl_delta_items.js`。
 
+## [2026-09-16] 三角洲行动交易行全量道具市场价格解析与写入
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 逆向攻破 `wwery.com/market` 设防机制（自定义二进制协议 `application/x-zhou-pack v2`、专属协商头校验与解密算法），提取完整解包库至 `scripts/lib/zhou_pack_decoder.js`。
+  2. 编写自动化行情同步脚本 `scripts/update_item_prices.js`，高速获取交易行 1,358 件物品的实时市场价格、日/周/月价格涨跌幅。
+  3. 基于官方 `object_id` 和规范中文名与本地 `item_manifest.json` 中的 359 件核心道具建立 100% 精准映射。
+  4. 成功匹配写入 345 件可交易道具的现行市场价（`price`）、格式化价格（`priceFormatted`）、单格价值（`pricePerGrid`，总价/格子数）及交易状态标识（`isTradable: true`）。
+  5. 精准识别并标记 14 件游戏内绑定的非交易/任务材料（如火箭燃料、G.T.I.卫星通讯天线、高级燃料等标记为 `price: 0, isTradable: false, priceFormatted: "非交易品"`），经交叉比对 `sjz.jbskins.com` 证实与游戏内设定完全一致。
+  6. 严格按要求剔除所有不需要的涨跌幅（`priceChangeToday/Week/Month` 及 `*Percent`）、更新时间（`marketUpdatedAt`）等冗余字段，保持清单文件精简纯净。
+

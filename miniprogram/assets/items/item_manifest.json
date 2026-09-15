@@ -141,7 +141,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 432780,
+          "priceFormatted": "432,780",
+          "isTradable": true,
+          "pricePerGrid": 108195,
+          "pricePerGridFormatted": "108,195"
         },
         {
           "id": 15020010031,
@@ -180,7 +185,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 204861,
+          "priceFormatted": "204,861",
+          "isTradable": true,
+          "pricePerGrid": 22762,
+          "pricePerGridFormatted": "22,762"
         },
         {
           "id": 15020010033,
@@ -219,7 +229,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "航天基地 - 核心区, 航天基地 - 工業区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15030010012,
@@ -258,7 +273,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 619968,
+          "priceFormatted": "619,968",
+          "isTradable": true,
+          "pricePerGrid": 154992,
+          "pricePerGridFormatted": "154,992"
         },
         {
           "id": 15030050001,
@@ -297,7 +317,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 335213,
+          "priceFormatted": "335,213",
+          "isTradable": true,
+          "pricePerGrid": 167607,
+          "pricePerGridFormatted": "167,607"
         },
         {
           "id": 15030050002,
@@ -336,7 +361,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 606365,
+          "priceFormatted": "606,365",
+          "isTradable": true,
+          "pricePerGrid": 151591,
+          "pricePerGridFormatted": "151,591"
         },
         {
           "id": 15030050004,
@@ -375,7 +405,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 987826,
+          "priceFormatted": "987,826",
+          "isTradable": true,
+          "pricePerGrid": 246957,
+          "pricePerGridFormatted": "246,957"
         },
         {
           "id": 15030050007,
@@ -414,7 +449,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 3625336,
+          "priceFormatted": "3,625,336",
+          "isTradable": true,
+          "pricePerGrid": 604223,
+          "pricePerGridFormatted": "604,223"
         },
         {
           "id": 15030050008,
@@ -453,7 +493,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 1440240,
+          "priceFormatted": "1,440,240",
+          "isTradable": true,
+          "pricePerGrid": 120020,
+          "pricePerGridFormatted": "120,020"
         },
         {
           "id": 15030050012,
@@ -492,7 +537,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 1715269,
+          "priceFormatted": "1,715,269",
+          "isTradable": true,
+          "pricePerGrid": 142939,
+          "pricePerGridFormatted": "142,939"
         },
         {
           "id": 15030050013,
@@ -531,7 +581,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "航天基地 - 宿舍区, 航天基地 - 核心区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15030050014,
@@ -570,7 +625,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2111550,
+          "priceFormatted": "2,111,550",
+          "isTradable": true,
+          "pricePerGrid": 351925,
+          "pricePerGridFormatted": "351,925"
         },
         {
           "id": 15030050017,
@@ -609,7 +669,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1459184,
+          "priceFormatted": "1,459,184",
+          "isTradable": true,
+          "pricePerGrid": 243197,
+          "pricePerGridFormatted": "243,197"
         },
         {
           "id": 15030050018,
@@ -648,7 +713,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 388595,
+          "priceFormatted": "388,595",
+          "isTradable": true,
+          "pricePerGrid": 194298,
+          "pricePerGridFormatted": "194,298"
         },
         {
           "id": 15040050002,
@@ -687,7 +757,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1392878,
+          "priceFormatted": "1,392,878",
+          "isTradable": true,
+          "pricePerGrid": 232146,
+          "pricePerGridFormatted": "232,146"
         },
         {
           "id": 15060040004,
@@ -726,7 +801,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 447606,
+          "priceFormatted": "447,606",
+          "isTradable": true,
+          "pricePerGrid": 111902,
+          "pricePerGridFormatted": "111,902"
         },
         {
           "id": 15060080015,
@@ -765,7 +845,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 340710,
+          "priceFormatted": "340,710",
+          "isTradable": true,
+          "pricePerGrid": 170355,
+          "pricePerGridFormatted": "170,355"
         },
         {
           "id": 15070040003,
@@ -804,7 +889,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 228243,
+          "priceFormatted": "228,243",
+          "isTradable": true,
+          "pricePerGrid": 228243,
+          "pricePerGridFormatted": "228,243"
         },
         {
           "id": 15070050001,
@@ -843,7 +933,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 277293,
+          "priceFormatted": "277,293",
+          "isTradable": true,
+          "pricePerGrid": 277293,
+          "pricePerGridFormatted": "277,293"
         },
         {
           "id": 15080040001,
@@ -882,7 +977,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 350040,
+          "priceFormatted": "350,040",
+          "isTradable": true,
+          "pricePerGrid": 175020,
+          "pricePerGridFormatted": "175,020"
         },
         {
           "id": 15080050003,
@@ -921,7 +1021,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 736050,
+          "priceFormatted": "736,050",
+          "isTradable": true,
+          "pricePerGrid": 184013,
+          "pricePerGridFormatted": "184,013"
         },
         {
           "id": 15080050006,
@@ -960,7 +1065,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 13141314,
+          "priceFormatted": "13,141,314",
+          "isTradable": true,
+          "pricePerGrid": 13141314,
+          "pricePerGridFormatted": "13,141,314"
         },
         {
           "id": 15080050010,
@@ -999,7 +1109,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 333903,
+          "priceFormatted": "333,903",
+          "isTradable": true,
+          "pricePerGrid": 166952,
+          "pricePerGridFormatted": "166,952"
         },
         {
           "id": 15080050014,
@@ -1038,7 +1153,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 216831,
+          "priceFormatted": "216,831",
+          "isTradable": true,
+          "pricePerGrid": 216831,
+          "pricePerGridFormatted": "216,831"
         },
         {
           "id": 15080050030,
@@ -1077,7 +1197,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2029029,
+          "priceFormatted": "2,029,029",
+          "isTradable": true,
+          "pricePerGrid": 225448,
+          "pricePerGridFormatted": "225,448"
         },
         {
           "id": 15080050031,
@@ -1116,7 +1241,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2154765,
+          "priceFormatted": "2,154,765",
+          "isTradable": true,
+          "pricePerGrid": 239418,
+          "pricePerGridFormatted": "239,418"
         },
         {
           "id": 15080050032,
@@ -1155,7 +1285,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 905135,
+          "priceFormatted": "905,135",
+          "isTradable": true,
+          "pricePerGrid": 150856,
+          "pricePerGridFormatted": "150,856"
         },
         {
           "id": 15080050040,
@@ -1194,7 +1329,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2142119,
+          "priceFormatted": "2,142,119",
+          "isTradable": true,
+          "pricePerGrid": 238013,
+          "pricePerGridFormatted": "238,013"
         },
         {
           "id": 15080050041,
@@ -1233,7 +1373,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1317112,
+          "priceFormatted": "1,317,112",
+          "isTradable": true,
+          "pricePerGrid": 219519,
+          "pricePerGridFormatted": "219,519"
         },
         {
           "id": 15080050042,
@@ -1272,7 +1417,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 212469,
+          "priceFormatted": "212,469",
+          "isTradable": true,
+          "pricePerGrid": 212469,
+          "pricePerGridFormatted": "212,469"
         },
         {
           "id": 15080050044,
@@ -1311,7 +1461,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 2189874,
+          "priceFormatted": "2,189,874",
+          "isTradable": true,
+          "pricePerGrid": 243319,
+          "pricePerGridFormatted": "243,319"
         },
         {
           "id": 15080050058,
@@ -1350,7 +1505,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1681866,
+          "priceFormatted": "1,681,866",
+          "isTradable": true,
+          "pricePerGrid": 280311,
+          "pricePerGridFormatted": "280,311"
         },
         {
           "id": 15080050061,
@@ -1389,7 +1549,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 1320066,
+          "priceFormatted": "1,320,066",
+          "isTradable": true,
+          "pricePerGrid": 220011,
+          "pricePerGridFormatted": "220,011"
         },
         {
           "id": 15080050066,
@@ -1428,7 +1593,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1933703,
+          "priceFormatted": "1,933,703",
+          "isTradable": true,
+          "pricePerGrid": 214856,
+          "pricePerGridFormatted": "214,856"
         },
         {
           "id": 15080050067,
@@ -1467,7 +1637,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1524978,
+          "priceFormatted": "1,524,978",
+          "isTradable": true,
+          "pricePerGrid": 254163,
+          "pricePerGridFormatted": "254,163"
         },
         {
           "id": 15080050069,
@@ -1506,7 +1681,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15080050097,
@@ -1545,7 +1725,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 4190436,
+          "priceFormatted": "4,190,436",
+          "isTradable": true,
+          "pricePerGrid": 465604,
+          "pricePerGridFormatted": "465,604"
         },
         {
           "id": 15080050098,
@@ -1584,7 +1769,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3043769,
+          "priceFormatted": "3,043,769",
+          "isTradable": true,
+          "pricePerGrid": 338197,
+          "pricePerGridFormatted": "338,197"
         },
         {
           "id": 15080050099,
@@ -1623,7 +1813,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2852982,
+          "priceFormatted": "2,852,982",
+          "isTradable": true,
+          "pricePerGrid": 475497,
+          "pricePerGridFormatted": "475,497"
         },
         {
           "id": 15080050100,
@@ -1662,7 +1857,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1728281,
+          "priceFormatted": "1,728,281",
+          "isTradable": true,
+          "pricePerGrid": 144023,
+          "pricePerGridFormatted": "144,023"
         },
         {
           "id": 15020010036,
@@ -1701,7 +1901,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 370066,
+          "priceFormatted": "370,066",
+          "isTradable": true,
+          "pricePerGrid": 61678,
+          "pricePerGridFormatted": "61,678"
         },
         {
           "id": 15030040001,
@@ -1740,7 +1945,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 337306,
+          "priceFormatted": "337,306",
+          "isTradable": true,
+          "pricePerGrid": 337306,
+          "pricePerGridFormatted": "337,306"
         },
         {
           "id": 15030040003,
@@ -1779,7 +1989,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 64736,
+          "priceFormatted": "64,736",
+          "isTradable": true,
+          "pricePerGrid": 64736,
+          "pricePerGridFormatted": "64,736"
         },
         {
           "id": 15030040013,
@@ -1818,7 +2033,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 78084,
+          "priceFormatted": "78,084",
+          "isTradable": true,
+          "pricePerGrid": 78084,
+          "pricePerGridFormatted": "78,084"
         },
         {
           "id": 15030050003,
@@ -1857,7 +2077,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 72219,
+          "priceFormatted": "72,219",
+          "isTradable": true,
+          "pricePerGrid": 72219,
+          "pricePerGridFormatted": "72,219"
         },
         {
           "id": 15030050006,
@@ -1896,7 +2121,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 70947,
+          "priceFormatted": "70,947",
+          "isTradable": true,
+          "pricePerGrid": 70947,
+          "pricePerGridFormatted": "70,947"
         },
         {
           "id": 15030050019,
@@ -1935,7 +2165,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 135122,
+          "priceFormatted": "135,122",
+          "isTradable": true,
+          "pricePerGrid": 33781,
+          "pricePerGridFormatted": "33,781"
         },
         {
           "id": 15040010019,
@@ -1974,7 +2209,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 62236,
+          "priceFormatted": "62,236",
+          "isTradable": true,
+          "pricePerGrid": 62236,
+          "pricePerGridFormatted": "62,236"
         },
         {
           "id": 15040010023,
@@ -2013,7 +2253,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 269991,
+          "priceFormatted": "269,991",
+          "isTradable": true,
+          "pricePerGrid": 67498,
+          "pricePerGridFormatted": "67,498"
         },
         {
           "id": 15060040001,
@@ -2052,7 +2297,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 78711,
+          "priceFormatted": "78,711",
+          "isTradable": true,
+          "pricePerGrid": 78711,
+          "pricePerGridFormatted": "78,711"
         },
         {
           "id": 15060040003,
@@ -2091,7 +2341,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 63279,
+          "priceFormatted": "63,279",
+          "isTradable": true,
+          "pricePerGrid": 63279,
+          "pricePerGridFormatted": "63,279"
         },
         {
           "id": 15060080014,
@@ -2130,7 +2385,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 68903,
+          "priceFormatted": "68,903",
+          "isTradable": true,
+          "pricePerGrid": 68903,
+          "pricePerGridFormatted": "68,903"
         },
         {
           "id": 15070040001,
@@ -2169,7 +2429,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 71384,
+          "priceFormatted": "71,384",
+          "isTradable": true,
+          "pricePerGrid": 71384,
+          "pricePerGridFormatted": "71,384"
         },
         {
           "id": 15080050002,
@@ -2208,7 +2473,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 62155,
+          "priceFormatted": "62,155",
+          "isTradable": true,
+          "pricePerGrid": 62155,
+          "pricePerGridFormatted": "62,155"
         },
         {
           "id": 15080050004,
@@ -2247,7 +2517,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 82213,
+          "priceFormatted": "82,213",
+          "isTradable": true,
+          "pricePerGrid": 82213,
+          "pricePerGridFormatted": "82,213"
         },
         {
           "id": 15080050009,
@@ -2286,7 +2561,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 58234,
+          "priceFormatted": "58,234",
+          "isTradable": true,
+          "pricePerGrid": 58234,
+          "pricePerGridFormatted": "58,234"
         },
         {
           "id": 15080050013,
@@ -2325,7 +2605,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "長弓溪谷 - 首領雷斯"
-          }
+          },
+          "price": 108295,
+          "priceFormatted": "108,295",
+          "isTradable": true,
+          "pricePerGrid": 54148,
+          "pricePerGridFormatted": "54,148"
         },
         {
           "id": 15080050015,
@@ -2364,7 +2649,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 63296,
+          "priceFormatted": "63,296",
+          "isTradable": true,
+          "pricePerGrid": 63296,
+          "pricePerGridFormatted": "63,296"
         },
         {
           "id": 15080050025,
@@ -2403,7 +2693,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15080050033,
@@ -2442,7 +2737,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 277302,
+          "priceFormatted": "277,302",
+          "isTradable": true,
+          "pricePerGrid": 69326,
+          "pricePerGridFormatted": "69,326"
         },
         {
           "id": 15080050034,
@@ -2481,7 +2781,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 138975,
+          "priceFormatted": "138,975",
+          "isTradable": true,
+          "pricePerGrid": 34744,
+          "pricePerGridFormatted": "34,744"
         },
         {
           "id": 15080050035,
@@ -2520,7 +2825,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 94566,
+          "priceFormatted": "94,566",
+          "isTradable": true,
+          "pricePerGrid": 23642,
+          "pricePerGridFormatted": "23,642"
         },
         {
           "id": 15080050062,
@@ -2559,7 +2869,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 589425,
+          "priceFormatted": "589,425",
+          "isTradable": true,
+          "pricePerGrid": 49119,
+          "pricePerGridFormatted": "49,119"
         },
         {
           "id": 15080050063,
@@ -2598,7 +2913,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15080050071,
@@ -2637,7 +2957,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 355097,
+          "priceFormatted": "355,097",
+          "isTradable": true,
+          "pricePerGrid": 177549,
+          "pricePerGridFormatted": "177,549"
         },
         {
           "id": 15080050082,
@@ -2676,7 +3001,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 398896,
+          "priceFormatted": "398,896",
+          "isTradable": true,
+          "pricePerGrid": 66483,
+          "pricePerGridFormatted": "66,483"
         },
         {
           "id": 15080050083,
@@ -2715,7 +3045,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 199972,
+          "priceFormatted": "199,972",
+          "isTradable": true,
+          "pricePerGrid": 49993,
+          "pricePerGridFormatted": "49,993"
         },
         {
           "id": 15080050088,
@@ -2754,7 +3089,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 399427,
+          "priceFormatted": "399,427",
+          "isTradable": true,
+          "pricePerGrid": 66571,
+          "pricePerGridFormatted": "66,571"
         },
         {
           "id": 15080050089,
@@ -2793,7 +3133,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 92336,
+          "priceFormatted": "92,336",
+          "isTradable": true,
+          "pricePerGrid": 46168,
+          "pricePerGridFormatted": "46,168"
         },
         {
           "id": 15080050090,
@@ -2832,7 +3177,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 75568,
+          "priceFormatted": "75,568",
+          "isTradable": true,
+          "pricePerGrid": 75568,
+          "pricePerGridFormatted": "75,568"
         },
         {
           "id": 15080050092,
@@ -2870,7 +3220,12 @@
           "fileName": "15080050092.png",
           "propsDetail": {
             "type": "工藝藏品"
-          }
+          },
+          "price": 185177,
+          "priceFormatted": "185,177",
+          "isTradable": true,
+          "pricePerGrid": 185177,
+          "pricePerGridFormatted": "185,177"
         },
         {
           "id": 15080050093,
@@ -2908,7 +3263,12 @@
           "fileName": "15080050093.png",
           "propsDetail": {
             "type": "工藝藏品"
-          }
+          },
+          "price": 95858,
+          "priceFormatted": "95,858",
+          "isTradable": true,
+          "pricePerGrid": 95858,
+          "pricePerGridFormatted": "95,858"
         },
         {
           "id": 15080050094,
@@ -2946,7 +3306,12 @@
           "fileName": "15080050094.png",
           "propsDetail": {
             "type": "工藝藏品"
-          }
+          },
+          "price": 83934,
+          "priceFormatted": "83,934",
+          "isTradable": true,
+          "pricePerGrid": 41967,
+          "pricePerGridFormatted": "41,967"
         },
         {
           "id": 15080050095,
@@ -2984,7 +3349,12 @@
           "fileName": "15080050095.png",
           "propsDetail": {
             "type": "电子产品"
-          }
+          },
+          "price": 65954,
+          "priceFormatted": "65,954",
+          "isTradable": true,
+          "pricePerGrid": 65954,
+          "pricePerGridFormatted": "65,954"
         },
         {
           "id": 15080050101,
@@ -3023,7 +3393,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 68903,
+          "priceFormatted": "68,903",
+          "isTradable": true,
+          "pricePerGrid": 68903,
+          "pricePerGridFormatted": "68,903"
         },
         {
           "id": 15090010040,
@@ -3061,7 +3436,12 @@
           "fileName": "15090010040.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020010024,
@@ -3100,7 +3480,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 34888,
+          "priceFormatted": "34,888",
+          "isTradable": true,
+          "pricePerGrid": 17444,
+          "pricePerGridFormatted": "17,444"
         },
         {
           "id": 15020010035,
@@ -3138,7 +3523,12 @@
           "fileName": "15020010035.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020050001,
@@ -3177,7 +3567,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 105608,
+          "priceFormatted": "105,608",
+          "isTradable": true,
+          "pricePerGrid": 26402,
+          "pricePerGridFormatted": "26,402"
         },
         {
           "id": 15020050003,
@@ -3216,7 +3611,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 13137,
+          "priceFormatted": "13,137",
+          "isTradable": true,
+          "pricePerGrid": 13137,
+          "pricePerGridFormatted": "13,137"
         },
         {
           "id": 15020050004,
@@ -3254,7 +3654,12 @@
           "fileName": "15020050004.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020050005,
@@ -3293,7 +3698,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 32187,
+          "priceFormatted": "32,187",
+          "isTradable": true,
+          "pricePerGrid": 16094,
+          "pricePerGridFormatted": "16,094"
         },
         {
           "id": 15020050006,
@@ -3331,7 +3741,12 @@
           "fileName": "15020050006.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15030040005,
@@ -3370,7 +3785,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 36508,
+          "priceFormatted": "36,508",
+          "isTradable": true,
+          "pricePerGrid": 36508,
+          "pricePerGridFormatted": "36,508"
         },
         {
           "id": 15030040006,
@@ -3409,7 +3829,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 26581,
+          "priceFormatted": "26,581",
+          "isTradable": true,
+          "pricePerGrid": 26581,
+          "pricePerGridFormatted": "26,581"
         },
         {
           "id": 15030040007,
@@ -3448,7 +3873,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 48121,
+          "priceFormatted": "48,121",
+          "isTradable": true,
+          "pricePerGrid": 12030,
+          "pricePerGridFormatted": "12,030"
         },
         {
           "id": 15030040012,
@@ -3487,7 +3917,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 26040,
+          "priceFormatted": "26,040",
+          "isTradable": true,
+          "pricePerGrid": 13020,
+          "pricePerGridFormatted": "13,020"
         },
         {
           "id": 15030040014,
@@ -3526,7 +3961,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 12210,
+          "priceFormatted": "12,210",
+          "isTradable": true,
+          "pricePerGrid": 12210,
+          "pricePerGridFormatted": "12,210"
         },
         {
           "id": 15030050005,
@@ -3565,7 +4005,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 25425,
+          "priceFormatted": "25,425",
+          "isTradable": true,
+          "pricePerGrid": 12713,
+          "pricePerGridFormatted": "12,713"
         },
         {
           "id": 15030050011,
@@ -3604,7 +4049,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 29009,
+          "priceFormatted": "29,009",
+          "isTradable": true,
+          "pricePerGrid": 29009,
+          "pricePerGridFormatted": "29,009"
         },
         {
           "id": 15040010014,
@@ -3643,7 +4093,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 34712,
+          "priceFormatted": "34,712",
+          "isTradable": true,
+          "pricePerGrid": 17356,
+          "pricePerGridFormatted": "17,356"
         },
         {
           "id": 15040010015,
@@ -3682,7 +4137,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 21331,
+          "priceFormatted": "21,331",
+          "isTradable": true,
+          "pricePerGrid": 21331,
+          "pricePerGridFormatted": "21,331"
         },
         {
           "id": 15040040007,
@@ -3721,7 +4181,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 72063,
+          "priceFormatted": "72,063",
+          "isTradable": true,
+          "pricePerGrid": 12011,
+          "pricePerGridFormatted": "12,011"
         },
         {
           "id": 15040050003,
@@ -3760,7 +4225,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 47704,
+          "priceFormatted": "47,704",
+          "isTradable": true,
+          "pricePerGrid": 47704,
+          "pricePerGridFormatted": "47,704"
         },
         {
           "id": 15060040002,
@@ -3799,7 +4269,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 36691,
+          "priceFormatted": "36,691",
+          "isTradable": true,
+          "pricePerGrid": 9173,
+          "pricePerGridFormatted": "9,173"
         },
         {
           "id": 15060080005,
@@ -3838,7 +4313,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 16159,
+          "priceFormatted": "16,159",
+          "isTradable": true,
+          "pricePerGrid": 16159,
+          "pricePerGridFormatted": "16,159"
         },
         {
           "id": 15060080008,
@@ -3877,7 +4357,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 41081,
+          "priceFormatted": "41,081",
+          "isTradable": true,
+          "pricePerGrid": 41081,
+          "pricePerGridFormatted": "41,081"
         },
         {
           "id": 15070050002,
@@ -3916,7 +4401,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 12692,
+          "priceFormatted": "12,692",
+          "isTradable": true,
+          "pricePerGrid": 12692,
+          "pricePerGridFormatted": "12,692"
         },
         {
           "id": 15080040002,
@@ -3955,7 +4445,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 36322,
+          "priceFormatted": "36,322",
+          "isTradable": true,
+          "pricePerGrid": 36322,
+          "pricePerGridFormatted": "36,322"
         },
         {
           "id": 15080040003,
@@ -3994,7 +4489,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 21988,
+          "priceFormatted": "21,988",
+          "isTradable": true,
+          "pricePerGrid": 10994,
+          "pricePerGridFormatted": "10,994"
         },
         {
           "id": 15080050001,
@@ -4033,7 +4533,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 14226,
+          "priceFormatted": "14,226",
+          "isTradable": true,
+          "pricePerGrid": 14226,
+          "pricePerGridFormatted": "14,226"
         },
         {
           "id": 15080050016,
@@ -4072,7 +4577,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 25044,
+          "priceFormatted": "25,044",
+          "isTradable": true,
+          "pricePerGrid": 12522,
+          "pricePerGridFormatted": "12,522"
         },
         {
           "id": 15080050018,
@@ -4111,7 +4621,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 20680,
+          "priceFormatted": "20,680",
+          "isTradable": true,
+          "pricePerGrid": 10340,
+          "pricePerGridFormatted": "10,340"
         },
         {
           "id": 15080050024,
@@ -4149,7 +4664,12 @@
           "fileName": "15080050024.png",
           "propsDetail": {
             "type": "工藝藏品"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15080050036,
@@ -4188,7 +4708,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 68121,
+          "priceFormatted": "68,121",
+          "isTradable": true,
+          "pricePerGrid": 11354,
+          "pricePerGridFormatted": "11,354"
         },
         {
           "id": 15080050037,
@@ -4227,7 +4752,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 49887,
+          "priceFormatted": "49,887",
+          "isTradable": true,
+          "pricePerGrid": 24944,
+          "pricePerGridFormatted": "24,944"
         },
         {
           "id": 15080050038,
@@ -4266,7 +4796,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 35086,
+          "priceFormatted": "35,086",
+          "isTradable": true,
+          "pricePerGrid": 17543,
+          "pricePerGridFormatted": "17,543"
         },
         {
           "id": 15080050043,
@@ -4305,7 +4840,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 99634,
+          "priceFormatted": "99,634",
+          "isTradable": true,
+          "pricePerGrid": 16606,
+          "pricePerGridFormatted": "16,606"
         },
         {
           "id": 15080050045,
@@ -4344,7 +4884,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 41128,
+          "priceFormatted": "41,128",
+          "isTradable": true,
+          "pricePerGrid": 10282,
+          "pricePerGridFormatted": "10,282"
         },
         {
           "id": 15080050057,
@@ -4383,7 +4928,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 43220,
+          "priceFormatted": "43,220",
+          "isTradable": true,
+          "pricePerGrid": 21610,
+          "pricePerGridFormatted": "21,610"
         },
         {
           "id": 15080050064,
@@ -4422,7 +4972,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 22892,
+          "priceFormatted": "22,892",
+          "isTradable": true,
+          "pricePerGrid": 11446,
+          "pricePerGridFormatted": "11,446"
         },
         {
           "id": 15080050068,
@@ -4461,7 +5016,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 39133,
+          "priceFormatted": "39,133",
+          "isTradable": true,
+          "pricePerGrid": 9783,
+          "pricePerGridFormatted": "9,783"
         },
         {
           "id": 15080050070,
@@ -4500,7 +5060,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15080050091,
@@ -4539,7 +5104,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 27327,
+          "priceFormatted": "27,327",
+          "isTradable": true,
+          "pricePerGrid": 13664,
+          "pricePerGridFormatted": "13,664"
         },
         {
           "id": 15080050102,
@@ -4578,7 +5148,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 53984,
+          "priceFormatted": "53,984",
+          "isTradable": true,
+          "pricePerGrid": 53984,
+          "pricePerGridFormatted": "53,984"
         },
         {
           "id": 15080050103,
@@ -4617,7 +5192,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 36192,
+          "priceFormatted": "36,192",
+          "isTradable": true,
+          "pricePerGrid": 18096,
+          "pricePerGridFormatted": "18,096"
         },
         {
           "id": 15080050105,
@@ -4656,7 +5236,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 45678,
+          "priceFormatted": "45,678",
+          "isTradable": true,
+          "pricePerGrid": 15226,
+          "pricePerGridFormatted": "15,226"
         },
         {
           "id": 15080050106,
@@ -4695,7 +5280,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 24350,
+          "priceFormatted": "24,350",
+          "isTradable": true,
+          "pricePerGrid": 12175,
+          "pricePerGridFormatted": "12,175"
         },
         {
           "id": 15020010015,
@@ -4734,7 +5324,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 51007,
+          "priceFormatted": "51,007",
+          "isTradable": true,
+          "pricePerGrid": 8501,
+          "pricePerGridFormatted": "8,501"
         },
         {
           "id": 15020010016,
@@ -4773,7 +5368,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 20799,
+          "priceFormatted": "20,799",
+          "isTradable": true,
+          "pricePerGrid": 5200,
+          "pricePerGridFormatted": "5,200"
         },
         {
           "id": 15020010018,
@@ -4812,7 +5412,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 23105,
+          "priceFormatted": "23,105",
+          "isTradable": true,
+          "pricePerGrid": 5776,
+          "pricePerGridFormatted": "5,776"
         },
         {
           "id": 15020010023,
@@ -4851,7 +5456,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 15203,
+          "priceFormatted": "15,203",
+          "isTradable": true,
+          "pricePerGrid": 15203,
+          "pricePerGridFormatted": "15,203"
         },
         {
           "id": 15020010025,
@@ -4889,7 +5499,12 @@
           "fileName": "15020010025.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020010028,
@@ -4927,7 +5542,12 @@
           "fileName": "15020010028.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020010034,
@@ -4966,7 +5586,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 13912,
+          "priceFormatted": "13,912",
+          "isTradable": true,
+          "pricePerGrid": 13912,
+          "pricePerGridFormatted": "13,912"
         },
         {
           "id": 15020010037,
@@ -5005,7 +5630,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 21090,
+          "priceFormatted": "21,090",
+          "isTradable": true,
+          "pricePerGrid": 5273,
+          "pricePerGridFormatted": "5,273"
         },
         {
           "id": 15020040001,
@@ -5043,7 +5673,12 @@
           "fileName": "15020040001.png",
           "propsDetail": {
             "type": "工具材料"
-          }
+          },
+          "price": 0,
+          "priceFormatted": "非交易品",
+          "isTradable": false,
+          "pricePerGrid": 0,
+          "pricePerGridFormatted": "非交易品"
         },
         {
           "id": 15020040002,
@@ -5082,7 +5717,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 22895,
+          "priceFormatted": "22,895",
+          "isTradable": true,
+          "pricePerGrid": 11448,
+          "pricePerGridFormatted": "11,448"
         },
         {
           "id": 15020050002,
@@ -5121,7 +5761,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 30445,
+          "priceFormatted": "30,445",
+          "isTradable": true,
+          "pricePerGrid": 15223,
+          "pricePerGridFormatted": "15,223"
         },
         {
           "id": 15020050008,
@@ -5160,7 +5805,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 8511,
+          "priceFormatted": "8,511",
+          "isTradable": true,
+          "pricePerGrid": 8511,
+          "pricePerGridFormatted": "8,511"
         },
         {
           "id": 15030010001,
@@ -5199,7 +5849,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 8561,
+          "priceFormatted": "8,561",
+          "isTradable": true,
+          "pricePerGrid": 8561,
+          "pricePerGridFormatted": "8,561"
         },
         {
           "id": 15030010008,
@@ -5238,7 +5893,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 10723,
+          "priceFormatted": "10,723",
+          "isTradable": true,
+          "pricePerGrid": 10723,
+          "pricePerGridFormatted": "10,723"
         },
         {
           "id": 15030040002,
@@ -5277,7 +5937,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 11963,
+          "priceFormatted": "11,963",
+          "isTradable": true,
+          "pricePerGrid": 11963,
+          "pricePerGridFormatted": "11,963"
         },
         {
           "id": 15030040010,
@@ -5316,7 +5981,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 19554,
+          "priceFormatted": "19,554",
+          "isTradable": true,
+          "pricePerGrid": 4889,
+          "pricePerGridFormatted": "4,889"
         },
         {
           "id": 15030050016,
@@ -5355,7 +6025,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 24620,
+          "priceFormatted": "24,620",
+          "isTradable": true,
+          "pricePerGrid": 3078,
+          "pricePerGridFormatted": "3,078"
         },
         {
           "id": 15040010017,
@@ -5394,7 +6069,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 19725,
+          "priceFormatted": "19,725",
+          "isTradable": true,
+          "pricePerGrid": 9863,
+          "pricePerGridFormatted": "9,863"
         },
         {
           "id": 15040010021,
@@ -5433,7 +6113,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 16999,
+          "priceFormatted": "16,999",
+          "isTradable": true,
+          "pricePerGrid": 8500,
+          "pricePerGridFormatted": "8,500"
         },
         {
           "id": 15040010022,
@@ -5472,7 +6157,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 9697,
+          "priceFormatted": "9,697",
+          "isTradable": true,
+          "pricePerGrid": 9697,
+          "pricePerGridFormatted": "9,697"
         },
         {
           "id": 15060010004,
@@ -5511,7 +6201,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 10731,
+          "priceFormatted": "10,731",
+          "isTradable": true,
+          "pricePerGrid": 10731,
+          "pricePerGridFormatted": "10,731"
         },
         {
           "id": 15060010006,
@@ -5550,7 +6245,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 16031,
+          "priceFormatted": "16,031",
+          "isTradable": true,
+          "pricePerGrid": 8016,
+          "pricePerGridFormatted": "8,016"
         },
         {
           "id": 15060010007,
@@ -5589,7 +6289,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 9128,
+          "priceFormatted": "9,128",
+          "isTradable": true,
+          "pricePerGrid": 9128,
+          "pricePerGridFormatted": "9,128"
         },
         {
           "id": 15060080010,
@@ -5628,7 +6333,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 8882,
+          "priceFormatted": "8,882",
+          "isTradable": true,
+          "pricePerGrid": 8882,
+          "pricePerGridFormatted": "8,882"
         },
         {
           "id": 15060080011,
@@ -5667,7 +6377,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 12323,
+          "priceFormatted": "12,323",
+          "isTradable": true,
+          "pricePerGrid": 12323,
+          "pricePerGridFormatted": "12,323"
         },
         {
           "id": 15060080013,
@@ -5706,7 +6421,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 36476,
+          "priceFormatted": "36,476",
+          "isTradable": true,
+          "pricePerGrid": 36476,
+          "pricePerGridFormatted": "36,476"
         },
         {
           "id": 15060080016,
@@ -5745,7 +6465,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 10898,
+          "priceFormatted": "10,898",
+          "isTradable": true,
+          "pricePerGrid": 10898,
+          "pricePerGridFormatted": "10,898"
         },
         {
           "id": 15070010001,
@@ -5784,7 +6509,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 8910,
+          "priceFormatted": "8,910",
+          "isTradable": true,
+          "pricePerGrid": 8910,
+          "pricePerGridFormatted": "8,910"
         },
         {
           "id": 15070010002,
@@ -5823,7 +6553,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 7961,
+          "priceFormatted": "7,961",
+          "isTradable": true,
+          "pricePerGrid": 7961,
+          "pricePerGridFormatted": "7,961"
         },
         {
           "id": 15070040002,
@@ -5862,7 +6597,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 7561,
+          "priceFormatted": "7,561",
+          "isTradable": true,
+          "pricePerGrid": 7561,
+          "pricePerGridFormatted": "7,561"
         },
         {
           "id": 15070050003,
@@ -5901,7 +6641,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 14895,
+          "priceFormatted": "14,895",
+          "isTradable": true,
+          "pricePerGrid": 7448,
+          "pricePerGridFormatted": "7,448"
         },
         {
           "id": 15080050008,
@@ -5940,7 +6685,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 8440,
+          "priceFormatted": "8,440",
+          "isTradable": true,
+          "pricePerGrid": 8440,
+          "pricePerGridFormatted": "8,440"
         },
         {
           "id": 15080050011,
@@ -5979,7 +6729,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 11515,
+          "priceFormatted": "11,515",
+          "isTradable": true,
+          "pricePerGrid": 5758,
+          "pricePerGridFormatted": "5,758"
         },
         {
           "id": 15080050012,
@@ -6018,7 +6773,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 14782,
+          "priceFormatted": "14,782",
+          "isTradable": true,
+          "pricePerGrid": 7391,
+          "pricePerGridFormatted": "7,391"
         },
         {
           "id": 15080050021,
@@ -6057,7 +6817,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 16958,
+          "priceFormatted": "16,958",
+          "isTradable": true,
+          "pricePerGrid": 4240,
+          "pricePerGridFormatted": "4,240"
         },
         {
           "id": 15080050023,
@@ -6096,7 +6861,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 20158,
+          "priceFormatted": "20,158",
+          "isTradable": true,
+          "pricePerGrid": 10079,
+          "pricePerGridFormatted": "10,079"
         },
         {
           "id": 15080050026,
@@ -6135,7 +6905,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 10042,
+          "priceFormatted": "10,042",
+          "isTradable": true,
+          "pricePerGrid": 10042,
+          "pricePerGridFormatted": "10,042"
         },
         {
           "id": 15080050027,
@@ -6174,7 +6949,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 11535,
+          "priceFormatted": "11,535",
+          "isTradable": true,
+          "pricePerGrid": 11535,
+          "pricePerGridFormatted": "11,535"
         },
         {
           "id": 15080050039,
@@ -6213,7 +6993,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 17550,
+          "priceFormatted": "17,550",
+          "isTradable": true,
+          "pricePerGrid": 4388,
+          "pricePerGridFormatted": "4,388"
         },
         {
           "id": 15080050065,
@@ -6252,7 +7037,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 17751,
+          "priceFormatted": "17,751",
+          "isTradable": true,
+          "pricePerGrid": 5917,
+          "pricePerGridFormatted": "5,917"
         },
         {
           "id": 15080050072,
@@ -6291,7 +7081,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 13254,
+          "priceFormatted": "13,254",
+          "isTradable": true,
+          "pricePerGrid": 6627,
+          "pricePerGridFormatted": "6,627"
         },
         {
           "id": 15080050073,
@@ -6330,7 +7125,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 10046,
+          "priceFormatted": "10,046",
+          "isTradable": true,
+          "pricePerGrid": 10046,
+          "pricePerGridFormatted": "10,046"
         },
         {
           "id": 15080050074,
@@ -6369,7 +7169,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 13863,
+          "priceFormatted": "13,863",
+          "isTradable": true,
+          "pricePerGrid": 13863,
+          "pricePerGridFormatted": "13,863"
         },
         {
           "id": 15080050075,
@@ -6408,7 +7213,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 13152,
+          "priceFormatted": "13,152",
+          "isTradable": true,
+          "pricePerGrid": 6576,
+          "pricePerGridFormatted": "6,576"
         },
         {
           "id": 15080050076,
@@ -6447,7 +7257,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 12108,
+          "priceFormatted": "12,108",
+          "isTradable": true,
+          "pricePerGrid": 12108,
+          "pricePerGridFormatted": "12,108"
         },
         {
           "id": 15080050096,
@@ -6486,7 +7301,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 27550,
+          "priceFormatted": "27,550",
+          "isTradable": true,
+          "pricePerGrid": 9183,
+          "pricePerGridFormatted": "9,183"
         },
         {
           "id": 15080050107,
@@ -6525,7 +7345,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 9520,
+          "priceFormatted": "9,520",
+          "isTradable": true,
+          "pricePerGrid": 9520,
+          "pricePerGridFormatted": "9,520"
         },
         {
           "id": 15080050108,
@@ -6564,7 +7389,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 8998,
+          "priceFormatted": "8,998",
+          "isTradable": true,
+          "pricePerGrid": 8998,
+          "pricePerGridFormatted": "8,998"
         },
         {
           "id": 15080050109,
@@ -6603,7 +7433,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 23156,
+          "priceFormatted": "23,156",
+          "isTradable": true,
+          "pricePerGrid": 5789,
+          "pricePerGridFormatted": "5,789"
         },
         {
           "id": 15090010041,
@@ -6642,7 +7477,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 28680,
+          "priceFormatted": "28,680",
+          "isTradable": true,
+          "pricePerGrid": 7170,
+          "pricePerGridFormatted": "7,170"
         },
         {
           "id": 15010010013,
@@ -6681,7 +7521,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2553,
+          "priceFormatted": "2,553",
+          "isTradable": true,
+          "pricePerGrid": 2553,
+          "pricePerGridFormatted": "2,553"
         },
         {
           "id": 15010010015,
@@ -6720,7 +7565,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2562,
+          "priceFormatted": "2,562",
+          "isTradable": true,
+          "pricePerGrid": 2562,
+          "pricePerGridFormatted": "2,562"
         },
         {
           "id": 15020010005,
@@ -6759,7 +7609,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2741,
+          "priceFormatted": "2,741",
+          "isTradable": true,
+          "pricePerGrid": 2741,
+          "pricePerGridFormatted": "2,741"
         },
         {
           "id": 15020010007,
@@ -6798,7 +7653,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 4023,
+          "priceFormatted": "4,023",
+          "isTradable": true,
+          "pricePerGrid": 2012,
+          "pricePerGridFormatted": "2,012"
         },
         {
           "id": 15020010008,
@@ -6837,7 +7697,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 4025,
+          "priceFormatted": "4,025",
+          "isTradable": true,
+          "pricePerGrid": 2013,
+          "pricePerGridFormatted": "2,013"
         },
         {
           "id": 15020010012,
@@ -6876,7 +7741,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2167,
+          "priceFormatted": "2,167",
+          "isTradable": true,
+          "pricePerGrid": 2167,
+          "pricePerGridFormatted": "2,167"
         },
         {
           "id": 15020010017,
@@ -6915,7 +7785,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2258,
+          "priceFormatted": "2,258",
+          "isTradable": true,
+          "pricePerGrid": 2258,
+          "pricePerGridFormatted": "2,258"
         },
         {
           "id": 15020010019,
@@ -6954,7 +7829,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2372,
+          "priceFormatted": "2,372",
+          "isTradable": true,
+          "pricePerGrid": 2372,
+          "pricePerGridFormatted": "2,372"
         },
         {
           "id": 15020010020,
@@ -6993,7 +7873,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2256,
+          "priceFormatted": "2,256",
+          "isTradable": true,
+          "pricePerGrid": 2256,
+          "pricePerGridFormatted": "2,256"
         },
         {
           "id": 15020010021,
@@ -7032,7 +7917,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3901,
+          "priceFormatted": "3,901",
+          "isTradable": true,
+          "pricePerGrid": 975,
+          "pricePerGridFormatted": "975"
         },
         {
           "id": 15020010026,
@@ -7071,7 +7961,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2268,
+          "priceFormatted": "2,268",
+          "isTradable": true,
+          "pricePerGrid": 2268,
+          "pricePerGridFormatted": "2,268"
         },
         {
           "id": 15020010027,
@@ -7110,7 +8005,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2184,
+          "priceFormatted": "2,184",
+          "isTradable": true,
+          "pricePerGrid": 2184,
+          "pricePerGridFormatted": "2,184"
         },
         {
           "id": 15020010030,
@@ -7149,7 +8049,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3739,
+          "priceFormatted": "3,739",
+          "isTradable": true,
+          "pricePerGrid": 1870,
+          "pricePerGridFormatted": "1,870"
         },
         {
           "id": 15020010032,
@@ -7188,7 +8093,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3189,
+          "priceFormatted": "3,189",
+          "isTradable": true,
+          "pricePerGrid": 1595,
+          "pricePerGridFormatted": "1,595"
         },
         {
           "id": 15020040003,
@@ -7227,7 +8137,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3944,
+          "priceFormatted": "3,944",
+          "isTradable": true,
+          "pricePerGrid": 1972,
+          "pricePerGridFormatted": "1,972"
         },
         {
           "id": 15020040004,
@@ -7266,7 +8181,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 4236,
+          "priceFormatted": "4,236",
+          "isTradable": true,
+          "pricePerGrid": 2118,
+          "pricePerGridFormatted": "2,118"
         },
         {
           "id": 15020050007,
@@ -7305,7 +8225,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2279,
+          "priceFormatted": "2,279",
+          "isTradable": true,
+          "pricePerGrid": 2279,
+          "pricePerGridFormatted": "2,279"
         },
         {
           "id": 15030010002,
@@ -7344,7 +8269,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2062,
+          "priceFormatted": "2,062",
+          "isTradable": true,
+          "pricePerGrid": 2062,
+          "pricePerGridFormatted": "2,062"
         },
         {
           "id": 15030010007,
@@ -7383,7 +8313,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 3861,
+          "priceFormatted": "3,861",
+          "isTradable": true,
+          "pricePerGrid": 3861,
+          "pricePerGridFormatted": "3,861"
         },
         {
           "id": 15030010011,
@@ -7422,7 +8357,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 8511,
+          "priceFormatted": "8,511",
+          "isTradable": true,
+          "pricePerGrid": 2128,
+          "pricePerGridFormatted": "2,128"
         },
         {
           "id": 15030010013,
@@ -7461,7 +8401,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2486,
+          "priceFormatted": "2,486",
+          "isTradable": true,
+          "pricePerGrid": 2486,
+          "pricePerGridFormatted": "2,486"
         },
         {
           "id": 15030010014,
@@ -7500,7 +8445,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2539,
+          "priceFormatted": "2,539",
+          "isTradable": true,
+          "pricePerGrid": 1270,
+          "pricePerGridFormatted": "1,270"
         },
         {
           "id": 15030010018,
@@ -7539,7 +8489,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2721,
+          "priceFormatted": "2,721",
+          "isTradable": true,
+          "pricePerGrid": 2721,
+          "pricePerGridFormatted": "2,721"
         },
         {
           "id": 15030010019,
@@ -7578,7 +8533,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 2332,
+          "priceFormatted": "2,332",
+          "isTradable": true,
+          "pricePerGrid": 2332,
+          "pricePerGridFormatted": "2,332"
         },
         {
           "id": 15030040011,
@@ -7617,7 +8577,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 3861,
+          "priceFormatted": "3,861",
+          "isTradable": true,
+          "pricePerGrid": 3861,
+          "pricePerGridFormatted": "3,861"
         },
         {
           "id": 15040010003,
@@ -7656,7 +8621,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 4618,
+          "priceFormatted": "4,618",
+          "isTradable": true,
+          "pricePerGrid": 1155,
+          "pricePerGridFormatted": "1,155"
         },
         {
           "id": 15040010012,
@@ -7695,7 +8665,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1963,
+          "priceFormatted": "1,963",
+          "isTradable": true,
+          "pricePerGrid": 1963,
+          "pricePerGridFormatted": "1,963"
         },
         {
           "id": 15060010001,
@@ -7734,7 +8709,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2048,
+          "priceFormatted": "2,048",
+          "isTradable": true,
+          "pricePerGrid": 2048,
+          "pricePerGridFormatted": "2,048"
         },
         {
           "id": 15060010002,
@@ -7773,7 +8753,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2118,
+          "priceFormatted": "2,118",
+          "isTradable": true,
+          "pricePerGrid": 2118,
+          "pricePerGridFormatted": "2,118"
         },
         {
           "id": 15060010003,
@@ -7812,7 +8797,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2597,
+          "priceFormatted": "2,597",
+          "isTradable": true,
+          "pricePerGrid": 2597,
+          "pricePerGridFormatted": "2,597"
         },
         {
           "id": 15060010010,
@@ -7851,7 +8841,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2134,
+          "priceFormatted": "2,134",
+          "isTradable": true,
+          "pricePerGrid": 2134,
+          "pricePerGridFormatted": "2,134"
         },
         {
           "id": 15060010012,
@@ -7890,7 +8885,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2371,
+          "priceFormatted": "2,371",
+          "isTradable": true,
+          "pricePerGrid": 2371,
+          "pricePerGridFormatted": "2,371"
         },
         {
           "id": 15060080001,
@@ -7929,7 +8929,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2363,
+          "priceFormatted": "2,363",
+          "isTradable": true,
+          "pricePerGrid": 2363,
+          "pricePerGridFormatted": "2,363"
         },
         {
           "id": 15060080004,
@@ -7968,7 +8973,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1837,
+          "priceFormatted": "1,837",
+          "isTradable": true,
+          "pricePerGrid": 1837,
+          "pricePerGridFormatted": "1,837"
         },
         {
           "id": 15060080006,
@@ -8007,7 +9017,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2013,
+          "priceFormatted": "2,013",
+          "isTradable": true,
+          "pricePerGrid": 2013,
+          "pricePerGridFormatted": "2,013"
         },
         {
           "id": 15060080009,
@@ -8046,7 +9061,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2883,
+          "priceFormatted": "2,883",
+          "isTradable": true,
+          "pricePerGrid": 2883,
+          "pricePerGridFormatted": "2,883"
         },
         {
           "id": 15070010005,
@@ -8085,7 +9105,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 2982,
+          "priceFormatted": "2,982",
+          "isTradable": true,
+          "pricePerGrid": 1491,
+          "pricePerGridFormatted": "1,491"
         },
         {
           "id": 15070010006,
@@ -8124,7 +9149,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 3785,
+          "priceFormatted": "3,785",
+          "isTradable": true,
+          "pricePerGrid": 1893,
+          "pricePerGridFormatted": "1,893"
         },
         {
           "id": 15070010007,
@@ -8163,7 +9193,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 3395,
+          "priceFormatted": "3,395",
+          "isTradable": true,
+          "pricePerGrid": 1698,
+          "pricePerGridFormatted": "1,698"
         },
         {
           "id": 15070010008,
@@ -8202,7 +9237,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 4010,
+          "priceFormatted": "4,010",
+          "isTradable": true,
+          "pricePerGrid": 2005,
+          "pricePerGridFormatted": "2,005"
         },
         {
           "id": 15070010009,
@@ -8241,7 +9281,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 3168,
+          "priceFormatted": "3,168",
+          "isTradable": true,
+          "pricePerGrid": 1584,
+          "pricePerGridFormatted": "1,584"
         },
         {
           "id": 15080010003,
@@ -8280,7 +9325,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 4276,
+          "priceFormatted": "4,276",
+          "isTradable": true,
+          "pricePerGrid": 2138,
+          "pricePerGridFormatted": "2,138"
         },
         {
           "id": 15080010004,
@@ -8319,7 +9369,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 5005,
+          "priceFormatted": "5,005",
+          "isTradable": true,
+          "pricePerGrid": 1251,
+          "pricePerGridFormatted": "1,251"
         },
         {
           "id": 15080040004,
@@ -8358,7 +9413,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 3490,
+          "priceFormatted": "3,490",
+          "isTradable": true,
+          "pricePerGrid": 3490,
+          "pricePerGridFormatted": "3,490"
         },
         {
           "id": 15080040005,
@@ -8397,7 +9457,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 4181,
+          "priceFormatted": "4,181",
+          "isTradable": true,
+          "pricePerGrid": 2091,
+          "pricePerGridFormatted": "2,091"
         },
         {
           "id": 15080050007,
@@ -8436,7 +9501,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2326,
+          "priceFormatted": "2,326",
+          "isTradable": true,
+          "pricePerGrid": 2326,
+          "pricePerGridFormatted": "2,326"
         },
         {
           "id": 15080050017,
@@ -8475,7 +9545,12 @@
           "propsDetail": {
             "type": "工藝藏品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 5603,
+          "priceFormatted": "5,603",
+          "isTradable": true,
+          "pricePerGrid": 1401,
+          "pricePerGridFormatted": "1,401"
         },
         {
           "id": 15080050019,
@@ -8514,7 +9589,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 4529,
+          "priceFormatted": "4,529",
+          "isTradable": true,
+          "pricePerGrid": 1132,
+          "pricePerGridFormatted": "1,132"
         },
         {
           "id": 15080050020,
@@ -8553,7 +9633,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 5563,
+          "priceFormatted": "5,563",
+          "isTradable": true,
+          "pricePerGrid": 1391,
+          "pricePerGridFormatted": "1,391"
         },
         {
           "id": 15080050022,
@@ -8592,7 +9677,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 4975,
+          "priceFormatted": "4,975",
+          "isTradable": true,
+          "pricePerGrid": 1244,
+          "pricePerGridFormatted": "1,244"
         },
         {
           "id": 15080050077,
@@ -8631,7 +9721,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 6779,
+          "priceFormatted": "6,779",
+          "isTradable": true,
+          "pricePerGrid": 1695,
+          "pricePerGridFormatted": "1,695"
         },
         {
           "id": 15080050078,
@@ -8670,7 +9765,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 5363,
+          "priceFormatted": "5,363",
+          "isTradable": true,
+          "pricePerGrid": 2682,
+          "pricePerGridFormatted": "2,682"
         },
         {
           "id": 15080050079,
@@ -8709,7 +9809,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2853,
+          "priceFormatted": "2,853",
+          "isTradable": true,
+          "pricePerGrid": 2853,
+          "pricePerGridFormatted": "2,853"
         },
         {
           "id": 15080050080,
@@ -8748,7 +9853,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 2938,
+          "priceFormatted": "2,938",
+          "isTradable": true,
+          "pricePerGrid": 2938,
+          "pricePerGridFormatted": "2,938"
         },
         {
           "id": 15080050084,
@@ -8787,7 +9897,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 12384,
+          "priceFormatted": "12,384",
+          "isTradable": true,
+          "pricePerGrid": 4128,
+          "pricePerGridFormatted": "4,128"
         },
         {
           "id": 15080050087,
@@ -8826,7 +9941,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 11606,
+          "priceFormatted": "11,606",
+          "isTradable": true,
+          "pricePerGrid": 3869,
+          "pricePerGridFormatted": "3,869"
         },
         {
           "id": 15080050110,
@@ -8865,7 +9985,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3548,
+          "priceFormatted": "3,548",
+          "isTradable": true,
+          "pricePerGrid": 3548,
+          "pricePerGridFormatted": "3,548"
         },
         {
           "id": 15080050111,
@@ -8904,7 +10029,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2883,
+          "priceFormatted": "2,883",
+          "isTradable": true,
+          "pricePerGrid": 2883,
+          "pricePerGridFormatted": "2,883"
         },
         {
           "id": 15090910017,
@@ -8942,7 +10072,12 @@
           "fileName": "15090910017.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 4893,
+          "priceFormatted": "4,893",
+          "isTradable": true,
+          "pricePerGrid": 2447,
+          "pricePerGridFormatted": "2,447"
         },
         {
           "id": 15090910022,
@@ -8980,7 +10115,12 @@
           "fileName": "15090910022.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 4430,
+          "priceFormatted": "4,430",
+          "isTradable": true,
+          "pricePerGrid": 2215,
+          "pricePerGridFormatted": "2,215"
         },
         {
           "id": 15090910023,
@@ -9018,7 +10158,12 @@
           "fileName": "15090910023.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 2836,
+          "priceFormatted": "2,836",
+          "isTradable": true,
+          "pricePerGrid": 1418,
+          "pricePerGridFormatted": "1,418"
         },
         {
           "id": 15010010004,
@@ -9057,7 +10202,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 2264,
+          "priceFormatted": "2,264",
+          "isTradable": true,
+          "pricePerGrid": 1132,
+          "pricePerGridFormatted": "1,132"
         },
         {
           "id": 15010010008,
@@ -9096,7 +10246,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1019,
+          "priceFormatted": "1,019",
+          "isTradable": true,
+          "pricePerGrid": 1019,
+          "pricePerGridFormatted": "1,019"
         },
         {
           "id": 15020010001,
@@ -9135,7 +10290,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1086,
+          "priceFormatted": "1,086",
+          "isTradable": true,
+          "pricePerGrid": 1086,
+          "pricePerGridFormatted": "1,086"
         },
         {
           "id": 15020010002,
@@ -9174,7 +10334,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1077,
+          "priceFormatted": "1,077",
+          "isTradable": true,
+          "pricePerGrid": 1077,
+          "pricePerGridFormatted": "1,077"
         },
         {
           "id": 15020010003,
@@ -9213,7 +10378,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1216,
+          "priceFormatted": "1,216",
+          "isTradable": true,
+          "pricePerGrid": 1216,
+          "pricePerGridFormatted": "1,216"
         },
         {
           "id": 15020010004,
@@ -9252,7 +10422,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1368,
+          "priceFormatted": "1,368",
+          "isTradable": true,
+          "pricePerGrid": 1368,
+          "pricePerGridFormatted": "1,368"
         },
         {
           "id": 15020010006,
@@ -9291,7 +10466,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2293,
+          "priceFormatted": "2,293",
+          "isTradable": true,
+          "pricePerGrid": 1147,
+          "pricePerGridFormatted": "1,147"
         },
         {
           "id": 15020010010,
@@ -9330,7 +10510,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1024,
+          "priceFormatted": "1,024",
+          "isTradable": true,
+          "pricePerGrid": 1024,
+          "pricePerGridFormatted": "1,024"
         },
         {
           "id": 15020010014,
@@ -9369,7 +10554,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2590,
+          "priceFormatted": "2,590",
+          "isTradable": true,
+          "pricePerGrid": 1295,
+          "pricePerGridFormatted": "1,295"
         },
         {
           "id": 15030010009,
@@ -9408,7 +10598,12 @@
           "propsDetail": {
             "type": "电子产品",
             "propsSource": "長弓溪谷 - 哈夫克雷达站, 航天基地 - 核心区"
-          }
+          },
+          "price": 922,
+          "priceFormatted": "922",
+          "isTradable": true,
+          "pricePerGrid": 922,
+          "pricePerGridFormatted": "922"
         },
         {
           "id": 15040010007,
@@ -9447,7 +10642,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1638,
+          "priceFormatted": "1,638",
+          "isTradable": true,
+          "pricePerGrid": 1638,
+          "pricePerGridFormatted": "1,638"
         },
         {
           "id": 15040010008,
@@ -9486,7 +10686,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1664,
+          "priceFormatted": "1,664",
+          "isTradable": true,
+          "pricePerGrid": 1664,
+          "pricePerGridFormatted": "1,664"
         },
         {
           "id": 15040010009,
@@ -9525,7 +10730,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1666,
+          "priceFormatted": "1,666",
+          "isTradable": true,
+          "pricePerGrid": 1666,
+          "pricePerGridFormatted": "1,666"
         },
         {
           "id": 15040010016,
@@ -9564,7 +10774,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 1067,
+          "priceFormatted": "1,067",
+          "isTradable": true,
+          "pricePerGrid": 1067,
+          "pricePerGridFormatted": "1,067"
         },
         {
           "id": 15060010008,
@@ -9603,7 +10818,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1012,
+          "priceFormatted": "1,012",
+          "isTradable": true,
+          "pricePerGrid": 1012,
+          "pricePerGridFormatted": "1,012"
         },
         {
           "id": 15060010009,
@@ -9642,7 +10862,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1120,
+          "priceFormatted": "1,120",
+          "isTradable": true,
+          "pricePerGrid": 1120,
+          "pricePerGridFormatted": "1,120"
         },
         {
           "id": 15060080002,
@@ -9681,7 +10906,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 945,
+          "priceFormatted": "945",
+          "isTradable": true,
+          "pricePerGrid": 945,
+          "pricePerGridFormatted": "945"
         },
         {
           "id": 15060080003,
@@ -9720,7 +10950,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 962,
+          "priceFormatted": "962",
+          "isTradable": true,
+          "pricePerGrid": 962,
+          "pricePerGridFormatted": "962"
         },
         {
           "id": 15060080007,
@@ -9759,7 +10994,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 920,
+          "priceFormatted": "920",
+          "isTradable": true,
+          "pricePerGrid": 920,
+          "pricePerGridFormatted": "920"
         },
         {
           "id": 15080050046,
@@ -9798,7 +11038,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 3891,
+          "priceFormatted": "3,891",
+          "isTradable": true,
+          "pricePerGrid": 3891,
+          "pricePerGridFormatted": "3,891"
         },
         {
           "id": 15080050047,
@@ -9837,7 +11082,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 5238,
+          "priceFormatted": "5,238",
+          "isTradable": true,
+          "pricePerGrid": 5238,
+          "pricePerGridFormatted": "5,238"
         },
         {
           "id": 15080050048,
@@ -9876,7 +11126,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 3107,
+          "priceFormatted": "3,107",
+          "isTradable": true,
+          "pricePerGrid": 3107,
+          "pricePerGridFormatted": "3,107"
         },
         {
           "id": 15080050049,
@@ -9915,7 +11170,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 1562,
+          "priceFormatted": "1,562",
+          "isTradable": true,
+          "pricePerGrid": 1562,
+          "pricePerGridFormatted": "1,562"
         },
         {
           "id": 15080050050,
@@ -9954,7 +11214,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 2983,
+          "priceFormatted": "2,983",
+          "isTradable": true,
+          "pricePerGrid": 2983,
+          "pricePerGridFormatted": "2,983"
         },
         {
           "id": 15080050051,
@@ -9993,7 +11258,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 2001,
+          "priceFormatted": "2,001",
+          "isTradable": true,
+          "pricePerGrid": 2001,
+          "pricePerGridFormatted": "2,001"
         },
         {
           "id": 15080050052,
@@ -10032,7 +11302,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 1450,
+          "priceFormatted": "1,450",
+          "isTradable": true,
+          "pricePerGrid": 1450,
+          "pricePerGridFormatted": "1,450"
         },
         {
           "id": 15080050053,
@@ -10071,7 +11346,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 1563,
+          "priceFormatted": "1,563",
+          "isTradable": true,
+          "pricePerGrid": 1563,
+          "pricePerGridFormatted": "1,563"
         },
         {
           "id": 15080050054,
@@ -10110,7 +11390,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 2471,
+          "priceFormatted": "2,471",
+          "isTradable": true,
+          "pricePerGrid": 2471,
+          "pricePerGridFormatted": "2,471"
         },
         {
           "id": 15080050055,
@@ -10149,7 +11434,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 4269,
+          "priceFormatted": "4,269",
+          "isTradable": true,
+          "pricePerGrid": 4269,
+          "pricePerGridFormatted": "4,269"
         },
         {
           "id": 15080050056,
@@ -10188,7 +11478,12 @@
           "propsDetail": {
             "type": "资料情报",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 904,
+          "priceFormatted": "904",
+          "isTradable": true,
+          "pricePerGrid": 904,
+          "pricePerGridFormatted": "904"
         },
         {
           "id": 15080050059,
@@ -10227,7 +11522,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 9095,
+          "priceFormatted": "9,095",
+          "isTradable": true,
+          "pricePerGrid": 9095,
+          "pricePerGridFormatted": "9,095"
         },
         {
           "id": 15080050060,
@@ -10266,7 +11566,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "零號大坝 - 行政轄区, 航天基地 - 核心区"
-          }
+          },
+          "price": 7696,
+          "priceFormatted": "7,696",
+          "isTradable": true,
+          "pricePerGrid": 7696,
+          "pricePerGridFormatted": "7,696"
         },
         {
           "id": 15080050081,
@@ -10305,7 +11610,12 @@
           "propsDetail": {
             "type": "家居物品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 宿舍区"
-          }
+          },
+          "price": 1770,
+          "priceFormatted": "1,770",
+          "isTradable": true,
+          "pricePerGrid": 1770,
+          "pricePerGridFormatted": "1,770"
         },
         {
           "id": 15080050085,
@@ -10344,7 +11654,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 3633,
+          "priceFormatted": "3,633",
+          "isTradable": true,
+          "pricePerGrid": 1817,
+          "pricePerGridFormatted": "1,817"
         },
         {
           "id": 15080050086,
@@ -10383,7 +11698,12 @@
           "propsDetail": {
             "type": "工具材料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2794,
+          "priceFormatted": "2,794",
+          "isTradable": true,
+          "pricePerGrid": 2794,
+          "pricePerGridFormatted": "2,794"
         },
         {
           "id": 15080050112,
@@ -10422,7 +11742,12 @@
           "propsDetail": {
             "type": "能源燃料",
             "propsSource": "零號大坝 - 水泥廠, 航天基地 - 工業区"
-          }
+          },
+          "price": 2264,
+          "priceFormatted": "2,264",
+          "isTradable": true,
+          "pricePerGrid": 566,
+          "pricePerGridFormatted": "566"
         },
         {
           "id": 15090010024,
@@ -10460,7 +11785,12 @@
           "fileName": "15090010024.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 2053,
+          "priceFormatted": "2,053",
+          "isTradable": true,
+          "pricePerGrid": 1027,
+          "pricePerGridFormatted": "1,027"
         },
         {
           "id": 15090010026,
@@ -10498,7 +11828,12 @@
           "fileName": "15090010026.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 2054,
+          "priceFormatted": "2,054",
+          "isTradable": true,
+          "pricePerGrid": 1027,
+          "pricePerGridFormatted": "1,027"
         },
         {
           "id": 15090010077,
@@ -10537,7 +11872,12 @@
           "propsDetail": {
             "type": "医疗用品",
             "propsSource": "長弓溪谷 - 鑽石皇后酒店, 航天基地 - 核心区"
-          }
+          },
+          "price": 1984,
+          "priceFormatted": "1,984",
+          "isTradable": true,
+          "pricePerGrid": 992,
+          "pricePerGridFormatted": "992"
         },
         {
           "id": 15090910016,
@@ -10575,7 +11915,12 @@
           "fileName": "15090910016.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 1855,
+          "priceFormatted": "1,855",
+          "isTradable": true,
+          "pricePerGrid": 928,
+          "pricePerGridFormatted": "928"
         },
         {
           "id": 15090910019,
@@ -10613,7 +11958,12 @@
           "fileName": "15090910019.png",
           "propsDetail": {
             "type": "资料情报"
-          }
+          },
+          "price": 1039,
+          "priceFormatted": "1,039",
+          "isTradable": true,
+          "pricePerGrid": 1039,
+          "pricePerGridFormatted": "1,039"
         }
       ]
     },
@@ -10664,7 +12014,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復头盔耐久度"
-          }
+          },
+          "price": 414040,
+          "priceFormatted": "414,040",
+          "isTradable": true,
+          "pricePerGrid": 103510,
+          "pricePerGridFormatted": "103,510"
         },
         {
           "id": 14060000004,
@@ -10707,7 +12062,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復护甲耐久度"
-          }
+          },
+          "price": 487190,
+          "priceFormatted": "487,190",
+          "isTradable": true,
+          "pricePerGrid": 121798,
+          "pricePerGridFormatted": "121,798"
         },
         {
           "id": 14020000006,
@@ -10745,7 +12105,12 @@
           "fileName": "14020000006.png",
           "propsDetail": {
             "activeTime": "3.5"
-          }
+          },
+          "price": 170001,
+          "priceFormatted": "170,001",
+          "isTradable": true,
+          "pricePerGrid": 42500,
+          "pricePerGridFormatted": "42,500"
         },
         {
           "id": 14060000001,
@@ -10788,7 +12153,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復头盔耐久度"
-          }
+          },
+          "price": 124995,
+          "priceFormatted": "124,995",
+          "isTradable": true,
+          "pricePerGrid": 41665,
+          "pricePerGridFormatted": "41,665"
         },
         {
           "id": 14060000002,
@@ -10831,7 +12201,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復护甲耐久度"
-          }
+          },
+          "price": 244315,
+          "priceFormatted": "244,315",
+          "isTradable": true,
+          "pricePerGrid": 61079,
+          "pricePerGridFormatted": "61,079"
         },
         {
           "id": 14020000005,
@@ -10869,7 +12244,12 @@
           "fileName": "14020000005.png",
           "propsDetail": {
             "activeTime": "4"
-          }
+          },
+          "price": 49355,
+          "priceFormatted": "49,355",
+          "isTradable": true,
+          "pricePerGrid": 16452,
+          "pricePerGridFormatted": "16,452"
         },
         {
           "id": 14030000003,
@@ -10908,7 +12288,12 @@
           "propsDetail": {
             "availableCount": 7,
             "activeTime": "5"
-          }
+          },
+          "price": 25375,
+          "priceFormatted": "25,375",
+          "isTradable": true,
+          "pricePerGrid": 8458,
+          "pricePerGridFormatted": "8,458"
         },
         {
           "id": 14050000003,
@@ -10947,7 +12332,12 @@
           "propsDetail": {
             "availableCount": 5,
             "activeTime": "3"
-          }
+          },
+          "price": 23541,
+          "priceFormatted": "23,541",
+          "isTradable": true,
+          "pricePerGrid": 23541,
+          "pricePerGridFormatted": "23,541"
         },
         {
           "id": 14060000005,
@@ -10990,7 +12380,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復头盔耐久度"
-          }
+          },
+          "price": 57800,
+          "priceFormatted": "57,800",
+          "isTradable": true,
+          "pricePerGrid": 28900,
+          "pricePerGridFormatted": "28,900"
         },
         {
           "id": 14060000006,
@@ -11033,7 +12428,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復护甲耐久度"
-          }
+          },
+          "price": 76295,
+          "priceFormatted": "76,295",
+          "isTradable": true,
+          "pricePerGrid": 25432,
+          "pricePerGridFormatted": "25,432"
         },
         {
           "id": 14070000003,
@@ -11072,7 +12472,12 @@
           "propsDetail": {
             "activeTime": "3",
             "bearEnhance": "{{14070000003.enhance}}"
-          }
+          },
+          "price": 42500,
+          "priceFormatted": "42,500",
+          "isTradable": true,
+          "pricePerGrid": 42500,
+          "pricePerGridFormatted": "42,500"
         },
         {
           "id": 14070000005,
@@ -11111,7 +12516,12 @@
           "propsDetail": {
             "activeTime": "3",
             "hearEnhance": "{{14070000005.hear}}"
-          }
+          },
+          "price": 49500,
+          "priceFormatted": "49,500",
+          "isTradable": true,
+          "pricePerGrid": 49500,
+          "pricePerGridFormatted": "49,500"
         },
         {
           "id": 14070000007,
@@ -11150,7 +12560,12 @@
           "propsDetail": {
             "activeTime": "3",
             "replyEffect": "大幅度提升體力屬性"
-          }
+          },
+          "price": 69515,
+          "priceFormatted": "69,515",
+          "isTradable": true,
+          "pricePerGrid": 69515,
+          "pricePerGridFormatted": "69,515"
         },
         {
           "id": 14020000004,
@@ -11189,7 +12604,12 @@
           "propsDetail": {
             "durability": 220,
             "activeTime": "6"
-          }
+          },
+          "price": 12586,
+          "priceFormatted": "12,586",
+          "isTradable": true,
+          "pricePerGrid": 6293,
+          "pricePerGridFormatted": "6,293"
         },
         {
           "id": 14060000007,
@@ -11232,7 +12652,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復头盔耐久度"
-          }
+          },
+          "price": 17584,
+          "priceFormatted": "17,584",
+          "isTradable": true,
+          "pricePerGrid": 8792,
+          "pricePerGridFormatted": "8,792"
         },
         {
           "id": 14060000008,
@@ -11275,7 +12700,12 @@
             "repairEfficiency": "低",
             "activeTime": "4.5",
             "replyEffect": "恢復护甲耐久度"
-          }
+          },
+          "price": 22180,
+          "priceFormatted": "22,180",
+          "isTradable": true,
+          "pricePerGrid": 11090,
+          "pricePerGridFormatted": "11,090"
         },
         {
           "id": 14070000001,
@@ -11314,7 +12744,12 @@
           "propsDetail": {
             "activeTime": "3",
             "bearEnhance": "{{14070000001.enhance}}"
-          }
+          },
+          "price": 15375,
+          "priceFormatted": "15,375",
+          "isTradable": true,
+          "pricePerGrid": 15375,
+          "pricePerGridFormatted": "15,375"
         },
         {
           "id": 14070000004,
@@ -11353,7 +12788,12 @@
           "propsDetail": {
             "activeTime": "3",
             "hearEnhance": "{{14070000004.hear}}"
-          }
+          },
+          "price": 18900,
+          "priceFormatted": "18,900",
+          "isTradable": true,
+          "pricePerGrid": 18900,
+          "pricePerGridFormatted": "18,900"
         },
         {
           "id": 14070000006,
@@ -11392,7 +12832,12 @@
           "propsDetail": {
             "activeTime": "3",
             "replyEffect": "提升體力屬性"
-          }
+          },
+          "price": 23680,
+          "priceFormatted": "23,680",
+          "isTradable": true,
+          "pricePerGrid": 23680,
+          "pricePerGridFormatted": "23,680"
         },
         {
           "id": 14070000008,
@@ -11431,7 +12876,12 @@
           "propsDetail": {
             "activeTime": "3",
             "replyEffect": "體力快速恢復"
-          }
+          },
+          "price": 25883,
+          "priceFormatted": "25,883",
+          "isTradable": true,
+          "pricePerGrid": 25883,
+          "pricePerGridFormatted": "25,883"
         },
         {
           "id": 14070000009,
@@ -11470,7 +12920,12 @@
           "propsDetail": {
             "activeTime": "3",
             "bodyCapacity": "{{14070000009.capacity}}"
-          }
+          },
+          "price": 10725,
+          "priceFormatted": "10,725",
+          "isTradable": true,
+          "pricePerGrid": 10725,
+          "pricePerGridFormatted": "10,725"
         },
         {
           "id": 14020000003,
@@ -11509,7 +12964,12 @@
           "propsDetail": {
             "durability": 60,
             "activeTime": "3"
-          }
+          },
+          "price": 6709,
+          "priceFormatted": "6,709",
+          "isTradable": true,
+          "pricePerGrid": 6709,
+          "pricePerGridFormatted": "6,709"
         },
         {
           "id": 14030000002,
@@ -11548,7 +13008,12 @@
           "propsDetail": {
             "availableCount": 4,
             "activeTime": "7"
-          }
+          },
+          "price": 9296,
+          "priceFormatted": "9,296",
+          "isTradable": true,
+          "pricePerGrid": 4648,
+          "pricePerGridFormatted": "4,648"
         },
         {
           "id": 14050000002,
@@ -11587,7 +13052,12 @@
           "propsDetail": {
             "availableCount": 3,
             "activeTime": "4"
-          }
+          },
+          "price": 6470,
+          "priceFormatted": "6,470",
+          "isTradable": true,
+          "pricePerGrid": 6470,
+          "pricePerGridFormatted": "6,470"
         },
         {
           "id": 14020000001,
@@ -11626,7 +13096,12 @@
           "propsDetail": {
             "durability": 30,
             "activeTime": "3.5"
-          }
+          },
+          "price": 1562,
+          "priceFormatted": "1,562",
+          "isTradable": true,
+          "pricePerGrid": 1562,
+          "pricePerGridFormatted": "1,562"
         },
         {
           "id": 14020000002,
@@ -11664,7 +13139,12 @@
           "fileName": "14020000002.png",
           "propsDetail": {
             "activeTime": "5"
-          }
+          },
+          "price": 2973,
+          "priceFormatted": "2,973",
+          "isTradable": true,
+          "pricePerGrid": 2973,
+          "pricePerGridFormatted": "2,973"
         },
         {
           "id": 14030000001,
@@ -11703,7 +13183,12 @@
           "propsDetail": {
             "availableCount": 2,
             "activeTime": "10"
-          }
+          },
+          "price": 2301,
+          "priceFormatted": "2,301",
+          "isTradable": true,
+          "pricePerGrid": 2301,
+          "pricePerGridFormatted": "2,301"
         },
         {
           "id": 14040000001,
@@ -11742,7 +13227,12 @@
           "propsDetail": {
             "availableCount": 4,
             "activeTime": "2.5"
-          }
+          },
+          "price": 2498,
+          "priceFormatted": "2,498",
+          "isTradable": true,
+          "pricePerGrid": 2498,
+          "pricePerGridFormatted": "2,498"
         },
         {
           "id": 14040000002,
@@ -11781,7 +13271,12 @@
           "propsDetail": {
             "availableCount": 2,
             "activeTime": "3"
-          }
+          },
+          "price": 1071,
+          "priceFormatted": "1,071",
+          "isTradable": true,
+          "pricePerGrid": 1071,
+          "pricePerGridFormatted": "1,071"
         },
         {
           "id": 14050000001,
@@ -11820,7 +13315,12 @@
           "propsDetail": {
             "availableCount": 1,
             "activeTime": "4"
-          }
+          },
+          "price": 1921,
+          "priceFormatted": "1,921",
+          "isTradable": true,
+          "pricePerGrid": 1921,
+          "pricePerGridFormatted": "1,921"
         }
       ]
     },
@@ -11868,7 +13368,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-大变电站",
             "durability": 20
-          }
+          },
+          "price": 3630657,
+          "priceFormatted": "3,630,657",
+          "isTradable": true,
+          "pricePerGrid": 3630657,
+          "pricePerGridFormatted": "3,630,657"
         },
         {
           "id": 15050100019,
@@ -11909,7 +13414,12 @@
             "usePlace": "零號大坝-行政楼",
             "durability": 20,
             "keyCardType": 1
-          }
+          },
+          "price": 4332178,
+          "priceFormatted": "4,332,178",
+          "isTradable": true,
+          "pricePerGrid": 4332178,
+          "pricePerGridFormatted": "4,332,178"
         },
         {
           "id": 15050200001,
@@ -11950,7 +13460,12 @@
             "usePlace": "航天基地-总裁室",
             "durability": 40,
             "keyCardType": 1
-          }
+          },
+          "price": 5061235,
+          "priceFormatted": "5,061,235",
+          "isTradable": true,
+          "pricePerGrid": 5061235,
+          "pricePerGridFormatted": "5,061,235"
         },
         {
           "id": 15050200004,
@@ -11990,7 +13505,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-黑室",
             "durability": 40
-          }
+          },
+          "price": 3136950,
+          "priceFormatted": "3,136,950",
+          "isTradable": true,
+          "pricePerGrid": 3136950,
+          "pricePerGridFormatted": "3,136,950"
         },
         {
           "id": 15050200005,
@@ -12030,7 +13550,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-蓝室",
             "durability": 40
-          }
+          },
+          "price": 3775454,
+          "priceFormatted": "3,775,454",
+          "isTradable": true,
+          "pricePerGrid": 3775454,
+          "pricePerGridFormatted": "3,775,454"
         },
         {
           "id": 15050300001,
@@ -12071,7 +13596,12 @@
             "usePlace": "長弓溪谷-鑽石皇后酒店",
             "durability": 20,
             "keyCardType": 1
-          }
+          },
+          "price": 4371711,
+          "priceFormatted": "4,371,711",
+          "isTradable": true,
+          "pricePerGrid": 4371711,
+          "pricePerGridFormatted": "4,371,711"
         },
         {
           "id": 15050300013,
@@ -12112,7 +13642,12 @@
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20,
             "keyCardType": 1
-          }
+          },
+          "price": 3633514,
+          "priceFormatted": "3,633,514",
+          "isTradable": true,
+          "pricePerGrid": 3633514,
+          "pricePerGridFormatted": "3,633,514"
         },
         {
           "id": 15050400001,
@@ -12153,7 +13688,12 @@
             "usePlace": "巴克什-地下金库",
             "durability": 40,
             "keyCardType": 1
-          }
+          },
+          "price": 2799565,
+          "priceFormatted": "2,799,565",
+          "isTradable": true,
+          "pricePerGrid": 2799565,
+          "pricePerGridFormatted": "2,799,565"
         },
         {
           "id": 15050400002,
@@ -12193,7 +13733,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-博物馆",
             "durability": 20
-          }
+          },
+          "price": 732608,
+          "priceFormatted": "732,608",
+          "isTradable": true,
+          "pricePerGrid": 732608,
+          "pricePerGridFormatted": "732,608"
         },
         {
           "id": 15050400005,
@@ -12233,7 +13778,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-旧浴场",
             "durability": 20
-          }
+          },
+          "price": 976684,
+          "priceFormatted": "976,684",
+          "isTradable": true,
+          "pricePerGrid": 976684,
+          "pricePerGridFormatted": "976,684"
         },
         {
           "id": 15050400006,
@@ -12273,7 +13823,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-旅馆",
             "durability": 20
-          }
+          },
+          "price": 1914479,
+          "priceFormatted": "1,914,479",
+          "isTradable": true,
+          "pricePerGrid": 1914479,
+          "pricePerGridFormatted": "1,914,479"
         },
         {
           "id": 15050100013,
@@ -12313,7 +13868,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-行政楼",
             "durability": 20
-          }
+          },
+          "price": 541886,
+          "priceFormatted": "541,886",
+          "isTradable": true,
+          "pricePerGrid": 541886,
+          "pricePerGridFormatted": "541,886"
         },
         {
           "id": 15050100014,
@@ -12353,7 +13913,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-行政楼",
             "durability": 20
-          }
+          },
+          "price": 394374,
+          "priceFormatted": "394,374",
+          "isTradable": true,
+          "pricePerGrid": 394374,
+          "pricePerGridFormatted": "394,374"
         },
         {
           "id": 15050100016,
@@ -12393,7 +13958,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-行政楼",
             "durability": 20
-          }
+          },
+          "price": 303605,
+          "priceFormatted": "303,605",
+          "isTradable": true,
+          "pricePerGrid": 303605,
+          "pricePerGridFormatted": "303,605"
         },
         {
           "id": 15050200002,
@@ -12433,7 +14003,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-东区吊橋",
             "durability": 40
-          }
+          },
+          "price": 1484000,
+          "priceFormatted": "1,484,000",
+          "isTradable": true,
+          "pricePerGrid": 1484000,
+          "pricePerGridFormatted": "1,484,000"
         },
         {
           "id": 15050200003,
@@ -12473,7 +14048,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-蓝室",
             "durability": 40
-          }
+          },
+          "price": 874121,
+          "priceFormatted": "874,121",
+          "isTradable": true,
+          "pricePerGrid": 874121,
+          "pricePerGridFormatted": "874,121"
         },
         {
           "id": 15050300005,
@@ -12513,7 +14093,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-鑽石皇后酒店",
             "durability": 20
-          }
+          },
+          "price": 1075773,
+          "priceFormatted": "1,075,773",
+          "isTradable": true,
+          "pricePerGrid": 1075773,
+          "pricePerGridFormatted": "1,075,773"
         },
         {
           "id": 15050300008,
@@ -12553,7 +14138,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-鑽石皇后酒店",
             "durability": 20
-          }
+          },
+          "price": 1511068,
+          "priceFormatted": "1,511,068",
+          "isTradable": true,
+          "pricePerGrid": 1511068,
+          "pricePerGridFormatted": "1,511,068"
         },
         {
           "id": 15050300011,
@@ -12593,7 +14183,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-鑽石皇后酒店",
             "durability": 20
-          }
+          },
+          "price": 1049114,
+          "priceFormatted": "1,049,114",
+          "isTradable": true,
+          "pricePerGrid": 1049114,
+          "pricePerGridFormatted": "1,049,114"
         },
         {
           "id": 15050300014,
@@ -12633,7 +14228,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 621343,
+          "priceFormatted": "621,343",
+          "isTradable": true,
+          "pricePerGrid": 621343,
+          "pricePerGridFormatted": "621,343"
         },
         {
           "id": 15050300015,
@@ -12673,7 +14273,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 799993,
+          "priceFormatted": "799,993",
+          "isTradable": true,
+          "pricePerGrid": 799993,
+          "pricePerGridFormatted": "799,993"
         },
         {
           "id": 15050300019,
@@ -12713,7 +14318,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 1186568,
+          "priceFormatted": "1,186,568",
+          "isTradable": true,
+          "pricePerGrid": 1186568,
+          "pricePerGridFormatted": "1,186,568"
         },
         {
           "id": 15050300020,
@@ -12753,7 +14363,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 502437,
+          "priceFormatted": "502,437",
+          "isTradable": true,
+          "pricePerGrid": 502437,
+          "pricePerGridFormatted": "502,437"
         },
         {
           "id": 15050300032,
@@ -12793,7 +14408,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-鑽石皇后酒店",
             "durability": 20
-          }
+          },
+          "price": 566321,
+          "priceFormatted": "566,321",
+          "isTradable": true,
+          "pricePerGrid": 566321,
+          "pricePerGridFormatted": "566,321"
         },
         {
           "id": 15050400003,
@@ -12833,7 +14453,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-博物馆",
             "durability": 20
-          }
+          },
+          "price": 639725,
+          "priceFormatted": "639,725",
+          "isTradable": true,
+          "pricePerGrid": 639725,
+          "pricePerGridFormatted": "639,725"
         },
         {
           "id": 15050400004,
@@ -12873,7 +14498,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-博物馆",
             "durability": 20
-          }
+          },
+          "price": 228884,
+          "priceFormatted": "228,884",
+          "isTradable": true,
+          "pricePerGrid": 228884,
+          "pricePerGridFormatted": "228,884"
         },
         {
           "id": 15050400011,
@@ -12913,7 +14543,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 478178,
+          "priceFormatted": "478,178",
+          "isTradable": true,
+          "pricePerGrid": 478178,
+          "pricePerGridFormatted": "478,178"
         },
         {
           "id": 15050400013,
@@ -12953,7 +14588,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 1153410,
+          "priceFormatted": "1,153,410",
+          "isTradable": true,
+          "pricePerGrid": 1153410,
+          "pricePerGridFormatted": "1,153,410"
         },
         {
           "id": 15050400014,
@@ -12993,7 +14633,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 512000,
+          "priceFormatted": "512,000",
+          "isTradable": true,
+          "pricePerGrid": 512000,
+          "pricePerGridFormatted": "512,000"
         },
         {
           "id": 15050400015,
@@ -13033,7 +14678,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 415485,
+          "priceFormatted": "415,485",
+          "isTradable": true,
+          "pricePerGrid": 415485,
+          "pricePerGridFormatted": "415,485"
         },
         {
           "id": 15050400016,
@@ -13073,7 +14723,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 826377,
+          "priceFormatted": "826,377",
+          "isTradable": true,
+          "pricePerGrid": 826377,
+          "pricePerGridFormatted": "826,377"
         },
         {
           "id": 15050400017,
@@ -13113,7 +14768,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 638865,
+          "priceFormatted": "638,865",
+          "isTradable": true,
+          "pricePerGrid": 638865,
+          "pricePerGridFormatted": "638,865"
         },
         {
           "id": 15050400018,
@@ -13153,7 +14813,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 247979,
+          "priceFormatted": "247,979",
+          "isTradable": true,
+          "pricePerGrid": 247979,
+          "pricePerGridFormatted": "247,979"
         },
         {
           "id": 15050100001,
@@ -13193,7 +14858,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-水泥廠",
             "durability": 20
-          }
+          },
+          "price": 368129,
+          "priceFormatted": "368,129",
+          "isTradable": true,
+          "pricePerGrid": 368129,
+          "pricePerGridFormatted": "368,129"
         },
         {
           "id": 15050100003,
@@ -13233,7 +14903,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-水泥廠",
             "durability": 20
-          }
+          },
+          "price": 360999,
+          "priceFormatted": "360,999",
+          "isTradable": true,
+          "pricePerGrid": 360999,
+          "pricePerGridFormatted": "360,999"
         },
         {
           "id": 15050100004,
@@ -13273,7 +14948,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-反叛军军營",
             "durability": 20
-          }
+          },
+          "price": 415341,
+          "priceFormatted": "415,341",
+          "isTradable": true,
+          "pricePerGrid": 415341,
+          "pricePerGridFormatted": "415,341"
         },
         {
           "id": 15050100006,
@@ -13313,7 +14993,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-遊客中心",
             "durability": 20
-          }
+          },
+          "price": 501037,
+          "priceFormatted": "501,037",
+          "isTradable": true,
+          "pricePerGrid": 501037,
+          "pricePerGridFormatted": "501,037"
         },
         {
           "id": 15050100007,
@@ -13353,7 +15038,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-遊客中心",
             "durability": 20
-          }
+          },
+          "price": 303740,
+          "priceFormatted": "303,740",
+          "isTradable": true,
+          "pricePerGrid": 303740,
+          "pricePerGridFormatted": "303,740"
         },
         {
           "id": 15050200006,
@@ -13393,7 +15083,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-浮力室",
             "durability": 40
-          }
+          },
+          "price": 303529,
+          "priceFormatted": "303,529",
+          "isTradable": true,
+          "pricePerGrid": 303529,
+          "pricePerGridFormatted": "303,529"
         },
         {
           "id": 15050200007,
@@ -13433,7 +15128,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-西区大门",
             "durability": 40
-          }
+          },
+          "price": 800000,
+          "priceFormatted": "800,000",
+          "isTradable": true,
+          "pricePerGrid": 800000,
+          "pricePerGridFormatted": "800,000"
         },
         {
           "id": 15050200008,
@@ -13473,7 +15173,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-中控区",
             "durability": 40
-          }
+          },
+          "price": 494550,
+          "priceFormatted": "494,550",
+          "isTradable": true,
+          "pricePerGrid": 494550,
+          "pricePerGridFormatted": "494,550"
         },
         {
           "id": 15050200009,
@@ -13513,7 +15218,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-员工通道",
             "durability": 40
-          }
+          },
+          "price": 1036000,
+          "priceFormatted": "1,036,000",
+          "isTradable": true,
+          "pricePerGrid": 1036000,
+          "pricePerGridFormatted": "1,036,000"
         },
         {
           "id": 15050200010,
@@ -13553,7 +15263,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-蓝室",
             "durability": 40
-          }
+          },
+          "price": 738032,
+          "priceFormatted": "738,032",
+          "isTradable": true,
+          "pricePerGrid": 738032,
+          "pricePerGridFormatted": "738,032"
         },
         {
           "id": 15050200011,
@@ -13593,7 +15308,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-蓝室",
             "durability": 40
-          }
+          },
+          "price": 1043745,
+          "priceFormatted": "1,043,745",
+          "isTradable": true,
+          "pricePerGrid": 1043745,
+          "pricePerGridFormatted": "1,043,745"
         },
         {
           "id": 15050200012,
@@ -13633,7 +15353,12 @@
             "useMap": "航天基地",
             "usePlace": "航天基地-宿舍区",
             "durability": 40
-          }
+          },
+          "price": 619933,
+          "priceFormatted": "619,933",
+          "isTradable": true,
+          "pricePerGrid": 619933,
+          "pricePerGridFormatted": "619,933"
         },
         {
           "id": 15050300017,
@@ -13673,7 +15398,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 442213,
+          "priceFormatted": "442,213",
+          "isTradable": true,
+          "pricePerGrid": 442213,
+          "pricePerGridFormatted": "442,213"
         },
         {
           "id": 15050300025,
@@ -13713,7 +15443,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-墜机之地",
             "durability": 20
-          }
+          },
+          "price": 435760,
+          "priceFormatted": "435,760",
+          "isTradable": true,
+          "pricePerGrid": 435760,
+          "pricePerGridFormatted": "435,760"
         },
         {
           "id": 15050300026,
@@ -13753,7 +15488,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-阿米亞小镇",
             "durability": 20
-          }
+          },
+          "price": 555841,
+          "priceFormatted": "555,841",
+          "isTradable": true,
+          "pricePerGrid": 555841,
+          "pricePerGridFormatted": "555,841"
         },
         {
           "id": 15050400007,
@@ -13793,7 +15533,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-旅馆",
             "durability": 20
-          }
+          },
+          "price": 299534,
+          "priceFormatted": "299,534",
+          "isTradable": true,
+          "pricePerGrid": 299534,
+          "pricePerGridFormatted": "299,534"
         },
         {
           "id": 15050400008,
@@ -13833,7 +15578,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-西城",
             "durability": 20
-          }
+          },
+          "price": 207901,
+          "priceFormatted": "207,901",
+          "isTradable": true,
+          "pricePerGrid": 207901,
+          "pricePerGridFormatted": "207,901"
         },
         {
           "id": 15050400009,
@@ -13873,7 +15623,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-东城",
             "durability": 20
-          }
+          },
+          "price": 295988,
+          "priceFormatted": "295,988",
+          "isTradable": true,
+          "pricePerGrid": 295988,
+          "pricePerGridFormatted": "295,988"
         },
         {
           "id": 15050400010,
@@ -13913,7 +15668,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-旧浴场",
             "durability": 20
-          }
+          },
+          "price": 390223,
+          "priceFormatted": "390,223",
+          "isTradable": true,
+          "pricePerGrid": 390223,
+          "pricePerGridFormatted": "390,223"
         },
         {
           "id": 15050400012,
@@ -13953,7 +15713,12 @@
             "useMap": "巴克什",
             "usePlace": "巴克什-巴別塔",
             "durability": 20
-          }
+          },
+          "price": 524447,
+          "priceFormatted": "524,447",
+          "isTradable": true,
+          "pricePerGrid": 524447,
+          "pricePerGridFormatted": "524,447"
         },
         {
           "id": 15050100009,
@@ -13993,7 +15758,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-变电站",
             "durability": 20
-          }
+          },
+          "price": 35700,
+          "priceFormatted": "35,700",
+          "isTradable": true,
+          "pricePerGrid": 35700,
+          "pricePerGridFormatted": "35,700"
         },
         {
           "id": 15050100011,
@@ -14033,7 +15803,12 @@
             "useMap": "零號大坝",
             "usePlace": "零號大坝-行政楼",
             "durability": 20
-          }
+          },
+          "price": 124950,
+          "priceFormatted": "124,950",
+          "isTradable": true,
+          "pricePerGrid": 124950,
+          "pricePerGridFormatted": "124,950"
         },
         {
           "id": 15050300021,
@@ -14073,7 +15848,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-哈夫克雷达站",
             "durability": 20
-          }
+          },
+          "price": 200000,
+          "priceFormatted": "200,000",
+          "isTradable": true,
+          "pricePerGrid": 200000,
+          "pricePerGridFormatted": "200,000"
         },
         {
           "id": 15050300029,
@@ -14113,7 +15893,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-检查站",
             "durability": 20
-          }
+          },
+          "price": 226800,
+          "priceFormatted": "226,800",
+          "isTradable": true,
+          "pricePerGrid": 226800,
+          "pricePerGridFormatted": "226,800"
         },
         {
           "id": 15050300031,
@@ -14153,7 +15938,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-沙徑牧场",
             "durability": 20
-          }
+          },
+          "price": 42000,
+          "priceFormatted": "42,000",
+          "isTradable": true,
+          "pricePerGrid": 42000,
+          "pricePerGridFormatted": "42,000"
         },
         {
           "id": 15050300033,
@@ -14193,7 +15983,12 @@
             "useMap": "長弓溪谷",
             "usePlace": "長弓溪谷-小火车站",
             "durability": 20
-          }
+          },
+          "price": 35700,
+          "priceFormatted": "35,700",
+          "isTradable": true,
+          "pricePerGrid": 35700,
+          "pricePerGridFormatted": "35,700"
         }
       ]
     }
