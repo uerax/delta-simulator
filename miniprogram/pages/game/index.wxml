@@ -1,0 +1,78 @@
+<view class="game-container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="status-item">
+      <text class="label">时间</text>
+      <text class="value time-value {{timeLeft <= 5 ? 'danger' : ''}}">{{timeLeft}}s</text>
+    </view>
+    <view class="status-item">
+      <text class="label">得分</text>
+      <text class="value score-value">{{score}}</text>
+    </view>
+    <view class="status-item">
+      <text class="label">连击</text>
+      <text class="value combo-value">x{{combo}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏主棋盘 (3x3 九宫格) -->
+  <view class="grid-board">
+    <block wx:for="{{gridCells}}" wx:key="index">
+      <view
+        class="grid-cell {{item.isActive ? 'cell-active' : ''}} {{item.isWrong ? 'cell-wrong' : ''}}"
+        bindtap="onCellTap"
+        data-index="{{index}}"
+      >
+        <view wx:if="{{item.isActive}}" class="active-pulse">🎯</view>
+        <view wx:if="{{item.isWrong}}" class="wrong-cross">❌</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部操作与提示 -->
+  <view class="footer-tips">
+    <text wx:if="{{gameState === 'ready'}}">点击下方按钮开始挑战！</text>
+    <text wx:elif="{{gameState === 'playing'}}">快速点击带靶心的方块！</text>
+    <text wx:elif="{{gameState === 'ended'}}">游戏结束！正在结算...</text>
+  </view>
+
+  <!-- 准备开始按钮 -->
+  <view class="action-btn-area" wx:if="{{gameState === 'ready'}}">
+    <button class="start-btn" bindtap="startGame">立即开始 (30秒)</button>
+  </view>
+
+  <!-- 结算弹窗 -->
+  <view class="modal-overlay" wx:if="{{showResultModal}}">
+    <view class="result-modal">
+      <view class="modal-title">🎉 挑战完成！</view>
+
+      <view class="new-record-badge" wx:if="{{gameResult.isNewRecord}}">
+        🏆 刷新历史最高纪录！
+      </view>
+
+      <view class="result-list">
+        <view class="result-row">
+          <text class="row-label">本局最终得分：</text>
+          <text class="row-value score-highlight">{{score}}</text>
+        </view>
+        <view class="result-row">
+          <text class="row-label">最高连击数：</text>
+          <text class="row-value">{{maxCombo}} 次</text>
+        </view>
+        <view class="result-row">
+          <text class="row-label">历史最高得分：</text>
+          <text class="row-value">{{gameResult.stats.highScore}}</text>
+        </view>
+        <view class="result-row">
+          <text class="row-label">今日已玩次数：</text>
+          <text class="row-value">{{gameResult.todayData.plays}} 次</text>
+        </view>
+      </view>
+
+      <view class="modal-actions">
+        <button class="modal-btn play-again-btn" bindtap="restartGame">再玩一局</button>
+        <button class="modal-btn back-home-btn" bindtap="goHome">返回大厅</button>
+      </view>
+    </view>
+  </view>
+</view>

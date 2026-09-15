@@ -1,0 +1,72 @@
+<view class="schulte-container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <view class="status-item">
+      <text class="label">用时</text>
+      <text class="value time-value">{{timeStr}}s</text>
+    </view>
+    <view class="status-item">
+      <text class="label">当前寻找</text>
+      <text class="value target-value">{{currentTarget}}</text>
+    </view>
+    <view class="status-item">
+      <text class="label">剩余</text>
+      <text class="value remain-value">{{16 - currentTarget + 1}}</text>
+    </view>
+  </view>
+
+  <!-- 4x4 舒尔特方格 -->
+  <view class="schulte-grid">
+    <block wx:for="{{gridNumbers}}" wx:key="index">
+      <view
+        class="grid-box {{item.cleared ? 'cleared' : ''}} {{item.isWrong ? 'wrong' : ''}}"
+        bindtap="onBoxTap"
+        data-index="{{index}}"
+      >
+        <text class="box-num">{{item.num}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="footer-tips">
+    <text wx:if="{{gameState === 'ready'}}">从数字 1 依次点击到 16，考验专注力！</text>
+    <text wx:elif="{{gameState === 'playing'}}">请点击目标数字：{{currentTarget}}</text>
+    <text wx:elif="{{gameState === 'ended'}}">挑战成功！</text>
+  </view>
+
+  <!-- 准备开始按钮 -->
+  <view class="action-btn-area" wx:if="{{gameState === 'ready'}}">
+    <button class="start-btn" bindtap="startGame">立即开始 (4x4 方格)</button>
+  </view>
+
+  <!-- 结算弹窗 -->
+  <view class="modal-overlay" wx:if="{{showResultModal}}">
+    <view class="result-modal">
+      <view class="modal-title">🏆 挑战通关！</view>
+
+      <view class="new-record-badge" wx:if="{{isNewRecord}}">
+        ⚡ 刷新个人最佳速度！
+      </view>
+
+      <view class="result-list">
+        <view class="result-row">
+          <text class="row-label">最终用时：</text>
+          <text class="row-value time-highlight">{{timeStr}} 秒</text>
+        </view>
+        <view class="result-row">
+          <text class="row-label">专注力评级：</text>
+          <text class="row-value rating">{{rating}}</text>
+        </view>
+        <view class="result-row">
+          <text class="row-label">历史最佳用时：</text>
+          <text class="row-value">{{bestRecord}} 秒</text>
+        </view>
+      </view>
+
+      <view class="modal-actions">
+        <button class="modal-btn play-again-btn" bindtap="restartGame">再测一次</button>
+        <button class="modal-btn back-home-btn" bindtap="goHome">返回大厅</button>
+      </view>
+    </view>
+  </view>
+</view>

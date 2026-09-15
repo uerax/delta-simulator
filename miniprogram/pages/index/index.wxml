@@ -1,0 +1,83 @@
+<view class="portal-container">
+  <!-- 顶部精简玩家栏 -->
+  <view class="top-bar">
+    <view class="player-profile">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-img" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
+      </button>
+      <view class="player-texts">
+        <view class="nickname-box">
+          <input
+            type="nickname"
+            class="nickname-input"
+            value="{{userProfile.nickName}}"
+            placeholder="点击设置昵称"
+            bindblur="onNicknameBlur"
+          />
+        </view>
+        <text class="daily-badge">📅 今日已玩 {{todayRecord.plays}} 局</text>
+      </view>
+    </view>
+    <view class="coin-badge">
+      <text class="coin-icon">🪙</text>
+      <text class="coin-num">{{gameStats.coins}}</text>
+    </view>
+  </view>
+
+  <!-- 游戏入口列表标题 -->
+  <view class="section-title-bar">
+    <text class="section-title">🎮 游戏大厅</text>
+    <text class="section-sub">选择游戏开启挑战</text>
+  </view>
+
+  <!-- 游戏卡片列表 -->
+  <view class="game-cards-list">
+    <block wx:for="{{gameList}}" wx:key="id">
+      <view class="game-card" bindtap="onSelectGame" data-path="{{item.path}}">
+        <!-- 上半部分：图标 + 标题/标签 + 描述 -->
+        <view class="card-main">
+          <view class="game-icon-box" style="background: {{item.bgGradient}};">
+            <text class="game-icon">{{item.icon}}</text>
+          </view>
+          <view class="game-info">
+            <view class="game-header">
+              <text class="game-title">{{item.title}}</text>
+              <text class="game-tag">{{item.tag}}</text>
+            </view>
+            <text class="game-desc">{{item.desc}}</text>
+          </view>
+        </view>
+
+        <!-- 卡片内分割线 -->
+        <view class="card-divider"></view>
+
+        <!-- 下半部分：战绩 + 进入按钮 -->
+        <view class="card-footer">
+          <view class="game-record">
+            <text class="record-label">{{item.recordLabel}}：</text>
+            <text class="record-val">{{item.recordVal}}</text>
+          </view>
+          <view class="enter-btn-pill">
+            <text class="btn-text">进入游玩</text>
+            <text class="btn-arrow">›</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部快捷设置与重置 -->
+  <view class="footer-settings">
+    <view class="setting-item">
+      <text class="setting-text">震动反馈</text>
+      <switch checked="{{settings.vibrationEnabled}}" bindchange="onToggleVibration" color="#89b4fa" />
+    </view>
+    <view class="setting-item">
+      <text class="setting-text">游戏音效</text>
+      <switch checked="{{settings.soundEnabled}}" bindchange="onToggleSound" color="#89b4fa" />
+    </view>
+    <view class="clear-data-text" bindtap="confirmResetData">
+      <text>重置战绩</text>
+    </view>
+  </view>
+</view>
