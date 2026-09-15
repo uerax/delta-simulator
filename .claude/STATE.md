@@ -59,4 +59,13 @@
   3. `item_manifest.json` 清单体积从 559.7 KB 进一步压缩至 470.5 KB，再节省 89.2 KB（优化率 15.9%）。
   4. 同步升级 `scripts/crawl_delta_items.js` 与 `scripts/simplify_item_manifest.js`，确保后续数据采集和清洗不再生成此类冗余字段。
 
+## [2026-09-16] 修复 GitHub Secret Scanning 警报（脱敏 AppID）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 修复 GitHub 针对腾讯微信 AppID 触发的安全扫描警报（`Secrets detected in uerax/delta-simulator`）。
+  2. 将公共版本控制文件 `project.config.json` 中的 `appid` 替换为官方游客占位符 `touristappid`。
+  3. 新增本地私有配置文件 `project.private.config.json`（已受 `.gitignore` 保护不入库），保留开发者真实 AppID，确保本地微信开发者工具开发不受影响。
+
+
 
