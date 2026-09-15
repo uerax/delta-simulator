@@ -33,72 +33,48 @@ function toSimplifiedChinese(str) {
 const RARITY_MAP = {
   6: {
     level: 6,
-    levelName: '6级',
     color: '红',
-    colorLabel: '红色',
     rarity: '红',
-    rarityLabel: '6级 (红)',
-    rarityFull: '6级红色',
     colorHex: '#E03A3E',
     bgColorHex: '#361a1c',
     iconClass: 'item-level-icon img_levelicon_06'
   },
   5: {
     level: 5,
-    levelName: '5级',
     color: '橙',
-    colorLabel: '橙色',
     rarity: '橙',
-    rarityLabel: '5级 (橙)',
-    rarityFull: '5级橙色',
     colorHex: '#F59E0B',
     bgColorHex: '#37281b',
     iconClass: 'item-level-icon img_levelicon_05'
   },
   4: {
     level: 4,
-    levelName: '4级',
     color: '紫',
-    colorLabel: '紫色',
     rarity: '紫',
-    rarityLabel: '4级 (紫)',
-    rarityFull: '4级紫色',
     colorHex: '#9333EA',
     bgColorHex: '#1e1c2c',
     iconClass: 'item-level-icon img_levelicon_04'
   },
   3: {
     level: 3,
-    levelName: '3级',
     color: '蓝',
-    colorLabel: '蓝色',
     rarity: '蓝',
-    rarityLabel: '3级 (蓝)',
-    rarityFull: '3级蓝色',
     colorHex: '#2563EB',
     bgColorHex: '#121f28',
     iconClass: 'item-level-icon img_levelicon_03'
   },
   2: {
     level: 2,
-    levelName: '2级',
     color: '绿',
-    colorLabel: '绿色',
     rarity: '绿',
-    rarityLabel: '2级 (绿)',
-    rarityFull: '2级绿色',
     colorHex: '#10B981',
     bgColorHex: '#10211a',
     iconClass: 'item-level-icon img_levelicon_02'
   },
   1: {
     level: 1,
-    levelName: '1级',
     color: '白',
-    colorLabel: '白色',
     rarity: '白',
-    rarityLabel: '1级 (白)',
-    rarityFull: '1级白色',
     colorHex: '#9CA3AF',
     bgColorHex: '#1e2222',
     iconClass: 'item-level-icon img_levelicon_01'
@@ -289,27 +265,17 @@ async function main() {
     const grade = Number(item.grade) || 1;
     const rarityInfo = RARITY_MAP[grade] || RARITY_MAP[1];
 
-    // 带等级与稀有度标识名称 (如 "[6级·红] 黄金瞪羚", "[红] 黄金瞪羚")
-    const nameWithLevel = `[${rarityInfo.levelName}·${rarityInfo.color}] ${nameCn}`;
-    const nameWithRarity = `[${rarityInfo.color}] ${nameCn}`;
-
     parsedItems.push({
       id: item.objectID,
       rawId: item.id,
       name: nameCn,
-      nameWithLevel: nameWithLevel,
-      nameWithRarity: nameWithRarity,
       category: item.secondClass,
       categoryName: catConfig.name,
       subClass: item.thirdClass || '',
       // 等级标识与稀有度体系
       level: rarityInfo.level,
-      levelName: rarityInfo.levelName,
       color: rarityInfo.color,
-      colorLabel: rarityInfo.colorLabel,
       rarity: rarityInfo.rarity,
-      rarityLabel: rarityInfo.rarityLabel,
-      rarityFull: rarityInfo.rarityFull,
       grade: grade,
       colorHex: rarityInfo.colorHex,
       bgColorHex: rarityInfo.bgColorHex,
@@ -385,8 +351,9 @@ async function main() {
     if (rarityStats[i.color] !== undefined) {
       rarityStats[i.color]++;
     }
-    if (levelStats[i.rarityLabel] !== undefined) {
-      levelStats[i.rarityLabel]++;
+    const lvlKey = `${i.level}级 (${i.color})`;
+    if (levelStats[lvlKey] !== undefined) {
+      levelStats[lvlKey]++;
     }
   });
 

@@ -50,4 +50,13 @@
   6. 清单文件体积由 1,195.7 KB 骤降至 559.7 KB，直接瘦身 635.9 KB（缩减 53.2%），大幅减轻小程序代码包及内存压力。
   7. 同步升级 `scripts/crawl_delta_items.js`、`scripts/update_item_prices.js` 及新增独立清洗脚本 `scripts/simplify_item_manifest.js`。
 
+## [2026-09-16] 道具清单移除冗余展示标签字段
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. 从 `item_manifest.json` 全量 359 件道具（收藏品/消耗品/门卡）以及顶层 `rarityDefinitions` 中彻底移除 6 个无用展示标签字段：`nameWithLevel`, `nameWithRarity`, `levelName`, `colorLabel`, `rarityLabel`, `rarityFull`。
+  2. 保持核心元数据精简纯粹（保留 `name`, `level`, `color`, `rarity`, `grade`, `colorHex`, `bgColorHex`, `levelIconClass` 等基础属性）。
+  3. `item_manifest.json` 清单体积从 559.7 KB 进一步压缩至 470.5 KB，再节省 89.2 KB（优化率 15.9%）。
+  4. 同步升级 `scripts/crawl_delta_items.js` 与 `scripts/simplify_item_manifest.js`，确保后续数据采集和清洗不再生成此类冗余字段。
+
 

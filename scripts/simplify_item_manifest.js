@@ -2,11 +2,12 @@
  * 道具元数据清单瘦身与纯简体中文规范化脚本
  *
  * 优化项:
- * 1. 移除繁体中文名称与描述，保留并规范为主字段: name, nameWithLevel, nameWithRarity, desc
- * 2. 彻底剔除冗余字段: name_cn, nameWithLevel_cn, nameWithRarity_cn, desc_cn
- * 3. 对齐三角洲行动国服官方交易行标准简体中文名（345件交易品100%对齐，14件非交易品精准补齐）
- * 4. 基于 OpenCC 权威词典对全部描述与 propsDetail 属性进行深度消歧繁简转换
- * 5. 移除顶层完全重复冗余的 items 数组（与 categories 重复，且缺少价格数据），使文件体积缩减超 53%
+ * 1. 移除繁体中文名称与描述，保留并规范为主字段: name, desc
+ * 2. 彻底剔除冗余展示字段: nameWithLevel, nameWithRarity, levelName, colorLabel, rarityLabel, rarityFull
+ * 3. 彻底剔除繁体/别名字段: name_cn, nameWithLevel_cn, nameWithRarity_cn, desc_cn
+ * 4. 对齐三角洲行动国服官方交易行标准简体中文名（345件交易品100%对齐，14件非交易品精准补齐）
+ * 5. 基于 OpenCC 权威词典对全部描述与 propsDetail 属性进行深度消歧繁简转换
+ * 6. 移除顶层完全重复冗余的 items 数组（与 categories 重复，且缺少价格数据）
  */
 
 const fs = require('fs');
@@ -100,8 +101,6 @@ async function main() {
 
       // 2. 覆盖主字段为规范简体中文
       item.name = simpName;
-      item.nameWithLevel = `[${item.levelName}·${item.color}] ${simpName}`;
-      item.nameWithRarity = `[${item.color}] ${simpName}`;
 
       // 3. 描述转换为纯正规范简体中文 (优先以繁体原版输入经高质量 OpenCC 转换，避免原 name_cn/desc_cn 残留异体字)
       const rawDesc = item.desc || item.desc_cn || '';
@@ -116,17 +115,33 @@ async function main() {
         }
       }
 
-      // 5. 彻底删除繁体与 redundant 字段
+      // 5. 彻底删除繁体与冗余无用字段
       delete item.name_cn;
       delete item.nameWithLevel_cn;
       delete item.nameWithRarity_cn;
       delete item.desc_cn;
+      delete item.nameWithLevel;
+      delete item.nameWithRarity;
+      delete item.levelName;
+      delete item.colorLabel;
+      delete item.rarityLabel;
+      delete item.rarityFull;
 
       totalProcessed++;
     }
   }
 
-  // 6. 移除顶层完全重复且缺少价格维护的 items 数组
+  // 6. 清理 rarityDefinitions 中的无用展示标签
+  if (manifest.rarityDefinitions) {
+    for (const def of Object.values(manifest.rarityDefinitions)) {
+      delete def.levelName;
+      delete def.colorLabel;
+      delete def.rarityLabel;
+      delete def.rarityFull;
+    }
+  }
+
+  // 7. 移除顶层完全重复且缺少价格维护的 items 数组
   delete manifest.items;
 
   console.log('[4/4] 写入精简后的 item_manifest.json...');
