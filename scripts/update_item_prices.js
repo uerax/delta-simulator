@@ -84,7 +84,7 @@ async function main() {
       delete item.priceUnit;
 
       const idStr = String(item.id);
-      const marketRow = marketById.get(idStr) || marketByName.get(item.name_cn) || marketByName.get(item.name);
+      const marketRow = marketById.get(idStr) || marketByName.get(item.name);
       const gridCount = item.totalGrid || (item.width * item.length) || 1;
 
       if (marketRow) {
@@ -108,8 +108,9 @@ async function main() {
     }
   }
 
-  // 移除根目录不需要的复杂摘要，保持文件干净轻量
+  // 移除根目录不需要的复杂摘要与重复 items 数组，保持文件干净轻量
   delete manifest.marketSummary;
+  delete manifest.items;
 
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), 'utf-8');
 

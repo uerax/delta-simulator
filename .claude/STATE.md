@@ -38,3 +38,16 @@
   5. 精准识别并标记 14 件游戏内绑定的非交易/任务材料（如火箭燃料、G.T.I.卫星通讯天线、高级燃料等标记为 `price: 0, isTradable: false, priceFormatted: "非交易品"`），经交叉比对 `sjz.jbskins.com` 证实与游戏内设定完全一致。
   6. 严格按要求剔除所有不需要的涨跌幅（`priceChangeToday/Week/Month` 及 `*Percent`）、更新时间（`marketUpdatedAt`）等冗余字段，保持清单文件精简纯净。
 
+## [2026-09-16] 道具清单文件瘦身与纯简体中文规范化
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 彻底移除 `item_manifest.json` 中保存的繁体中文名称与描述，将规范简体中文直接提升为主字段（`name`, `nameWithLevel`, `nameWithRarity`, `desc`）。
+  2. 彻底剔除 `name_cn`, `nameWithLevel_cn`, `nameWithRarity_cn`, `desc_cn` 4 个 redundant 字段。
+  3. 全量道具名称 100% 对齐三角洲行动国服官方规范（345 件可交易品直接对齐交易行官方标准中文名，14 件非交易品精准补齐）。
+  4. 引入本地 OpenCC 权威消歧词典库（`scripts/lib/opencc.js`），对全部道具描述（`desc`）及 `propsDetail` 属性（`type`, `propsSource` 等）执行深度规范化繁转简，消除了所有残留异体字与繁体字。
+  5. 移除顶层与 `categories` 完全重复冗余且未维护价格的 `items` 数组，保持与 `icon_manifest.json` 架构一致的 `categories` 组织形式。
+  6. 清单文件体积由 1,195.7 KB 骤降至 559.7 KB，直接瘦身 635.9 KB（缩减 53.2%），大幅减轻小程序代码包及内存压力。
+  7. 同步升级 `scripts/crawl_delta_items.js`、`scripts/update_item_prices.js` 及新增独立清洗脚本 `scripts/simplify_item_manifest.js`。
+
+
