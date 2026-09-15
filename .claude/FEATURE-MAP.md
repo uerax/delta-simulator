@@ -34,7 +34,13 @@
     - 首领Boss：`miniprogram/assets/icons/bosses/` (1 个)
     - 特种/辐射设施：`miniprogram/assets/icons/facilities/` (14 个)
   - 分类索引清单：`miniprogram/assets/icons/icon_manifest.json`
-  - 数据爬取与导出脚本：`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+  - 稀有度等级图标与样式：`miniprogram/assets/icons/levels/` (红/橙/紫/蓝/绿/白 6 级图标雪碧图与 `level_icons.wxss`)
+  - 道具高清图片与元数据：`miniprogram/assets/items/`
+    - 收藏品 (270件)：`miniprogram/assets/items/collection/`
+    - 消耗品 (30件)：`miniprogram/assets/items/consume/`
+    - 门卡 (59件)：`miniprogram/assets/items/keys/`
+    - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`
+  - 数据爬取与导出脚本：`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

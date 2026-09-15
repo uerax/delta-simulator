@@ -1,0 +1,60 @@
+/* 官方等级与稀有度图标样式 (红/橙/紫/蓝/绿/白) */
+.item-level-icon {
+  display: inline-block;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+}
+
+/* 6级 - 红色 (Red) */
+.img_levelicon_06 {
+  width: 48rpx;
+  height: 47rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -10rpx -10rpx;
+  background-size: 173rpx 131rpx;
+}
+
+/* 5级 - 橙色 (Orange/Gold) */
+.img_levelicon_05 {
+  width: 44rpx;
+  height: 44rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -10rpx -77rpx;
+  background-size: 173rpx 131rpx;
+}
+
+/* 4级 - 紫色 (Purple) */
+.img_levelicon_04 {
+  width: 44rpx;
+  height: 44rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -78rpx -10rpx;
+  background-size: 173rpx 131rpx;
+}
+
+/* 3级 - 蓝色 (Blue) */
+.img_levelicon_03 {
+  width: 44rpx;
+  height: 33rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -74rpx -77rpx;
+  background-size: 173rpx 131rpx;
+}
+
+/* 2级 - 绿色 (Green) */
+.img_levelicon_02 {
+  width: 21rpx;
+  height: 42rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -142rpx -10rpx;
+  background-size: 173rpx 131rpx;
+}
+
+/* 1级 - 白色 (White) */
+.img_levelicon_01 {
+  width: 21rpx;
+  height: 21rpx;
+  background-image: url('/assets/icons/levels/level_sprite.png');
+  background-position: -142rpx -72rpx;
+  background-size: 173rpx 131rpx;
+}
