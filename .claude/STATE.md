@@ -67,5 +67,16 @@
   2. 将公共版本控制文件 `project.config.json` 中的 `appid` 替换为官方游客占位符 `touristappid`。
   3. 新增本地私有配置文件 `project.private.config.json`（已受 `.gitignore` 保护不入库），保留开发者真实 AppID，确保本地微信开发者工具开发不受影响。
 
+## [2026-09-16] 道具清单移除用户指定的 6 项冗余字段
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. 顶层移除：彻底剔除 `rarityCounts` 与 `levelCounts` 重复统计字段。
+  2. `rarityDefinitions` 字典精简：逐项移除 `color`、`rarity`、`iconClass`，仅保留核心 `level`、`colorHex`、`bgColorHex`。
+  3. 道具对象精简：从 359 件道具全量中彻底移除 `color`、`rarity`、`rawId`、`subClass`、`grade` 共 5 个无用/重复字段。
+  4. 清单体积从 482.6 KB 降至 425.1 KB，净减 57.5 KB（缩减 11.9%）。
+  5. 同步更新 `scripts/simplify_item_manifest.js` 与 `scripts/crawl_delta_items.js`，保证爬虫与清洗链路一致。
+
+
 
 

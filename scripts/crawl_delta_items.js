@@ -267,16 +267,11 @@ async function main() {
 
     parsedItems.push({
       id: item.objectID,
-      rawId: item.id,
       name: nameCn,
       category: item.secondClass,
       categoryName: catConfig.name,
-      subClass: item.thirdClass || '',
       // 等级标识与稀有度体系
       level: rarityInfo.level,
-      color: rarityInfo.color,
-      rarity: rarityInfo.rarity,
-      grade: grade,
       colorHex: rarityInfo.colorHex,
       bgColorHex: rarityInfo.bgColorHex,
       levelIconClass: rarityInfo.iconClass,
@@ -431,14 +426,22 @@ async function main() {
 `;
   fs.writeFileSync(path.join(levelsDir, 'level_icons.wxss'), levelWxssContent, 'utf8');
 
+  // 精简后的稀有度定义（剔除 color, rarity, iconClass）
+  const cleanRarityDefinitions = {};
+  for (const [k, v] of Object.entries(RARITY_MAP)) {
+    cleanRarityDefinitions[k] = {
+      level: v.level,
+      colorHex: v.colorHex,
+      bgColorHex: v.bgColorHex
+    };
+  }
+
   const manifestData = {
     generatedAt: new Date().toISOString(),
     sourceWiki: 'https://www.playdeltaforce.com/act/officialwiki/zh-tw/#/item/consume',
     totalItems: parsedItems.length,
     categoryCounts: categoryStats,
-    levelCounts: levelStats,
-    rarityCounts: rarityStats,
-    rarityDefinitions: RARITY_MAP,
+    rarityDefinitions: cleanRarityDefinitions,
     categories: categoriesMap
   };
 

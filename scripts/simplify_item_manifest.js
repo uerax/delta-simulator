@@ -126,23 +126,34 @@ async function main() {
       delete item.colorLabel;
       delete item.rarityLabel;
       delete item.rarityFull;
+      // 用户指定清理的冗余字段
+      delete item.color;
+      delete item.rarity;
+      delete item.rawId;
+      delete item.subClass;
+      delete item.grade;
 
       totalProcessed++;
     }
   }
 
-  // 6. 清理 rarityDefinitions 中的无用展示标签
+  // 6. 清理 rarityDefinitions 中的无用展示标签与冗余属性
   if (manifest.rarityDefinitions) {
     for (const def of Object.values(manifest.rarityDefinitions)) {
       delete def.levelName;
       delete def.colorLabel;
       delete def.rarityLabel;
       delete def.rarityFull;
+      delete def.color;
+      delete def.rarity;
+      delete def.iconClass;
     }
   }
 
-  // 7. 移除顶层完全重复且缺少价格维护的 items 数组
+  // 7. 移除顶层完全重复且缺少价格维护的 items 数组与重复统计
   delete manifest.items;
+  delete manifest.rarityCounts;
+  delete manifest.levelCounts;
 
   console.log('[4/4] 写入精简后的 item_manifest.json...');
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 2), 'utf8');
