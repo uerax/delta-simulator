@@ -297,12 +297,36 @@
   2. **道具 pic 字段极致瘦身**：全量 474 个道具的 `pic` 字段彻底剥离 48 字符冗长前缀，纯化为文件名（如 `"15080050142.png"`、`"key/航天基地金卡.png"`）；清单文件体积从 107.2 KB 进一步压缩至 **83.7 KB**（再降 21.9%）。
   3. **ItemManager 自动拼接联动**：在 `itemManager.js` 中动态读取清单中的 `cdnBaseUrl`，并在生成标准化道具对象时自动补齐为完整 CDN 链接（`item.pic`）与纯文件名（`item.fileName`），业务渲染与开发无任何影响。
   4. **全套自动化测试回归**：更新 `scripts/verify_item_manager.js`，验证 CDN 动态拼装与文件名正确性，全量单测 100% 通过。
+
+## [2026-09-17] 清理图标清单 icon_manifest.json 中的超长 Base64 数据
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **彻底剥离 29 个超长 Base64**：在 `miniprogram/assets/icons/icon_manifest.json` 中移除由官方 CSS 内联引入的 29 个超长 Base64 `remoteUrl` 字段，其余 28 个官方真实 CDN 外链（`https://game.gtimg.cn/...`）及 `backupPath`、分类与地图信息完全保持不变。
+  2. **清单文件极限瘦身**：文件体积由 **972 KB** 骤降至 **49 KB**（净减 923 KB，缩减 95.0%），消除了编辑器加载卡顿与包体积负担。
+  3. **同步维护迁移脚本**：同步优化 `scripts/migrate_to_official_cdn.js`，在拉取官方图标时主动过滤 Data URI，杜绝后续自动化同步重新引入 Base64。
 - 涉及文件：
-  - `miniprogram/assets/items/item_manifest.json`
-  - `miniprogram/utils/itemManager.js`
-  - `scripts/sync_delta_items.js`
-  - `scripts/verify_item_manager.js`
+  - `miniprogram/assets/icons/icon_manifest.json`
+  - `scripts/migrate_to_official_cdn.js`
   - `.claude/STATE.md`
+
+## [2026-09-17] 战术地图背景管理器 MapManager 落地与合成大西瓜实装
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **构建独立服务单例 MapManager**：在 `miniprogram/utils/mapManager.js` 中抽象封装全量地图服务，具备 6 大战术地图双键字典（`mapMap`，支持 key 与 name O(1) 检索）。
+  2. **开局战术切片随机 Session 机制**：基于官方 CDN（`game.gtimg.cn`）6 大地图 96 张战术切片，提供 `pickSession()`，在开局时随机抽取战术区域，支持每局不同地图、不同角落的战术氛围呈现。
+  3. **Canvas 2D 专属独立渲染管线（方案 B）**：`drawBackground()` 自动维护 Image 实例内存缓存，提供深色战术底色渐变兜底、官方 CDN 切片异步加载覆盖、战术深色遮罩（防前景小球干扰）、轻量参考经纬网格与四角战术准星十字刻度绘制。
+  4. **DOM/WXML 样式生成支持**：内置 `getRandomBackgroundStyle()`，供非 Canvas 小游戏通过 WXML `style="{{bgStyle}}"` 一键获取战术渐变背景。
+  5. **合成大西瓜无缝接入实装**：在 `pages/watermelon/index.js` 的 `_initCanvas`、`_renderFrame`、`restartGame` 与 `onUnload` 中接入，每局开局自动随机切换不同战术地图背景，卸载时自动清理图片内存缓存。
+  6. **单测自动化全覆盖**：编写 `scripts/verify_map_manager.js`，验证全量地图双键索引、切片随机性、Canvas 2D 模拟绘制管线与 CSS 样式生成，全套回归测试 100% 通过。
+- 涉及文件：
+  - `miniprogram/utils/mapManager.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `scripts/verify_map_manager.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
+
 
 
 

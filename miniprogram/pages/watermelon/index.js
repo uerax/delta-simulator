@@ -8,6 +8,7 @@ const WatermelonEngine = require('../../games/watermelon/engine');
 const { WATERMELON_ITEMS, getItemByLevel } = require('../../games/watermelon/items');
 const Storage = require('../../utils/storage');
 const Feedback = require('../../utils/feedback');
+const MapManager = require('../../utils/mapManager');
 
 Page({
   data: {
@@ -64,6 +65,7 @@ Page({
     this._imgCache = {};
     this._shockwaves = [];
     this._floatingTexts = [];
+    MapManager.clearCache();
   },
 
   /**
@@ -95,6 +97,9 @@ Page({
       this._width = width;
       this._height = height;
       this._dpr = dpr;
+
+      // 抽取本局战术地图背景切片
+      MapManager.pickSession({ width, height });
 
       // 预加载所有品级道具的贴图图片
       this._preloadImages();
@@ -258,8 +263,13 @@ Page({
       return;
     }
 
-    // 1. 绘制背景网格装饰 (战术科技风)
-    this._drawTacticalGrid(ctx, width, height);
+    // 1. 绘制战术地图背景与科技网格 (MapManager 方案B)
+    MapManager.drawBackground(this._canvas, ctx, width, height, {
+      maskColor: 'rgba(15, 18, 26, 0.80)',
+      mapAlpha: 0.38,
+      showGrid: true,
+      showCrosshair: true
+    });
 
     // 2. 绘制顶部警戒红线 (带呼吸警示虚线)
     this._drawDangerLine(ctx, width);
@@ -611,6 +621,9 @@ Page({
       combo: 0,
       isWarning: false
     });
+
+    // 重新抽取下一局战术地图切片
+    MapManager.pickSession({ width: this._width, height: this._height });
 
     if (this._engine) {
       this._engine.restart();

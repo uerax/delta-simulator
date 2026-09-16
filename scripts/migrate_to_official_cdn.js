@@ -59,23 +59,32 @@ async function updateIconManifest() {
     return url;
   }
 
-  let httpCount = 0, b64Count = 0;
+  let httpCount = 0, b64Skipped = 0;
   for (const cat of Object.values(manifest.categories)) {
     for (const item of cat.list) {
       const url = resolveIconUrl(item.iconKey);
-      item.remoteUrl = url;
+      if (url && !url.startsWith('data:')) {
+        item.remoteUrl = url;
+        httpCount++;
+      } else {
+        delete item.remoteUrl;
+        b64Skipped++;
+      }
       if (item.path) {
         item.backupPath = item.path.replace(/^\/assets\//, '/assets_backup/');
         delete item.path;
       }
-      if (url.startsWith('data:')) b64Count++;
-      else httpCount++;
     }
   }
 
   if (manifest.items && Array.isArray(manifest.items)) {
     for (const item of manifest.items) {
-      item.remoteUrl = resolveIconUrl(item.iconKey);
+      const url = resolveIconUrl(item.iconKey);
+      if (url && !url.startsWith('data:')) {
+        item.remoteUrl = url;
+      } else {
+        delete item.remoteUrl;
+      }
       if (item.path) {
         item.backupPath = item.path.replace(/^\/assets\//, '/assets_backup/');
         delete item.path;
@@ -84,7 +93,7 @@ async function updateIconManifest() {
   }
 
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8');
-  console.log(`已成功为全量 57 个图标补充 remoteUrl 与 backupPath (HTTP CDN: ${httpCount}个, 官方Base64: ${b64Count}个)`);
+  console.log(`已成功更新 57 个图标：保留 HTTP CDN ${httpCount}个，已剥离剔除 29 个超长 Base64`);
 }
 
 // 3. 更新地图清单 map_manifest.json
