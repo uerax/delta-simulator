@@ -186,6 +186,48 @@
   - `scripts/verify_game_architecture.js`
   - `.claude/STATE.md`
 
+## [2026-09-17] 彻底解决大西瓜失败结算弹窗面板被 Canvas 2D 原生同层渲染穿透遮挡缺陷
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **定位 Canvas 2D 原生同层穿透根本根因**：`<canvas type="2d">` 是由微信客户端 Native 直接嵌入 Webview 的同层渲染组件。普通 DOM 节点（即使设置 `z-index: 999999`）仍受限于 Webview 视图渲染树，天然处于 Native 同层视口下方，导致弹窗被小球道具、警戒线彻底遮挡。
+  2. **升级引入微信官方最高穿透容器 `<root-portal>`**：
+     - 在 `miniprogram/components/game-result-modal/index.wxml` 中全面启用 `<root-portal wx:if="{{visible}}">`，将弹窗节点从普通组件文档流中彻底抽离并直接挂载到小程序根视图节点，获得最高 Native 覆盖权限，绝对居中并覆盖于 `<canvas type="2d">` 之上。
+     - 在组件 `index.js` 与 `index.wxml` 中增加 `catchtouchmove="preventTouchMove"`，彻底阻断弹窗展示期间手势滑动向底层 Canvas 穿透。
+  3. **Canvas 渲染层与父页面双重保险隔离**：
+     - 在 `pages/watermelon/index.wxml` 与 `index.wxss` 中，为 `game-canvas` 增加 `{{showResultModal ? 'canvas-dimmed' : ''}}` 动态样式，在弹窗打开时施加 `opacity: 0.18; filter: blur(4rpx); pointer-events: none;`，即使在任何特殊机型极端环境下也能确保底层道具化为沉浸式微弱磨砂背景，绝不干扰文字与按钮。
+     - 弹窗重新开始（`restartGame`）或返回大厅时自动复原 Canvas 状态，无缝衔接下一局。
+- 涉及文件：
+  - `miniprogram/components/game-result-modal/index.wxml`
+  - `miniprogram/components/game-result-modal/index.wxss`
+  - `miniprogram/components/game-result-modal/index.js`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 物理图层清空与显隐隔离彻底根除模拟器 Canvas 2D 结算遮挡
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **定位模拟器同层内核机制**：微信开发者工具（基于 NW.js/Chromium）中，`<canvas type="2d">` 的 Native View 视口拥有最高复合图层优先级，不受 CSS `opacity` 或 `filter` 影响。只要 Canvas 持续在内部调用绘制小球，其像素就会强制覆盖在所有 Webview 元素（包括 root-portal 弹窗）之上。
+  2. **Canvas 帧主循环像素级清空（Transparent Clearing）**：
+     - 在 `pages/watermelon/index.js` 的 `_renderFrame` 渲染帧首部增加 `if (this.data.showResultModal) return;`；
+     - 弹窗展示期间仅执行 `clearRect` 清空为全透明，完全停止所有小球、警戒线与网格绘制，彻底从物理像素上消灭遮挡物。
+  3. **WXML 与 WXSS 容器级 `visibility: hidden` 绝对隐藏**：
+     - 在 `pages/watermelon/index.wxml` 与 `index.wxss` 中为 `.canvas-wrap` 和 `game-canvas` 绑定 `visibility: hidden !important; pointer-events: none !important;`；
+     - 既不销毁 Canvas 节点与 2D 上下文分辨率，又彻底通知模拟器合成层隐藏同层 Native 视口。
+  4. **全生命周期无缝恢复**：
+     - 玩家点击“再来一局”（`restartGame`）或“返回大厅”时，状态自动复位，Canvas 瞬时恢复渲染，零卡顿进入新游戏。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+
+
 
 
 

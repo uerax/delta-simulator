@@ -37,6 +37,9 @@ Component({
     },
     onTapSecondary() {
       this.triggerEvent('home');
+    },
+    preventTouchMove() {
+      // 阻断弹窗背景触摸穿透
     }
   }
 });

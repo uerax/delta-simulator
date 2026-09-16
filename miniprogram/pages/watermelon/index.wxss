@@ -162,6 +162,13 @@ page {
   box-sizing: border-box;
 }
 
+.canvas-wrap.canvas-hidden,
+.game-canvas.canvas-hidden {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .game-canvas {
   width: 100%;
   height: 100%;

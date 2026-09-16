@@ -253,6 +253,11 @@ Page({
     // 清空背景
     ctx.clearRect(0, 0, width, height);
 
+    // 结算弹窗展示期间，完全清空画布并停止绘制小球与警戒线，物理消除模拟器同层图层遮挡
+    if (this.data.showResultModal) {
+      return;
+    }
+
     // 1. 绘制背景网格装饰 (战术科技风)
     this._drawTacticalGrid(ctx, width, height);
 
@@ -278,14 +283,6 @@ Page({
 
     // 7. 绘制连击与身价浮动文字
     this._drawFloatingTexts(ctx, dt);
-
-    // 8. 游戏结束时在 Canvas 画布内叠加暗色压暗蒙层 (防止道具高光视觉干扰弹窗)
-    if (this.data.showResultModal) {
-      ctx.save();
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-      ctx.fillRect(0, 0, width, height);
-      ctx.restore();
-    }
   },
 
   /**

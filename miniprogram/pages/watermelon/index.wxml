@@ -28,11 +28,15 @@
   </view>
 
   <!-- 核心物理渲染画布 (Canvas 2D) -->
-  <view class="canvas-wrap" id="canvasWrap">
+  <view
+    class="canvas-wrap {{showResultModal ? 'canvas-hidden' : ''}}"
+    id="canvasWrap"
+    style="visibility: {{showResultModal ? 'hidden' : 'visible'}}; pointer-events: {{showResultModal ? 'none' : 'auto'}};"
+  >
     <canvas
       type="2d"
       id="gameCanvas"
-      class="game-canvas"
+      class="game-canvas {{showResultModal ? 'canvas-hidden' : ''}}"
       bindtouchstart="onTouchStart"
       bindtouchmove="onTouchMove"
       bindtouchend="onTouchEnd"
