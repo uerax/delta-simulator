@@ -240,6 +240,23 @@
   - `scripts/verify_watermelon_physics.js`
   - `.claude/STATE.md`
 
+## [2026-09-17] 大西瓜落地闭环发牌控制器（双轨激活 + 读指令对抗 + 濒死安全制动）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **架构升级为四层闭环发牌控制体系**：构建由 Pacing Gate（回合数门限）、Spatial Gate（空间高度门限）、Safety Limiter（濒死安全制动）与 Adversarial Modifiers（卡手修饰器）组成的完整控制流，彻底摆脱无状态单调随机发牌。
+  2. **严谨规范 Canvas 空间坐标语义**：抽离 `_getTopmostBodyY()`，以物理世界最顶端小球的上边缘（Canvas 最小 $Y$）作为前线几何参考，定义 `activationY = 50%`（300px）与 `criticalY = 20%`（120px）。
+  3. **双轨平滑激活门限（Dual-Track Trigger）**：
+     - 回合数轨（`turnAlpha`）：前 14 次纯净放权；第 15~22 次采用 Hermite Smoothstep S型缓动无感爬升至 1.0；
+     - 空间高度轨（`heightAlpha`）：越过 50% 容器高度启动监控，达到 20% 高度拉满。
+  4. **闭环安全制动器（Pressure Limiter）**：当小球逼近 18% 危险死线（108px）时，线性制动卸载对抗强度，杜绝向濒死盘面无脑灌大球的系统死刑，给极限微操留出一线翻盘生机。
+  5. **纯修饰器解耦计算（Modifiers）与线性插值**：Anti-repeat（0.25x 冰冻粉碎双拼）、Anti-merge（0.55x 顶层同级避让）、Pressure（1.80x 高出顶层 1~2 阶的 CDE 大球压顶）；通过 `weight = baseWeight * (1 - alpha + alpha * modifier)` 平滑过渡。
+  6. **单元测试全覆盖**：在 `scripts/verify_watermelon_physics.js` 中新增 8.1 闭环状态机单测断言，双测跑通 100%。
+- 涉及文件：
+  - `miniprogram/games/watermelon/engine.js`
+  - `scripts/verify_watermelon_physics.js`
+  - `.claude/STATE.md`
+
 
 
 

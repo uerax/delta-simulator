@@ -41,6 +41,7 @@ class WatermelonEngine {
     this.currentLevel = 1;
     this.nextLevel = 1;
     this.currentFruitX = this.width / 2;
+    this._recentDropHistory = [];
 
     // 初始化物理世界
     this.physics = new PhysicsWorld({
@@ -73,57 +74,212 @@ class WatermelonEngine {
    * 初始化待下落道具
    */
   _initFruits() {
+    this._recentDropHistory = [];
     this.currentLevel = this._generateDropLevel(this.dropCount);
     this.nextLevel = this._generateDropLevel(this.dropCount + 1);
   }
 
   /**
-   * 动态下落池难度曲线算法 (全新快节奏优化版)
-   * 阶梯划分与精准概率：
-   * 1. 一开始 (第 0~2 次): 1~2 级 -> 50% 50%
-   * 2. 第三次开始 (第 3~5 次): 1~4 级 -> 20% 30% 30% 20%
-   * 3. 第六次开始 (第 6~9 次): 1~5 级 -> 10% 20% 30% 30% 10%
-   * 4. 第十次开始 (第 10~14 次): 1~6 级 -> 5% 15% 25% 30% 20% 5%
-   * 5. 第十五次开始 (第 15 次及以后): 1~7 级 -> 5% 10% 26% 24% 21% 9% 5%
-   * 严格封顶于 Lv.7，绝不产出 Lv.8 及以上超大金 (激光陀螺仪/非洲之心等仅限合成)
+   * 动态下落池难度曲线算法 (闭环控制器架构: 基础阶梯 + 激活门限 + 读指令对抗 + 濒死安全制动)
+   * 1. 基础分阶表: 严格对标原版前 15 次快速进阶至 Lv.7 并封顶
+   * 2. 双轨平滑激活门限 (Pacing Gate + Spatial Gate):
+   *    - 回合数门限 (turnAlpha): n >= 15 次通过 Smoothstep (S型曲线) 平滑爬升至 22 次拉满
+   *    - 空间高度门限 (heightAlpha): 顶部物体越过 50% 高度开始启动，达到 20% 高度拉满
+   * 3. 闭环安全制动器 (Pressure Limiter):
+   *    - 濒临死亡警戒线时 (离顶部不足 18% 高度)，强制反向衰减对抗强度，阻止系统向濒死盘面疯狂灌大球
+   * 4. 读指令对抗卡手修饰器 (Adversarial Modifiers):
+   *    - Anti-repeat (0.25x): 刚出过的水果强力冰冻，粉碎双拼连消预期
+   *    - Anti-merge (0.55x): 顶层已有同级水果故意降权避让，拒绝无脑消除
+   *    - Pressure (1.80x): 比顶层高出 1~2 阶的水果 (C/D/E) 大幅提权，大球压顶
+   * 5. 权重混合: weight = baseWeight * (1 - alpha + alpha * modifier)
    */
   _generateDropLevel(n) {
-    const r = Math.random();
+    const baseWeights = this._getBaseWeights(n);
+    const alpha = this._calculateAdversarialAlpha(n);
+    const modifiers = this._getAdversarialModifiers();
 
+    const finalWeights = {};
+    for (const [levelStr, baseWeight] of Object.entries(baseWeights)) {
+      const level = Number(levelStr);
+      const modifier = modifiers[level] !== undefined ? modifiers[level] : 1.0;
+      // 线性插值混合：alpha=0 纯基础表，alpha=1 完全对抗
+      const blendedWeight = baseWeight * ((1 - alpha) + alpha * modifier);
+      finalWeights[level] = Math.max(blendedWeight, 0.5);
+    }
+
+    const chosen = this._weightedPick(finalWeights);
+    this._recordDropHistory(chosen);
+    return chosen;
+  }
+
+  /**
+   * 基础分阶权重表 (严格保证等级范围与阶段边界不变)
+   */
+  _getBaseWeights(n) {
     if (n < 3) {
       // 一开始 (第 0~2 次): 50% 50% (Lv.1~Lv.2)
-      return r < 0.50 ? 1 : 2;
+      return { 1: 50, 2: 50 };
     } else if (n < 6) {
       // 第三次开始 (第 3~5 次): 20% 30% 30% 20% (Lv.1~Lv.4)
-      if (r < 0.20) return 1;
-      if (r < 0.50) return 2;
-      if (r < 0.80) return 3;
-      return 4;
+      return { 1: 20, 2: 30, 3: 30, 4: 20 };
     } else if (n < 10) {
       // 第六次开始 (第 6~9 次): 10% 20% 30% 30% 10% (Lv.1~Lv.5)
-      if (r < 0.10) return 1;
-      if (r < 0.30) return 2;
-      if (r < 0.60) return 3;
-      if (r < 0.90) return 4;
-      return 5;
+      return { 1: 10, 2: 20, 3: 30, 4: 30, 5: 10 };
     } else if (n < 15) {
       // 第十次开始 (第 10~14 次): 5% 15% 25% 30% 20% 5% (Lv.1~Lv.6)
-      if (r < 0.05) return 1;
-      if (r < 0.20) return 2;
-      if (r < 0.45) return 3;
-      if (r < 0.75) return 4;
-      if (r < 0.95) return 5;
-      return 6;
+      return { 1: 5, 2: 15, 3: 25, 4: 30, 5: 20, 6: 5 };
     } else {
-      // 第十五次开始 (第 15 次及以后): 5% 10% 26% 24% 21% 9% 5% (Lv.1~Lv.7)
-      if (r < 0.05) return 1;
-      if (r < 0.15) return 2;
-      if (r < 0.41) return 3;
-      if (r < 0.65) return 4;
-      if (r < 0.86) return 5;
-      if (r < 0.95) return 6;
-      return 7;
+      // 第十五次开始 (第 15 次及以后): 1~7 级 (严格封顶于 Lv.7)
+      return { 1: 5, 2: 10, 3: 26, 4: 24, 5: 21, 6: 9, 7: 5 };
     }
+  }
+
+  /**
+   * 计算读指令对抗介入强度 alpha (0.0 ~ 1.0)
+   * 双轨触发 (Smoothstep 回合数 + 空间高度) + 濒死压力制动 (Pressure Limiter)
+   */
+  _calculateAdversarialAlpha(n) {
+    const turnAlpha = this._calculateTurnAlpha(n);
+    const heightAlpha = this._calculateHeightAlpha();
+    const rawAlpha = Math.max(turnAlpha, heightAlpha);
+
+    // 压力制动：在极端濒死状态下卸载对抗强度，避免正反馈将玩家强行处决
+    const pressureLimit = this._getPressureLimiter();
+    return Math.min(rawAlpha, pressureLimit);
+  }
+
+  /**
+   * 回合数门限：基于 Smoothstep 的 S 型缓动 (15~22 步)
+   */
+  _calculateTurnAlpha(n) {
+    const t = Math.min(1, Math.max(0, (n - 15) / 7));
+    return t * t * (3 - 2 * t);
+  }
+
+  /**
+   * 空间高度门限：越过 50% 高度开始启动，达到 20% 高度拉满
+   */
+  _calculateHeightAlpha() {
+    const topmostY = this._getTopmostBodyY();
+    if (topmostY === null) return 0;
+
+    const activationY = this.height * 0.50; // 300px
+    const criticalY = this.height * 0.20;   // 120px
+
+    if (topmostY >= activationY) return 0;
+    return Math.min(1.0, Math.max(0, (activationY - topmostY) / (activationY - criticalY)));
+  }
+
+  /**
+   * 濒死压力制动器：当最顶端物体进入危险区深处时，线性削减对抗强度给玩家翻盘生机
+   */
+  _getPressureLimiter() {
+    const topmostY = this._getTopmostBodyY();
+    if (topmostY === null) return 1.0;
+
+    const emergencyY = this.height * 0.18; // 108px (逼近 70px 警戒线)
+    if (topmostY < emergencyY) {
+      // 越逼近 dangerY (70px)，允许的最大对抗强度越小，回退到基础分布
+      const span = emergencyY - this.dangerY;
+      return Math.min(1.0, Math.max(0, (topmostY - this.dangerY) / (span > 0 ? span : 1)));
+    }
+    return 1.0;
+  }
+
+  /**
+   * 获取物理世界中距离顶部最近的小球上边缘 Y 坐标 (Y 越小越靠近顶部)
+   */
+  _getTopmostBodyY() {
+    if (!this.physics || !this.physics.bodies || this.physics.bodies.length === 0) {
+      return null;
+    }
+    let minY = Infinity;
+    for (const b of this.physics.bodies) {
+      if (b.isMerging || b.isStatic) continue;
+      const topY = b.y - b.radius;
+      if (topY < minY) {
+        minY = topY;
+      }
+    }
+    return minY === Infinity ? null : minY;
+  }
+
+  /**
+   * 提取当前物理世界最靠顶部的前 3 颗小球的等级集合
+   */
+  _getTopHorizonLevels() {
+    if (!this.physics || !this.physics.bodies || this.physics.bodies.length === 0) {
+      return [];
+    }
+    const active = this.physics.bodies.filter(b => !b.isMerging && !b.isStatic);
+    if (active.length === 0) return [];
+
+    // 按 Y 坐标升序排列 (Y 越小离顶部越近)
+    active.sort((a, b) => a.y - b.y);
+    const topSlice = active.slice(0, Math.min(3, active.length));
+    return topSlice.map(b => b.level);
+  }
+
+  /**
+   * 纯读指令对抗修饰器字典 (与 alpha 解耦)
+   * 返回各等级独立乘数: { [level]: multiplier }
+   */
+  _getAdversarialModifiers() {
+    const modifiers = {};
+    const topLevels = this._getTopHorizonLevels();
+    const history = this._recentDropHistory || [];
+    const lastDrop = history.length > 0 ? history[history.length - 1] : null;
+    const maxTopLv = topLevels.length > 0 ? Math.max(...topLevels) : 1;
+
+    for (let lv = 1; lv <= 7; lv++) {
+      let mult = 1.0;
+
+      // 1. 刚刚投放过的水果：强力冰冻打折 (0.25x)，破坏双拼预期
+      if (lv === lastDrop) {
+        mult *= 0.25;
+      }
+
+      // 2. 顶层已露出的同级水果：降权回避 (0.55x)，不给容易直接合成的甜头
+      if (topLevels.includes(lv)) {
+        mult *= 0.55;
+      }
+
+      // 3. 跨阶压顶：比顶层露出的最大等级还要高 1~2 阶的 (C/D/E)，大幅提权 1.80x
+      if (lv === maxTopLv + 1 || lv === maxTopLv + 2) {
+        mult *= 1.80;
+      }
+
+      modifiers[lv] = mult;
+    }
+
+    return modifiers;
+  }
+
+  /**
+   * 滑动窗口记录最近 3 次掉落
+   */
+  _recordDropHistory(lv) {
+    if (!this._recentDropHistory) {
+      this._recentDropHistory = [];
+    }
+    this._recentDropHistory.push(lv);
+    if (this._recentDropHistory.length > 3) {
+      this._recentDropHistory.shift();
+    }
+  }
+
+  /**
+   * 加权轮盘赌抽签
+   */
+  _weightedPick(weights) {
+    const levels = Object.keys(weights).map(Number);
+    const total = levels.reduce((sum, lv) => sum + weights[lv], 0);
+    let r = Math.random() * total;
+    for (const lv of levels) {
+      r -= weights[lv];
+      if (r <= 0) return lv;
+    }
+    return levels[levels.length - 1];
   }
 
   /**
@@ -138,6 +294,7 @@ class WatermelonEngine {
     this.combo = 0;
     this.maxCombo = 0;
     this.highestLevel = 1;
+    this._recentDropHistory = [];
     this.physics.clear();
     this._initFruits();
 

@@ -186,6 +186,23 @@ for (let t = 0; t < 500; t++) {
 assert.strictEqual(sawLv7, true, '核心规则验证：第十五次开始必须能够出现 Lv.7 (航空记录仪)');
 console.log('  ✔ 全新快节奏动态掉落阶梯曲线 (前15次进阶至 Lv.7) 测试通过！\n');
 
+// 8.1 验证“读指令对抗状态机 (Pacing Gate + Spatial Gate + Safety Limiter)”
+console.log('▶ [8.1] 测试读指令状态机闭环控制 (双轨门限 + 安全制动 + Modifiers)...');
+assert.strictEqual(testEngine._calculateTurnAlpha(14), 0, '14次之前 turnAlpha 必须为 0');
+assert(testEngine._calculateTurnAlpha(18) > 0.3 && testEngine._calculateTurnAlpha(18) < 0.5, '18次 turnAlpha 呈现 S 型缓动');
+assert.strictEqual(testEngine._calculateTurnAlpha(22), 1.0, '22次 turnAlpha 必须完全拉满 1.0');
+
+// 测试空间高度轨与濒死压力制动
+testEngine.physics.clear();
+assert.strictEqual(testEngine._calculateHeightAlpha(), 0, '空盘面 heightAlpha 必须为 0');
+testEngine.physics.createBody(1, 180, 210); // Y=210, topY=192 < 300 (50% 高度)
+assert(testEngine._calculateHeightAlpha() > 0.5, '越过 50% 门限 heightAlpha 应显著激活');
+
+testEngine.physics.clear();
+testEngine.physics.createBody(1, 180, 85); // 逼近 dangerY=70 (Y=85, topY=67)
+assert(testEngine._getPressureLimiter() < 0.5, '极端濒死盘面必须启动压力制动卸载对抗');
+console.log('  ✔ 读指令状态机闭环控制 (双轨门限 + 安全制动 + Modifiers) 测试通过！\n');
+
 // 9. 真实实机场景回归：悬空多球挤压夹持与闭环自旋阻绝 (1:1 图3场景)
 console.log('▶ [9/9] 测试悬空多球夹持与闭环自旋阻绝 (图3水泥与顶工具自旋回归)...');
 const world9 = new PhysicsWorld({ width: 360, height: 600, gravity: 1100 });
