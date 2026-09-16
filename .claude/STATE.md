@@ -257,6 +257,56 @@
   - `scripts/verify_watermelon_physics.js`
   - `.claude/STATE.md`
 
+## [2026-09-17] 道具全量数据扩充与按需 7 字段规范化（474件）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **遍历拉取交易行道具大类（props）**：直接接入并逆向解包 `api.wwery.com` 二进制行情协议，获取最新 460 件交易行在售道具数据（包含 349 件收集品、80 件门卡钥匙、31 件消耗品），比原库净增 115 件最新大金与门卡。
+  2. **非交易特殊任务品无损补全**：对比合并原清单中的 14 件不可交易任务品（如“火箭燃料”、“高级燃料”、“G.T.I.卫星通讯天线”等，价格规范置 0），全库扩充至 474 件（6级红品 83 件、5级橙品 105 件、4级紫品 101 件、3级蓝品 74 件、2级绿品 64 件、1级白品 47 件）。
+  3. **字段极致精简收敛**：严格仅保留用户指定的 6 核心字段 + 唯一 ID：`id`, `level`（对应官方 `grade`）, `name`, `pic`（还原为腾讯官方已备案 CDN 高清原图直链）, `price`（现行市场最新价格）, `length`, `width`；彻底剔除全部冗余嵌套属性。
+  4. **清单瘦身与自动化脚本沉淀**：`item_manifest.json` 体积由 425.1 KB 降至 107.2 KB（优化缩减 74.8%），沉淀可复用同步脚本 `scripts/sync_delta_items.js` 并保留安全备份。
+- 涉及文件：
+  - `miniprogram/assets/items/item_manifest.json`
+  - `miniprogram/assets/items/item_manifest.backup.json`
+  - `scripts/sync_delta_items.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 道具管理器 ItemManager 落地（1~6级双键Map + 等级主题枚举 + 衍生格式化）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **构建等级视觉主题枚举（LEVEL_THEMES）**：定义 1~6 级只读冻结主题配置，包含标准主色 `colorHex`、卡片底色 `bgColor`（如 6 级红品 `#361a1c`）、微光质感渐变 `bgGradient` 及中文等级名 `name`。
+  2. **落地方案 A 双键专属 Map 体系**：
+     - 构建 `level1Map` ~ `level6Map`：每个 Map 仅存当前品级道具，且将 `id` 与中文 `name` 双向注册为 Key，支持秒判与秒取（如 `level6Map.has('非洲之心')`、`level6Map.get('非洲之心')` 均为 $O(1)$）；
+     - 构建按身价（`price`）降序排好的 `level1List` ~ `level6List` 数组，支持快速遍历与 `getRandomByLevel` 随机抽金；
+     - 维护全局 `itemMap`（全量 474 件双键索引）。
+  3. **道具内置选定衍生字段**：为每个标准化道具对象挂载 `item.priceFormatted`（千分位文本）与 `item.theme`（等级视觉配置），省去页面重复计算；克制裁剪了不必要的空间统计字段。
+  4. **全局启动预热与全套测试**：在 `miniprogram/app.js` 的 `onLaunch` 执行 `ItemManager.init()`（<2ms 无感预热）；编写专项单测 `scripts/verify_item_manager.js`，验证全量 474 件数据、各等级条数、跨级隔离、双键检索与随机抽取，测试 100% 通过。
+- 涉及文件：
+  - `miniprogram/utils/itemManager.js`
+  - `miniprogram/app.js`
+  - `scripts/verify_item_manager.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 道具清单顶层抽取 cdnBaseUrl 并瘦身全量 pic 字段（107KB -> 83KB）
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **顶层抽离 CDN 配置**：在 `item_manifest.json` 根部新增 `"cdnBaseUrl": "https://playerhub.df.qq.com/playerhub/60004/object/"`，实现 CDN 域名集中配置与后续无缝迁移。
+  2. **道具 pic 字段极致瘦身**：全量 474 个道具的 `pic` 字段彻底剥离 48 字符冗长前缀，纯化为文件名（如 `"15080050142.png"`、`"key/航天基地金卡.png"`）；清单文件体积从 107.2 KB 进一步压缩至 **83.7 KB**（再降 21.9%）。
+  3. **ItemManager 自动拼接联动**：在 `itemManager.js` 中动态读取清单中的 `cdnBaseUrl`，并在生成标准化道具对象时自动补齐为完整 CDN 链接（`item.pic`）与纯文件名（`item.fileName`），业务渲染与开发无任何影响。
+  4. **全套自动化测试回归**：更新 `scripts/verify_item_manager.js`，验证 CDN 动态拼装与文件名正确性，全量单测 100% 通过。
+- 涉及文件：
+  - `miniprogram/assets/items/item_manifest.json`
+  - `miniprogram/utils/itemManager.js`
+  - `scripts/sync_delta_items.js`
+  - `scripts/verify_item_manager.js`
+  - `.claude/STATE.md`
+
+
+
+
 
 
 

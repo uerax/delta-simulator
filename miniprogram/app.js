@@ -1,8 +1,12 @@
 // app.js
 const Storage = require('./utils/storage');
+const ItemManager = require('./utils/itemManager');
 
 App({
   onLaunch: function () {
+    // 预热并初始化道具多维索引 Map
+    ItemManager.init();
+
     // 初始化本地存储数据
     this.globalData = {
       userProfile: Storage.getUserProfile(),
