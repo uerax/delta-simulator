@@ -25,13 +25,28 @@ class SchulteEngine {
     this._timer = null;
     this._wrongResetTimer = null;
 
-    this.init();
+    this.init({ silent: options.autoInitSilent || false });
+  }
+
+  /**
+   * 获取引擎初始化状态数据（用于页面单次批处理 setData）
+   */
+  getInitialState() {
+    return {
+      gameState: this.gameState,
+      gridNumbers: this.gridNumbers,
+      currentTarget: this.currentTarget,
+      timeStr: this.timeStr,
+      remaining: this.totalNumbers - this.currentTarget + 1
+    };
   }
 
   /**
    * 初始化/洗牌方格
+   * @param {object} [options]
+   * @param {boolean} [options.silent] 是否静默初始化
    */
-  init() {
+  init(options = {}) {
     this.clearAllTimers();
     this.gameState = 'ready';
     this.currentTarget = 1;
@@ -51,13 +66,15 @@ class SchulteEngine {
       isWrong: false
     }));
 
-    this.onStateChange({ gameState: this.gameState });
-    this.onTick({ timeStr: this.timeStr, elapsedSeconds: this.elapsedSeconds });
-    this.onGridUpdate({
-      gridNumbers: this.gridNumbers,
-      currentTarget: this.currentTarget,
-      remaining: this.totalNumbers - this.currentTarget + 1
-    });
+    if (!options.silent) {
+      this.onStateChange({ gameState: this.gameState });
+      this.onTick({ timeStr: this.timeStr, elapsedSeconds: this.elapsedSeconds });
+      this.onGridUpdate({
+        gridNumbers: this.gridNumbers,
+        currentTarget: this.currentTarget,
+        remaining: this.totalNumbers - this.currentTarget + 1
+      });
+    }
   }
 
   /**

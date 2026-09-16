@@ -1,5 +1,6 @@
 // pages/index/index.js
 const Storage = require('../../utils/storage');
+const Feedback = require('../../utils/feedback');
 const GameRegistry = require('../../games/registry');
 
 Page({
@@ -25,12 +26,15 @@ Page({
     gameList: []
   },
 
+  _isNavigating: false,
+
   onLoad() {
     this.refreshAllData();
   },
 
   onShow() {
-    // 切回大厅时刷新最新战绩与金币
+    // 切回大厅时刷新最新战绩与金币，并释放跳转防重锁
+    this._isNavigating = false;
     this.refreshAllData();
   },
 
@@ -53,15 +57,20 @@ Page({
     });
   },
 
-  // 选择游戏进入
+  // 选择游戏进入（增加防重节流锁与环境自适应反馈）
   onSelectGame(e) {
+    if (this._isNavigating) return;
     const { path } = e.currentTarget.dataset;
     if (path) {
-      if (this.data.settings.vibrationEnabled) {
-        wx.vibrateShort({ type: 'light' });
-      }
+      this._isNavigating = true;
+      Feedback.vibrateShort(this.data.settings.vibrationEnabled, 'light');
       wx.navigateTo({
-        url: path
+        url: path,
+        complete: () => {
+          setTimeout(() => {
+            this._isNavigating = false;
+          }, 300);
+        }
       });
     }
   },
@@ -89,9 +98,7 @@ Page({
     const vibrationEnabled = e.detail.value;
     const updated = Storage.saveSettings({ vibrationEnabled });
     this.setData({ settings: updated });
-    if (vibrationEnabled) {
-      wx.vibrateShort({ type: 'light' });
-    }
+    Feedback.vibrateShort(vibrationEnabled, 'light');
   },
 
   // 开关音效

@@ -118,3 +118,13 @@
   3. **标准红品底色与边框高光**：严格对齐官方 6 级稀有度规范，应用官方专属暗红底色（`#361a1c`）以及渐变高光（`linear-gradient(135deg, rgba(224, 58, 62, 0.45) 0%, #361a1c 100%)`），并赋予 `2rpx solid #E03A3E` 红色高光边框与专属辉光阴影。
   4. **大厅与子页面同步升级**：大厅卡片与 `pages/fortune/index` 占位页面同步启用该套绝密红品视觉体系。
   5. **单测核验**：执行 `node scripts/verify_game_architecture.js`，验证大厅列表首项为运势小游戏且正确绑定官方 CDN 图标，断言全部通过。
+
+## [2026-09-16] 修复微信开发者工具切页卡顿与触感延迟并支持批处理首屏渲染
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **触感反馈工具抽离与模拟器自适应**：新增 `miniprogram/utils/feedback.js`，精准识别 `devtools` 环境并安全静默跳过硬件马达调用，彻底消除微信开发者工具因缺少物理震动马达导致的 IPC 阻塞与切页 1 秒延迟；真机环境正常读取 `settings.vibrationEnabled` 用户配置。
+  2. **大厅跳转防重节流锁**：在 `pages/index/index.js` 中增加 `_isNavigating` 状态锁，在 `navigateTo` 触发与返回 `onShow` 时妥善加锁与释放，防止切页等待期间重复点击导致页面栈压爆。
+  3. **首屏渲染单批处理合并**：在 `ReactionEngine` 与 `SchulteEngine` 中增加 `autoInitSilent` 构造配置与 `getInitialState()` 接口，在页面 `onLoad` 时一次性合并批处理 `setData`，消除了子页面初始化微秒内连续触发 4 次跨进程通信的模拟器性能抖动。
+  4. **全套自动化测试覆盖**：在 `scripts/verify_game_architecture.js` 中补齐 Feedback 工具的模拟器/真机自适应测试以及引擎静默批处理测试，测试通过率 100%。
+

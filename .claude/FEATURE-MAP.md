@@ -39,6 +39,8 @@
   - 职责定位：占位页面（施工与方案对齐中）。
 
 ## 工具库与数据层
+- **触感与交互反馈 (Feedback)**：`miniprogram/utils/feedback.js`
+  - 核心能力：自动识别开发者工具环境（`devtools` 跳过马达调用消除卡顿）、真机硬件震动适配、读取 `settings.vibrationEnabled` 用户配置。
 - **本地存储管理 (Storage)**：`miniprogram/utils/storage.js`
   - 玩家配置：`getUserProfile`, `setUserProfile`
   - 游戏命名空间隔离存储：`getGameRecord(gameId)`, `saveGameRecord(gameId, data)`, `recordGamePlay(gameId, options)`

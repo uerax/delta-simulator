@@ -1,5 +1,6 @@
 // pages/schulte/index.js
 const Storage = require('../../utils/storage');
+const Feedback = require('../../utils/feedback');
 const SchulteEngine = require('../../games/schulte/engine');
 
 Page({
@@ -19,6 +20,8 @@ Page({
   onLoad() {
     this._settings = Storage.getSettings();
     this.initEngine();
+    // 页面加载阶段一次性单批处理初始化渲染，避免模拟器多次连续跨进程通信
+    this.setData(this._engine.getInitialState());
   },
 
   onUnload() {
@@ -37,6 +40,7 @@ Page({
   initEngine() {
     this._engine = new SchulteEngine({
       totalNumbers: 16,
+      autoInitSilent: true, // 静默构造，由 onLoad 统一批处理 setData
       onStateChange: ({ gameState }) => {
         this.setData({ gameState });
       },
@@ -47,12 +51,11 @@ Page({
         this.setData({ gridNumbers, currentTarget });
       },
       onFeedback: ({ type }) => {
-        if (this._settings && this._settings.vibrationEnabled) {
-          if (type === 'hit') {
-            wx.vibrateShort({ type: 'light' });
-          } else {
-            wx.vibrateLong();
-          }
+        const enabled = Boolean(this._settings && this._settings.vibrationEnabled);
+        if (type === 'hit') {
+          Feedback.vibrateShort(enabled, 'light');
+        } else {
+          Feedback.vibrateLong(enabled);
         }
       },
       onGameOver: ({ finalSeconds, timeStr, rating }) => {

@@ -28,13 +28,29 @@ class ReactionEngine {
     this._timer = null;
     this._wrongResetTimer = null;
 
-    this.init();
+    this.init({ silent: options.autoInitSilent || false });
+  }
+
+  /**
+   * 获取引擎初始化状态数据（用于页面单次批处理 setData）
+   */
+  getInitialState() {
+    return {
+      gameState: this.gameState,
+      timeLeft: this.timeLeft,
+      score: this.score,
+      combo: this.combo,
+      maxCombo: this.maxCombo,
+      gridCells: this.gridCells
+    };
   }
 
   /**
    * 初始化/重置棋盘与基础数据
+   * @param {object} [options]
+   * @param {boolean} [options.silent] 是否静默初始化（不触发外部通知回调）
    */
-  init() {
+  init(options = {}) {
     this.clearAllTimers();
     this.gameState = 'ready';
     this.timeLeft = this.totalDuration;
@@ -48,17 +64,19 @@ class ReactionEngine {
       isWrong: false
     }));
 
-    this.onStateChange({ gameState: this.gameState });
-    this.onTick({ timeLeft: this.timeLeft });
-    this.onScoreUpdate({
-      score: this.score,
-      combo: this.combo,
-      maxCombo: this.maxCombo
-    });
-    this.onBoardUpdate({
-      gridCells: this.gridCells,
-      activeIndex: this.activeIndex
-    });
+    if (!options.silent) {
+      this.onStateChange({ gameState: this.gameState });
+      this.onTick({ timeLeft: this.timeLeft });
+      this.onScoreUpdate({
+        score: this.score,
+        combo: this.combo,
+        maxCombo: this.maxCombo
+      });
+      this.onBoardUpdate({
+        gridCells: this.gridCells,
+        activeIndex: this.activeIndex
+      });
+    }
   }
 
   /**

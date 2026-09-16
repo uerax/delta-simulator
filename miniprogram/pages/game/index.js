@@ -1,5 +1,6 @@
 // pages/game/index.js
 const Storage = require('../../utils/storage');
+const Feedback = require('../../utils/feedback');
 const ReactionEngine = require('../../games/reaction/engine');
 
 Page({
@@ -21,6 +22,8 @@ Page({
   onLoad() {
     this._settings = Storage.getSettings();
     this.initEngine();
+    // 页面加载阶段一次性单批处理初始化渲染，避免模拟器多次连续跨进程通信
+    this.setData(this._engine.getInitialState());
   },
 
   onUnload() {
@@ -40,6 +43,7 @@ Page({
     this._engine = new ReactionEngine({
       totalDuration: 30,
       gridSize: 9,
+      autoInitSilent: true, // 静默构造，由 onLoad 统一批处理 setData
       onStateChange: ({ gameState }) => {
         this.setData({ gameState });
       },
@@ -53,12 +57,11 @@ Page({
         this.setData({ gridCells });
       },
       onFeedback: ({ type }) => {
-        if (this._settings && this._settings.vibrationEnabled) {
-          if (type === 'hit') {
-            wx.vibrateShort({ type: 'light' });
-          } else {
-            wx.vibrateLong();
-          }
+        const enabled = Boolean(this._settings && this._settings.vibrationEnabled);
+        if (type === 'hit') {
+          Feedback.vibrateShort(enabled, 'light');
+        } else {
+          Feedback.vibrateLong(enabled);
         }
       },
       onGameOver: ({ score, maxCombo }) => {

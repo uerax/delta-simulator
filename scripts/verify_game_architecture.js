@@ -64,7 +64,15 @@ reactionEngine.end();
 assert.strictEqual(reactionEngine.gameState, 'ended', 'end 后状态应为 ended');
 assert(reactionGameOverData !== null, '应正确触发 onGameOver 回调');
 reactionEngine.destroy();
-console.log('  ✔ ReactionEngine 状态流转、目标刷新、计分与回调测试全部通过！\n');
+
+// 验证 ReactionEngine autoInitSilent 与 getInitialState
+const silentReaction = new ReactionEngine({ totalDuration: 30, gridSize: 9, autoInitSilent: true });
+const initialDataReaction = silentReaction.getInitialState();
+assert.strictEqual(initialDataReaction.gameState, 'ready');
+assert.strictEqual(initialDataReaction.timeLeft, 30);
+assert.strictEqual(initialDataReaction.gridCells.length, 9);
+silentReaction.destroy();
+console.log('  ✔ ReactionEngine 状态流转、目标刷新、计分与静默批处理测试全部通过！\n');
 
 // 2. 验证 SchulteEngine (纯 JS 逻辑引擎单测)
 console.log('▶ [2/4] 测试 SchulteEngine 纯逻辑引擎...');
@@ -113,7 +121,15 @@ assert.strictEqual(schulteEngine.gameState, 'ended', '点完 16 个数字后应�
 assert(schulteGameOverData !== null, '通关应触发 onGameOver 回调');
 assert(['王者专注', '极佳', '优秀', '良好'].includes(schulteGameOverData.rating), '评级应符合规范');
 schulteEngine.destroy();
-console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通关测试全部通过！\n');
+
+// 验证 SchulteEngine autoInitSilent 与 getInitialState
+const silentSchulte = new SchulteEngine({ totalNumbers: 16, autoInitSilent: true });
+const initialDataSchulte = silentSchulte.getInitialState();
+assert.strictEqual(initialDataSchulte.gameState, 'ready');
+assert.strictEqual(initialDataSchulte.currentTarget, 1);
+assert.strictEqual(initialDataSchulte.gridNumbers.length, 16);
+silentSchulte.destroy();
+console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通关与静默批处理测试全部通过！\n');
 
 // 3. 验证 GameRegistry (游戏注册中心)
 console.log('▶ [3/4] 测试 GameRegistry 游戏注册中心...');
@@ -193,5 +209,41 @@ assert(schulteRes2.isNewRecord === false, '较慢成绩不应为新纪录');
 assert.strictEqual(Storage.getGameRecord('schulte').bestTime, 12.3, '最佳成绩应维持 12.3');
 
 console.log('  ✔ Storage 通用 gameId 隔离与老接口双向平滑兼容测试通过！\n');
+
+// 5. 验证 Feedback 触感模块与开发者工具自适应
+console.log('▶ [5/5] 测试 Feedback 触感反馈与模拟器自适应...');
+const Feedback = require('../miniprogram/utils/feedback');
+
+// 验证无 wx 环境下安全容错
+Feedback.vibrateShort(true, 'light');
+Feedback.vibrateLong(true);
+
+// 模拟 devtools 环境
+global.wx.getSystemInfoSync = () => ({ platform: 'devtools' });
+// 重新加载以测试缓存
+delete require.cache[require.resolve('../miniprogram/utils/feedback')];
+const DevToolsFeedback = require('../miniprogram/utils/feedback');
+assert.strictEqual(DevToolsFeedback.isDevTools(), true, '应精准识别 devtools 开发者工具');
+
+let vibrateCalled = false;
+global.wx.vibrateShort = () => { vibrateCalled = true; };
+DevToolsFeedback.vibrateShort(true, 'light');
+assert.strictEqual(vibrateCalled, false, '在 devtools 环境下应跳过原生震动防止 IPC 阻塞');
+
+// 模拟真机 ios 环境
+delete require.cache[require.resolve('../miniprogram/utils/feedback')];
+global.wx.getSystemInfoSync = () => ({ platform: 'ios' });
+const RealDeviceFeedback = require('../miniprogram/utils/feedback');
+assert.strictEqual(RealDeviceFeedback.isDevTools(), false, '应精准识别真机环境');
+
+RealDeviceFeedback.vibrateShort(true, 'light');
+assert.strictEqual(vibrateCalled, true, '在真机环境下开启震动应正常触发原生震动');
+
+// 开关为 false 时应不触发
+vibrateCalled = false;
+RealDeviceFeedback.vibrateShort(false, 'light');
+assert.strictEqual(vibrateCalled, false, '用户关闭震动开关时严禁触发震动');
+
+console.log('  ✔ Feedback 开发者工具自适应跳过与真机开关响应逻辑全部通过！\n');
 
 console.log('🎉 所有解耦架构与核心逻辑验证全部 100% 通过！');
