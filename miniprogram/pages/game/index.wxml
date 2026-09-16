@@ -41,38 +41,16 @@
     <button class="start-btn" bindtap="startGame">立即开始 (30秒)</button>
   </view>
 
-  <!-- 结算弹窗 -->
-  <view class="modal-overlay" wx:if="{{showResultModal}}">
-    <view class="result-modal">
-      <view class="modal-title">🎉 挑战完成！</view>
-
-      <view class="new-record-badge" wx:if="{{gameResult.isNewRecord}}">
-        🏆 刷新历史最高纪录！
-      </view>
-
-      <view class="result-list">
-        <view class="result-row">
-          <text class="row-label">本局最终得分：</text>
-          <text class="row-value score-highlight">{{score}}</text>
-        </view>
-        <view class="result-row">
-          <text class="row-label">最高连击数：</text>
-          <text class="row-value">{{maxCombo}} 次</text>
-        </view>
-        <view class="result-row">
-          <text class="row-label">历史最高得分：</text>
-          <text class="row-value">{{gameResult.stats.highScore}}</text>
-        </view>
-        <view class="result-row">
-          <text class="row-label">今日已玩次数：</text>
-          <text class="row-value">{{gameResult.todayData.plays}} 次</text>
-        </view>
-      </view>
-
-      <view class="modal-actions">
-        <button class="modal-btn play-again-btn" bindtap="restartGame">再玩一局</button>
-        <button class="modal-btn back-home-btn" bindtap="goHome">返回大厅</button>
-      </view>
-    </view>
-  </view>
+  <!-- 通用结算弹窗组件 -->
+  <game-result-modal
+    visible="{{showResultModal}}"
+    title="🎉 挑战完成！"
+    isNewRecord="{{isNewRecord}}"
+    badgeText="🏆 刷新历史最高纪录！"
+    items="{{resultItems}}"
+    primaryBtnText="再玩一局"
+    secondaryBtnText="返回大厅"
+    bindrestart="restartGame"
+    bindhome="goHome"
+  />
 </view>

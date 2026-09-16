@@ -26,7 +26,7 @@
 
   <!-- 游戏入口列表标题 -->
   <view class="section-title-bar">
-    <text class="section-title">🎮 游戏大厅</text>
+    <text class="section-title">🐭 鼠鼠菜单</text>
     <text class="section-sub">选择游戏开启挑战</text>
   </view>
 
@@ -36,8 +36,9 @@
       <view class="game-card" bindtap="onSelectGame" data-path="{{item.path}}">
         <!-- 上半部分：图标 + 标题/标签 + 描述 -->
         <view class="card-main">
-          <view class="game-icon-box" style="background: {{item.bgGradient}};">
-            <text class="game-icon">{{item.icon}}</text>
+          <view class="game-icon-box" style="background: {{item.bgGradient}}; {{item.boxStyle || ''}}">
+            <image wx:if="{{item.iconUrl}}" class="game-icon-img" src="{{item.iconUrl}}" mode="aspectFit"></image>
+            <text wx:else class="game-icon">{{item.icon}}</text>
           </view>
           <view class="game-info">
             <view class="game-header">

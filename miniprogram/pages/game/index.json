@@ -1,5 +1,7 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "game-result-modal": "/components/game-result-modal/index"
+  },
   "navigationBarTitleText": "反应力大挑战",
   "navigationBarBackgroundColor": "#1e1e2e",
   "navigationBarTextStyle": "white",

@@ -88,6 +88,33 @@
   5. 物理资产迁移与主包瘦身：全量 423 个本地图片文件（道具 359 张、图标 58 张、地图 6 张，共 58.07 MB）已安全移动至项目根目录备用文件夹 `assets_backup/`（完全位于 `miniprogram/` 之外，打包 0 占用），`miniprogram/assets/` 仅保留 4 个核心索引与样式文件，总体积从 60MB 骤降至 1.40MB。
   6. 编写并运行自动化迁移与同步脚本 `scripts/migrate_to_official_cdn.js`。
 
+## [2026-09-16] 小游戏架构规范化解耦重构（Engine + Registry + Component + Storage）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **纯 JS 核心逻辑引擎抽离**：在 `miniprogram/games/{reaction,schulte}/engine.js` 中创建 `ReactionEngine` 与 `SchulteEngine`，彻底将状态机、计时器循环、生成算法、计分公式与评级算法抽离至独立类，零依赖微信环境，实现 100% 独立可测试。
+  2. **游戏自描述元数据 Manifest**：在各游戏目录新增 `manifest.js`，声明游戏 ID、名称、图标、路径、渐变色及大厅战绩格式化适配函数 `getLobbyRecord`。
+  3. **游戏注册中心 (Game Registry)**：新增 `miniprogram/games/registry.js`，聚合所有已注册游戏，提供 `getAllGames`, `getGame`, `getLobbyList`。大厅改由配置注册表驱动渲染，后续新增小游戏大厅零改动。
+  4. **通用结算弹窗组件抽离**：新增 `miniprogram/components/game-result-modal/`，复用弹窗布局、动画与按钮操作，消除了两款游戏近百行重复 WXML/WXSS 代码。
+  5. **Storage 隔离存储与双向兼容**：在 `miniprogram/utils/storage.js` 增加 `GAME_RECORDS` 独立命名空间方法（`getGameRecord`, `saveGameRecord`, `recordGamePlay`），并对老字段老方法（`recordReactionResult`, `recordSchulteResult`）做双向平滑同步兼容。
+  6. **页面控制器瘦身**：`pages/game/` 与 `pages/schulte/` 瘦身为纯粹的 View Controller，仅负责中继输入事件和 UI 渲染绑定。
+  7. **自动化测试覆盖**：编写单测脚本 `scripts/verify_game_architecture.js`，全量验证引擎状态机、洗牌算法、步进按序校验、注册中心与存储层兼容性，测试通过率 100%。
 
+## [2026-09-16] 新增“今日鼠鼠运势”游戏占位与注册接入
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **注册接入**：创建 `miniprogram/games/fortune/manifest.js` 与 `engine.js`（骨架），自描述图标、渐变风格及“今日运势”战绩适配，在 `registry.js` 中直接登记。
+  2. **路由配置**：在 `miniprogram/app.json` 中配置 `"pages/fortune/index"` 页面。
+  3. **占位页面**：创建 `miniprogram/pages/fortune/{index.js, index.json, index.wxml, index.wxss}`，提供高质感的施工中占位界面及返回大厅按钮。
+  4. **全自动化验证**：更新并执行 `scripts/verify_game_architecture.js`，3 款小游戏动态注册与装配测试通过率 100%。大厅无需修改任何代码，自动展现卡片。
 
-
+## [2026-09-16] 今日鼠鼠运势置于首位并升级为官方CDN“非洲之心”专属红品视觉
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **展位提升**：调整 `miniprogram/games/registry.js` 中的 `REGISTERED_GAMES` 注册序列，将“今日鼠鼠运势”直接调整为第一位展示。
+  2. **官方 CDN 资产接入**：将游戏图标平替为三角洲行动官方 6 级红品大金“非洲之心”高清透明背景图（`playerhub.df.qq.com/.../15080050006.png`）。
+  3. **标准红品底色与边框高光**：严格对齐官方 6 级稀有度规范，应用官方专属暗红底色（`#361a1c`）以及渐变高光（`linear-gradient(135deg, rgba(224, 58, 62, 0.45) 0%, #361a1c 100%)`），并赋予 `2rpx solid #E03A3E` 红色高光边框与专属辉光阴影。
+  4. **大厅与子页面同步升级**：大厅卡片与 `pages/fortune/index` 占位页面同步启用该套绝密红品视觉体系。
+  5. **单测核验**：执行 `node scripts/verify_game_architecture.js`，验证大厅列表首项为运势小游戏且正确绑定官方 CDN 图标，断言全部通过。

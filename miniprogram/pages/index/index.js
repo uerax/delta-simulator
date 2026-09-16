@@ -1,5 +1,6 @@
 // pages/index/index.js
 const Storage = require('../../utils/storage');
+const GameRegistry = require('../../games/registry');
 
 Page({
   data: {
@@ -38,32 +39,10 @@ Page({
     const todayRecord = Storage.getTodayRecord();
     const gameStats = Storage.getGameStats();
     const settings = Storage.getSettings();
+    const recordsMap = wx.getStorageSync(Storage.STORAGE_KEYS.GAME_RECORDS) || {};
 
-    // 动态生成游戏入口列表及实时战绩
-    const gameList = [
-      {
-        id: 'reaction',
-        title: '极速反应挑战',
-        icon: '⚡',
-        tag: '手速 / 敏捷',
-        desc: '30秒九宫格动态打靶，考验极限反应与连击手速！',
-        bgGradient: 'linear-gradient(135deg, #f38ba8, #fab387)',
-        path: '/pages/game/index',
-        recordLabel: '最高得分',
-        recordVal: `${gameStats.highScore || 0} 分`
-      },
-      {
-        id: 'schulte',
-        title: '舒尔特专注方格',
-        icon: '🧠',
-        tag: '注意力 / 视幅',
-        desc: '4x4 随机乱序方格，按序找出 1 到 16，挑战专注极速！',
-        bgGradient: 'linear-gradient(135deg, #89b4fa, #b4befe)',
-        path: '/pages/schulte/index',
-        recordLabel: '最佳用时',
-        recordVal: gameStats.schulteBestTime ? `${gameStats.schulteBestTime.toFixed(1)} 秒` : '暂无记录'
-      }
-    ];
+    // 通过游戏注册中心统一生成大厅列表（配置驱动，与具体游戏解耦）
+    const gameList = GameRegistry.getLobbyList(gameStats, recordsMap);
 
     this.setData({
       userProfile,

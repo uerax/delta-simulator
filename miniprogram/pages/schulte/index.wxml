@@ -39,34 +39,16 @@
     <button class="start-btn" bindtap="startGame">立即开始 (4x4 方格)</button>
   </view>
 
-  <!-- 结算弹窗 -->
-  <view class="modal-overlay" wx:if="{{showResultModal}}">
-    <view class="result-modal">
-      <view class="modal-title">🏆 挑战通关！</view>
-
-      <view class="new-record-badge" wx:if="{{isNewRecord}}">
-        ⚡ 刷新个人最佳速度！
-      </view>
-
-      <view class="result-list">
-        <view class="result-row">
-          <text class="row-label">最终用时：</text>
-          <text class="row-value time-highlight">{{timeStr}} 秒</text>
-        </view>
-        <view class="result-row">
-          <text class="row-label">专注力评级：</text>
-          <text class="row-value rating">{{rating}}</text>
-        </view>
-        <view class="result-row">
-          <text class="row-label">历史最佳用时：</text>
-          <text class="row-value">{{bestRecord}} 秒</text>
-        </view>
-      </view>
-
-      <view class="modal-actions">
-        <button class="modal-btn play-again-btn" bindtap="restartGame">再测一次</button>
-        <button class="modal-btn back-home-btn" bindtap="goHome">返回大厅</button>
-      </view>
-    </view>
-  </view>
+  <!-- 通用结算弹窗组件 -->
+  <game-result-modal
+    visible="{{showResultModal}}"
+    title="🏆 挑战通关！"
+    isNewRecord="{{isNewRecord}}"
+    badgeText="⚡ 刷新个人最佳速度！"
+    items="{{resultItems}}"
+    primaryBtnText="再测一次"
+    secondaryBtnText="返回大厅"
+    bindrestart="restartGame"
+    bindhome="goHome"
+  />
 </view>

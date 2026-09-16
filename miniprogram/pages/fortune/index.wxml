@@ -1,0 +1,17 @@
+<view class="fortune-container">
+  <view class="placeholder-card">
+    <view class="icon-bubble">
+      <image class="fortune-icon-img" src="https://playerhub.df.qq.com/playerhub/60004/object/15080050006.png" mode="aspectFit"></image>
+    </view>
+    <view class="title">今日鼠鼠运势</view>
+    <view class="badge">💎 绝密红品 · 方案对齐中</view>
+    <view class="desc">
+      每日测一测你的“摸金大金运”、今日安全撤离指数与避战吉位！
+    </view>
+    <view class="tips">
+      ✨ 模块框架已接入统一架构，待具体玩法交互与卡池对齐后即可开启。
+    </view>
+
+    <button class="back-btn" bindtap="goHome">返回鼠鼠菜单</button>
+  </view>
+</view>

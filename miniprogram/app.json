@@ -2,13 +2,14 @@
   "pages": [
     "pages/index/index",
     "pages/game/index",
-    "pages/schulte/index"
+    "pages/schulte/index",
+    "pages/fortune/index"
   ],
   "window": {
     "backgroundColor": "#1e1e2e",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1e1e2e",
-    "navigationBarTitleText": "趣味游戏中心",
+    "navigationBarTitleText": "鼠鼠今天得吃了",
     "navigationBarTextStyle": "white"
   },
   "sitemapLocation": "sitemap.json",

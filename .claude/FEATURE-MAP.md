@@ -6,21 +6,43 @@
 - 全局样式：`miniprogram/app.wxss`
 - 开发者工具配置：`project.config.json`、`project.private.config.json`
 
-## 业务模块与页面
-- **游戏大厅 / 入口汇集**：`miniprogram/pages/index/`
+## 游戏领域层与注册中心 (Games Domain)
+- **游戏注册中心 (Game Registry)**：`miniprogram/games/registry.js`
+  - 核心能力：聚合所有小游戏 manifest，提供 `getAllGames`, `getGame`, `getLobbyList`。
+- **游戏 1：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
+  - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+- **游戏 2：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`
+  - 纯 JS 核心逻辑引擎：`engine.js`（`SchulteEngine`，管理乱序洗牌、步进按序校验、0.1s 计时与评级算法）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+- **游戏 3：今日鼠鼠运势 (Fortune)**：`miniprogram/games/fortune/`
+  - 纯 JS 逻辑引擎骨架：`engine.js`（`FortuneEngine`，待方案对齐后补充完整规则）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
+
+## 通用组件 (Components)
+- **通用游戏结算弹窗**：`miniprogram/components/game-result-modal/`
+  - 视图与逻辑：`index.wxml`, `index.wxss`, `index.js`, `index.json`
+  - 核心能力：支持新纪录勋章、自定义结算成绩明细数组、再玩一局与返回大厅统一操作。
+
+## 业务模块与页面 (View Controllers)
+- **大厅 / 入口汇集**：`miniprogram/pages/index/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 核心能力：游戏合集列表入口、玩家头像（`chooseAvatar`）与昵称（`type="nickname"`）管理、今日局数与金币看板、点击卡片进入对应小游戏、全局音效/震动开关、数据重置。
-- **游戏 1：极速反应挑战**：`miniprogram/pages/game/`
+  - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局音效/震动开关、数据重置。
+- **页面 1：极速反应挑战**：`miniprogram/pages/game/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 核心能力：3x3 九宫格动态反应打靶、30s 倒计时、连击倍率（Combo）、轻触与错误震动反馈、游戏结算与最高分更新。
-- **游戏 2：舒尔特专注方格**：`miniprogram/pages/schulte/`
+  - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。
+- **页面 2：舒尔特专注方格**：`miniprogram/pages/schulte/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 核心能力：4x4 乱序方格、1-16 升序扫视点击、0.1 秒高精度计时、通关专注力评级（王者/极佳/优秀/良好）、最佳用时记录保存。
+  - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
+- **页面 3：今日鼠鼠运势**：`miniprogram/pages/fortune/`
+  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
+  - 职责定位：占位页面（施工与方案对齐中）。
 
 ## 工具库与数据层
 - **本地存储管理 (Storage)**：`miniprogram/utils/storage.js`
   - 玩家配置：`getUserProfile`, `setUserProfile`
-  - 战绩持久化：`recordReactionResult`, `recordSchulteResult`, `getTodayRecord`, `getGameStats`
+  - 游戏命名空间隔离存储：`getGameRecord(gameId)`, `saveGameRecord(gameId, data)`, `recordGamePlay(gameId, options)`
+  - 兼容战绩持久化：`recordReactionResult`, `recordSchulteResult`, `getTodayRecord`, `getGameStats`
   - 系统偏好：`getSettings`, `saveSettings`
   - 存储清空：`clearAll`
 - **三角洲战术物资资源库**：
@@ -40,7 +62,7 @@
     - 消耗品 (30件)：`miniprogram/assets/items/consume/`
     - 门卡 (59件)：`miniprogram/assets/items/keys/`
     - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`（纯简体规范化轻量清单，总计 359 件核心道具）
-  - 数据爬取、价格同步与导出脚本：`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+  - 数据爬取、价格同步与导出脚本：`scripts/verify_game_architecture.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

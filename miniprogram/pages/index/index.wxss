@@ -161,6 +161,12 @@ page {
   font-size: 56rpx;
 }
 
+.game-icon-img {
+  width: 86rpx;
+  height: 86rpx;
+  display: block;
+}
+
 .game-info {
   margin-left: 24rpx;
   flex: 1;
