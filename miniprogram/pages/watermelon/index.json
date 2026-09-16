@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "合成大西瓜",
+  "navigationBarBackgroundColor": "#0d1117",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "game-result-modal": "/components/game-result-modal/index"
+  },
+  "disableScroll": true
+}

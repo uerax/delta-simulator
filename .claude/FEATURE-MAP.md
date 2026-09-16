@@ -9,15 +9,20 @@
 ## 游戏领域层与注册中心 (Games Domain)
 - **游戏注册中心 (Game Registry)**：`miniprogram/games/registry.js`
   - 核心能力：聚合所有小游戏 manifest，提供 `getAllGames`, `getGame`, `getLobbyList`。
-- **游戏 1：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
-  - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
-  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
-- **游戏 2：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`
-  - 纯 JS 核心逻辑引擎：`engine.js`（`SchulteEngine`，管理乱序洗牌、步进按序校验、0.1s 计时与评级算法）
-  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
-- **游戏 3：今日鼠鼠运势 (Fortune)**：`miniprogram/games/fortune/`
+- **游戏 1：今日鼠鼠运势 (Fortune)**：`miniprogram/games/fortune/`
   - 纯 JS 逻辑引擎骨架：`engine.js`（`FortuneEngine`，待方案对齐后补充完整规则）
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
+- **游戏 2：合成大西瓜 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
+  - 11 级阶梯道具元数据：`items.js`（官方已备案 CDN 道具、尺寸、物理质量与交易行身价）
+  - 工业级 2D 圆形刚体物理引擎：`physics.js`（`PhysicsWorld`，8 步 CCD 防穿透、低弹性0.1、滚动摩擦0.2、双阻尼、双重合成触发、`pickLowerFruit` 靠下锚定、径向冲击波与 0.8s 滞留警戒线）
+  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，动态下落池难度曲线、搜刮身价、连击算法与状态机）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+- **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
+  - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+- **游戏 4：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`
+  - 纯 JS 核心逻辑引擎：`engine.js`（`SchulteEngine`，管理乱序洗牌、步进按序校验、0.1s 计时与评级算法）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
 
 ## 通用组件 (Components)
 - **通用游戏结算弹窗**：`miniprogram/components/game-result-modal/`
@@ -28,15 +33,18 @@
 - **大厅 / 入口汇集**：`miniprogram/pages/index/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
   - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局音效/震动开关、数据重置。
-- **页面 1：极速反应挑战**：`miniprogram/pages/game/`
-  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。
-- **页面 2：舒尔特专注方格**：`miniprogram/pages/schulte/`
-  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
-- **页面 3：今日鼠鼠运势**：`miniprogram/pages/fortune/`
+- **页面 1：今日鼠鼠运势**：`miniprogram/pages/fortune/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
   - 职责定位：占位页面（施工与方案对齐中）。
+- **页面 2：合成大西瓜**：`miniprogram/pages/watermelon/`
+  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
+  - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入通用弹窗组件与触感反馈。
+- **页面 3：极速反应挑战**：`miniprogram/pages/game/`
+  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
+  - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。
+- **页面 4：舒尔特专注方格**：`miniprogram/pages/schulte/`
+  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
+  - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
 
 ## 工具库与数据层
 - **触感与交互反馈 (Feedback)**：`miniprogram/utils/feedback.js`
@@ -64,7 +72,7 @@
     - 消耗品 (30件)：`miniprogram/assets/items/consume/`
     - 门卡 (59件)：`miniprogram/assets/items/keys/`
     - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`（纯简体规范化轻量清单，总计 359 件核心道具）
-  - 数据爬取、价格同步与导出脚本：`scripts/verify_game_architecture.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+  - 数据爬取、价格同步与导出脚本：`scripts/verify_game_architecture.js`、`scripts/verify_watermelon_physics.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

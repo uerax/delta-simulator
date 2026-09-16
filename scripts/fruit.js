@@ -1,0 +1,2 @@
+System.register("chunks:///_virtual/fruit.ts",["cc"],(function(e){var t;return{setters:[function(e){t=e.cclegacy}],execute:function(){e("validateFruitLevels",(function(e,t=n,c=u){const r=[],s=[];return e.forEach((e=>{const n=Number(e.level);Number.isInteger(n)&&n>=t&&n<=c?r.push(n):s.push(n)})),{levels:r,invalidLevels:s}})),t._RF.push({},"2cb64ZMqnZE15wbnU/OPKGa","fruit",void 0);const n=e("MIN_FRUIT_LEVEL",1),u=e("MAX_FRUIT_LEVEL",11);t._RF.pop()}}}));
+

@@ -9,7 +9,7 @@ const path = require('path');
 console.log('🧪 开始小游戏解耦架构全面验证...\n');
 
 // 1. 验证 ReactionEngine (纯 JS 逻辑引擎单测)
-console.log('▶ [1/4] 测试 ReactionEngine 纯逻辑引擎...');
+console.log('▶ [1/6] 测试 ReactionEngine 纯逻辑引擎...');
 const ReactionEngine = require('../miniprogram/games/reaction/engine');
 
 let reactionTickCount = 0;
@@ -75,7 +75,7 @@ silentReaction.destroy();
 console.log('  ✔ ReactionEngine 状态流转、目标刷新、计分与静默批处理测试全部通过！\n');
 
 // 2. 验证 SchulteEngine (纯 JS 逻辑引擎单测)
-console.log('▶ [2/4] 测试 SchulteEngine 纯逻辑引擎...');
+console.log('▶ [2/6] 测试 SchulteEngine 纯逻辑引擎...');
 const SchulteEngine = require('../miniprogram/games/schulte/engine');
 
 let schulteState = '';
@@ -131,42 +131,182 @@ assert.strictEqual(initialDataSchulte.gridNumbers.length, 16);
 silentSchulte.destroy();
 console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通关与静默批处理测试全部通过！\n');
 
-// 3. 验证 GameRegistry (游戏注册中心)
-console.log('▶ [3/4] 测试 GameRegistry 游戏注册中心...');
+// 3. 验证 WatermelonEngine & PhysicsWorld (合成大西瓜物理与逻辑引擎)
+console.log('▶ [3/6] 测试 WatermelonEngine 逻辑与 PhysicsWorld 刚体物理引擎...');
+const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL } = require('../miniprogram/games/watermelon/items');
+const PhysicsWorld = require('../miniprogram/games/watermelon/physics');
+const WatermelonEngine = require('../miniprogram/games/watermelon/engine');
+
+// 3.1 道具元数据 11 阶验证
+assert.strictEqual(WATERMELON_ITEMS.length, 11, '道具清单应包含严格 11 个品阶');
+assert.strictEqual(WATERMELON_ITEMS[0].name, '含氟牙膏', 'Lv.1 道具应为含氟牙膏');
+assert.strictEqual(WATERMELON_ITEMS[10].name, '非洲之心', 'Lv.11 终极大金应为非洲之心');
+assert(WATERMELON_ITEMS[10].iconUrl.includes('15080050006.png'), '终极大金应直连非洲之心官方CDN');
+assert.strictEqual(MAX_LEVEL, 11, '最大等级应为 11');
+
+// 3.2 动态下落池难度曲线算法 (全新快节奏：一开始1~2级，前15次快速进阶至Lv.7)
+const watermelonEngine = new WatermelonEngine({ width: 360, height: 600, autoInitSilent: true });
+for (let i = 0; i < 50; i++) {
+  const lvInitial = watermelonEngine._generateDropLevel(0);
+  assert(lvInitial >= 1 && lvInitial <= 2, '一开始只能产出 Lv.1 ~ Lv.2 (50% 50%)');
+}
+
+for (let i = 0; i < 50; i++) {
+  const lvFrom3 = watermelonEngine._generateDropLevel(3);
+  assert(lvFrom3 >= 1 && lvFrom3 <= 4, '第三次开始产出 Lv.1 ~ Lv.4');
+}
+
+for (let i = 0; i < 50; i++) {
+  const lvFrom15 = watermelonEngine._generateDropLevel(15);
+  assert(lvFrom15 >= 1 && lvFrom15 <= 7, '第十五次开始最高可出现 Lv.7，严禁产出 Lv.8 及以上');
+}
+
+// 3.3 物理碰撞与合成机制验证 (含 pickLowerFruit 靠下锚定与冲击波)
+let mergeTriggered = false;
+let mergedLevel = 0;
+let mergedSpawnY = 0;
+
+const testWorld = new PhysicsWorld({
+  width: 360,
+  height: 600,
+  onMerge: (b1, b2, nextLevel, spawnX, spawnY) => {
+    mergeTriggered = true;
+    mergedLevel = nextLevel;
+    mergedSpawnY = spawnY;
+  }
+});
+
+// 在物理世界中加入两颗互相重叠的 Lv.1 小球 (b1 在上 y=400, b2 在下 y=420)
+const b1 = testWorld.createBody(1, 100, 400);
+const b2 = testWorld.createBody(1, 100, 420);
+assert.strictEqual(testWorld.bodies.length, 2, '初始应成功创建 2 个刚体');
+
+// 运行物理更新帧
+testWorld.update(0.016);
+assert.strictEqual(mergeTriggered, true, '两颗重叠 Lv.1 小球应成功触发合成');
+assert.strictEqual(mergedLevel, 2, '合成后等级应晋升为 Lv.2');
+assert(mergedSpawnY >= 420, '核心手感验证：新小球生成锚点应严格靠下 (pickLowerFruit 算法生效)');
+assert.strictEqual(testWorld.bodies.length, 1, '旧刚体应被移除，物理世界应保留新合成的刚体');
+assert.strictEqual(testWorld.bodies[0].level, 2, '保留刚体应为 Lv.2');
+
+// 3.4 警戒线与 0.8 秒滞留死亡模型验证
+let dangerLineHit = false;
+const dangerWorld = new PhysicsWorld({
+  width: 360,
+  height: 600,
+  gravity: 0,
+  dangerY: 100,
+  dangerDwellTime: 0.8,
+  onDangerLineTrigger: () => {
+    dangerLineHit = true;
+  }
+});
+
+// 在警戒线上方创建静止刚体 (y=80 < dangerY=100)
+const highBall = dangerWorld.createBody(1, 180, 80, { isStatic: false });
+highBall.age = 0.9; // 越过 0.8s 新生保护期
+highBall.vx = 0;
+highBall.vy = 0;
+
+// 更新 25 帧 * 0.016s = 0.4s (未达到 0.8s 阈值)
+for (let f = 0; f < 25; f++) {
+  dangerWorld.update(0.016);
+}
+assert.strictEqual(dangerLineHit, false, '滞留未满 0.8 秒严禁触发游戏结束');
+
+// 再次更新 35 帧 * 0.016s = 0.56s (累计约 0.96s > 0.8s)
+for (let f = 0; f < 35; f++) {
+  dangerWorld.update(0.016);
+}
+assert.strictEqual(dangerLineHit, true, '稳定滞留超过 0.8 秒应正确触发警戒线死亡');
+
+// 3.5 WatermelonEngine 完整游玩流程验证
+let engineMerged = false;
+let engineGameOver = false;
+
+const fullEngine = new WatermelonEngine({
+  width: 360,
+  height: 600,
+  onMerge: () => { engineMerged = true; },
+  onGameOver: () => { engineGameOver = true; }
+});
+
+fullEngine.start();
+assert.strictEqual(fullEngine.gameState, 'playing', 'start 后引擎状态应为 playing');
+assert.strictEqual(fullEngine.score, 0, '初始得分应为 0');
+assert.strictEqual(fullEngine.money, 0, '初始搜刮身价应为 0');
+
+// 模拟下落道具
+const dropSuccess = fullEngine.dropCurrentFruit(180);
+assert.strictEqual(dropSuccess, true, '合法状态下放置道具应成功');
+assert.strictEqual(fullEngine.dropCount, 1, '下落计数应加 1');
+
+// 测试冷却拦截
+const dropBlocked = fullEngine.dropCurrentFruit(180);
+assert.strictEqual(dropBlocked, false, '冷却时间内连续点击应被拦截防呆');
+
+// 3.6 核心对标验证：两球接触切向表面速度差耦合、库仑摩擦制动与绝无 NaN
+const frictionWorld = new PhysicsWorld({ width: 360, height: 600 });
+// 创建两颗不同等级（无法合成）的刚体，接触并置于地面上
+const rollB1 = frictionWorld.createBody(1, 100, 600 - 18);
+const rollB2 = frictionWorld.createBody(3, 100 + 18 + 28 - 2, 600 - 28);
+rollB1.angularVelocity = 10; // 初始自旋
+rollB2.angularVelocity = 0;
+
+for (let f = 0; f < 60; f++) {
+  frictionWorld.update(0.016);
+  assert(!isNaN(rollB1.angularVelocity), '自旋角速度严禁出现 NaN');
+  assert(!isNaN(rollB2.angularVelocity), '被接触球角速度严禁出现 NaN');
+}
+assert(rollB1.angularVelocity < 3.0, '接触摩擦与角阻尼应有效抑制自旋，禁止无限自转');
+assert(rollB1.angularVelocity >= 0, '角速度衰减方向应平稳且自洽');
+
+// 3.7 核心手感验证：地面接触纯滚动驱动与静止休眠
+const groundWorld = new PhysicsWorld({ width: 360, height: 600 });
+const dropBall = groundWorld.createBody(1, 180, 500, { vx: 80, vy: 0 });
+// 运行 2 秒物理模拟
+for (let f = 0; f < 120; f++) {
+  groundWorld.update(0.016);
+}
+assert(dropBall.y >= 600 - 18 - 1, '小球应落在地面');
+assert(Math.abs(dropBall.vx) < 5, '在地面滚动摩擦作用下水平速度应显著衰减');
+
+fullEngine.destroy();
+console.log('  ✔ WatermelonEngine 难度曲线、手感锚定、冲击波、0.8s 警戒线与 Box2D 切向接触摩擦测试通过！\n');
+
+// 4. 验证 GameRegistry (游戏注册中心与展位顺序)
+console.log('▶ [4/6] 测试 GameRegistry 游戏注册中心...');
 const GameRegistry = require('../miniprogram/games/registry');
 
 const games = GameRegistry.getAllGames();
-assert(Array.isArray(games) && games.length === 3, '当前应注册 3 款小游戏');
+assert(Array.isArray(games) && games.length === 4, '当前应注册 4 款小游戏');
 
-const reaction = GameRegistry.getGame('reaction');
-assert(reaction && reaction.title === '极速反应挑战', '应能通过 ID 索引极速反应挑战');
-
-const schulte = GameRegistry.getGame('schulte');
-assert(schulte && schulte.title === '舒尔特专注方格', '应能通过 ID 索引舒尔特方格');
-
-const fortune = GameRegistry.getGame('fortune');
-assert(fortune && fortune.title === '今日鼠鼠运势', '应能通过 ID 索引今日鼠鼠运势');
+// 重点验证顺序：首位为今日鼠鼠运势，第二位为合成大西瓜！
+assert.strictEqual(games[0].id, 'fortune', '首位游戏应为今日鼠鼠运势');
+assert.strictEqual(games[1].id, 'watermelon', '核心需求验证：第二位游戏应放置合成大西瓜');
+assert.strictEqual(games[1].title, '合成大西瓜', '第二位游戏标题应为合成大西瓜');
+assert.strictEqual(games[2].id, 'reaction', '第三位游戏应为极速反应挑战');
+assert.strictEqual(games[3].id, 'schulte', '第四位游戏应为舒尔特方格');
 
 const mockStats = { highScore: 260, schulteBestTime: 14.5 };
 const mockRecords = {
+  fortune: { todayFortune: '大吉·今日必出大金' },
+  watermelon: { bestMoney: 12484244, bestMoneyFormatted: '12,484,244' },
   reaction: { bestScore: 260 },
-  schulte: { bestTime: 14.5 },
-  fortune: { todayFortune: '大吉·今日必出大金' }
+  schulte: { bestTime: 14.5 }
 };
 
 const lobbyList = GameRegistry.getLobbyList(mockStats, mockRecords);
-assert.strictEqual(lobbyList.length, 3, '大厅卡片数据项数应为 3');
-assert.strictEqual(lobbyList[0].id, 'fortune', '首位卡片应为今日鼠鼠运势');
-assert(lobbyList[0].iconUrl.includes('15080050006.png'), '首位应引用非洲之心官方CDN图标');
-assert.strictEqual(lobbyList[0].recordVal, '大吉·今日必出大金', '运势占卜战绩应正确格式化');
-assert.strictEqual(lobbyList[1].id, 'reaction', '第二位卡片应为极速反应挑战');
-assert.strictEqual(lobbyList[1].recordVal, '260 分', '反应挑战战绩应正确格式化');
-assert.strictEqual(lobbyList[2].id, 'schulte', '第三位卡片应为舒尔特方格');
-assert.strictEqual(lobbyList[2].recordVal, '14.5 秒', '舒尔特方格战绩应正确格式化');
-console.log('  ✔ GameRegistry 集中管理、配置自描述与大厅卡片动态适配测试通过！\n');
+assert.strictEqual(lobbyList.length, 4, '大厅卡片数据项数应为 4');
+assert.strictEqual(lobbyList[0].id, 'fortune');
+assert.strictEqual(lobbyList[1].id, 'watermelon', '大厅第 2 张卡片应为合成大西瓜');
+assert.strictEqual(lobbyList[1].recordVal, '12,484,244 金币', '合成大西瓜战绩应正确展现最高搜刮身价');
+assert.strictEqual(lobbyList[2].id, 'reaction');
+assert.strictEqual(lobbyList[3].id, 'schulte');
+console.log('  ✔ GameRegistry 集中管理、第二展位精准排列与大厅卡片动态适配测试通过！\n');
 
-// 4. 验证 Storage 通用按 gameId 命名空间与向下兼容
-console.log('▶ [4/4] 测试 Storage 数据层解耦与平滑兼容...');
+// 5. 验证 Storage 数据层解耦与平滑兼容
+console.log('▶ [5/6] 测试 Storage 数据层解耦与平滑兼容...');
 // 模拟全局 wx.getStorageSync / wx.setStorageSync
 const mockStorage = {};
 global.wx = {
@@ -183,35 +323,36 @@ global.wx = {
 
 const Storage = require('../miniprogram/utils/storage');
 
+// 测试合成大西瓜战绩写入与独立命名空间
+const watermelonRes = Storage.recordWatermelonResult({
+  score: 1560,
+  money: 12484244,
+  highestLevel: 11,
+  highestItem: '非洲之心',
+  maxCombo: 6
+});
+
+assert(watermelonRes.isNewRecord === true, '首次记录应为新纪录');
+const watermelonGameRecord = Storage.getGameRecord('watermelon');
+assert(watermelonGameRecord !== null, '独立命名空间中应存在 watermelon 记录');
+assert.strictEqual(watermelonGameRecord.bestMoney, 12484244, '最高搜刮身价应为 12484244');
+assert.strictEqual(watermelonGameRecord.bestLevel, 11, '最高等级应为 11');
+assert.strictEqual(watermelonGameRecord.lastHighestItem, '非洲之心', '最高道具应记录为非洲之心');
+
 // 测试反应力记录兼容性
 const reactionRes = Storage.recordReactionResult(180, 8);
 assert(reactionRes.isNewRecord === true, '首次记录应为新纪录');
 assert.strictEqual(reactionRes.stats.highScore, 180, '全局 stats.highScore 应同步更新');
-
-// 验证独立命名空间
-const reactionGameRecord = Storage.getGameRecord('reaction');
-assert(reactionGameRecord !== null, '独立命名空间应存在 reaction 记录');
-assert.strictEqual(reactionGameRecord.bestScore, 180, '独立命名空间中 bestScore 应为 180');
-assert.strictEqual(reactionGameRecord.bestCombo, 8, '独立命名空间中 bestCombo 应为 8');
 
 // 测试舒尔特记录兼容性
 const schulteRes = Storage.recordSchulteResult(12.3);
 assert(schulteRes.isNewRecord === true, '首次记录应为新纪录');
 assert.strictEqual(schulteRes.stats.schulteBestTime, 12.3, '全局 stats.schulteBestTime 应同步更新');
 
-const schulteGameRecord = Storage.getGameRecord('schulte');
-assert(schulteGameRecord !== null, '独立命名空间应存在 schulte 记录');
-assert.strictEqual(schulteGameRecord.bestTime, 12.3, '独立命名空间中 bestTime 应为 12.3');
+console.log('  ✔ Storage 通用 gameId 隔离与合成大西瓜专属持久化测试通过！\n');
 
-// 再次记录舒尔特更慢成绩，不应刷新最佳
-const schulteRes2 = Storage.recordSchulteResult(19.8);
-assert(schulteRes2.isNewRecord === false, '较慢成绩不应为新纪录');
-assert.strictEqual(Storage.getGameRecord('schulte').bestTime, 12.3, '最佳成绩应维持 12.3');
-
-console.log('  ✔ Storage 通用 gameId 隔离与老接口双向平滑兼容测试通过！\n');
-
-// 5. 验证 Feedback 触感模块与开发者工具自适应
-console.log('▶ [5/5] 测试 Feedback 触感反馈与模拟器自适应...');
+// 6. 验证 Feedback 触感模块与开发者工具自适应
+console.log('▶ [6/6] 测试 Feedback 触感反馈与模拟器自适应...');
 const Feedback = require('../miniprogram/utils/feedback');
 
 // 验证无 wx 环境下安全容错

@@ -1,0 +1,60 @@
+<view class="watermelon-container">
+  <!-- 顶部状态栏：搜刮身价、得分与下一个道具预览 -->
+  <view class="status-bar">
+    <view class="status-item money-item">
+      <text class="label">搜刮总身价</text>
+      <text class="value money-value">¥ {{moneyFormatted}}</text>
+    </view>
+    <view class="status-item score-item">
+      <text class="label">当前得分</text>
+      <text class="value score-value">{{score}}</text>
+    </view>
+    <view class="status-item next-item-box" wx:if="{{nextItem}}">
+      <text class="label">下一个</text>
+      <view class="next-preview-circle" style="border-color: {{nextItem.colorHex}};">
+        <image class="next-preview-img" src="{{nextItem.iconUrl}}" mode="aspectFit" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 连击提示与警戒浮动提示 -->
+  <view class="floating-banner-container">
+    <view class="combo-tag {{combo > 1 ? 'show' : ''}}">
+      <text class="combo-text">⚡ {{combo}} 连击！</text>
+    </view>
+    <view class="danger-warning-tag {{isWarning ? 'show' : ''}}">
+      <text class="warning-text">⚠️ 堆叠过高，请尽快合成！</text>
+    </view>
+  </view>
+
+  <!-- 核心物理渲染画布 (Canvas 2D) -->
+  <view class="canvas-wrap" id="canvasWrap">
+    <canvas
+      type="2d"
+      id="gameCanvas"
+      class="game-canvas"
+      bindtouchstart="onTouchStart"
+      bindtouchmove="onTouchMove"
+      bindtouchend="onTouchEnd"
+    />
+  </view>
+
+  <!-- 底部快捷操作栏 -->
+  <view class="bottom-bar">
+    <button class="action-btn secondary-btn" bindtap="goHome">返回大厅</button>
+    <button class="action-btn primary-btn" bindtap="restartGame">重新开始</button>
+  </view>
+
+  <!-- 通用结算弹窗组件 -->
+  <game-result-modal
+    visible="{{showResultModal}}"
+    title="{{modalTitle}}"
+    isNewRecord="{{isNewRecord}}"
+    badgeText="🏆 刷新最高搜刮记录！"
+    items="{{resultItems}}"
+    primaryBtnText="再来一局"
+    secondaryBtnText="返回大厅"
+    bindrestart="restartGame"
+    bindhome="goHome"
+  />
+</view>

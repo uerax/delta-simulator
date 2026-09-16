@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/watermelon/index",
     "pages/game/index",
     "pages/schulte/index",
     "pages/fortune/index"

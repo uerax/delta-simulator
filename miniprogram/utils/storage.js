@@ -215,6 +215,48 @@ const Storage = {
     });
   },
 
+  /**
+   * 记录【合成大西瓜】战绩 (同步独立存储、金币与每日积分)
+   * @param {object} resultData
+   * @param {number} resultData.score 最终得分
+   * @param {number} resultData.money 搜刮身价
+   * @param {number} resultData.highestLevel 最高合成等级
+   * @param {string} resultData.highestItem 最高道具名称
+   * @param {number} resultData.maxCombo 最高连击
+   */
+  recordWatermelonResult(resultData = {}) {
+    const { score = 0, money = 0, highestLevel = 1, highestItem = '', maxCombo = 0 } = resultData;
+    const coins = Math.max(10, Math.floor(money / 10000));
+    return this.recordGamePlay('watermelon', {
+      coinsEarned: coins,
+      dailyScore: score,
+      updater: (currentRecord, stats) => {
+        const prevBestScore = currentRecord.bestScore || 0;
+        const prevBestMoney = currentRecord.bestMoney || 0;
+
+        const isNewRecord = score > prevBestScore || money > prevBestMoney;
+        const newBestScore = Math.max(prevBestScore, score);
+        const newBestMoney = Math.max(prevBestMoney, money);
+        const newBestLevel = Math.max(currentRecord.bestLevel || 1, highestLevel);
+        const newBestCombo = Math.max(currentRecord.bestCombo || 0, maxCombo);
+
+        return {
+          isNewRecord,
+          updatedRecord: {
+            bestScore: newBestScore,
+            bestMoney: newBestMoney,
+            bestMoneyFormatted: (newBestMoney).toLocaleString('en-US'),
+            bestLevel: newBestLevel,
+            bestCombo: newBestCombo,
+            lastScore: score,
+            lastMoney: money,
+            lastHighestItem: highestItem
+          }
+        };
+      }
+    });
+  },
+
   // 内部辅助：更新今日战报
   _incrementDailyPlay(addScore = 0) {
     const today = getTodayString();
