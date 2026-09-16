@@ -40,7 +40,7 @@
     - 消耗品 (30件)：`miniprogram/assets/items/consume/`
     - 门卡 (59件)：`miniprogram/assets/items/keys/`
     - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`（纯简体规范化轻量清单，总计 359 件核心道具）
-  - 数据爬取、价格同步与导出脚本：`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+  - 数据爬取、价格同步与导出脚本：`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

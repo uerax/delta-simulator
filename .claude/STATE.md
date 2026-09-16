@@ -77,6 +77,17 @@
   4. 清单体积从 482.6 KB 降至 425.1 KB，净减 57.5 KB（缩减 11.9%）。
   5. 同步更新 `scripts/simplify_item_manifest.js` 与 `scripts/crawl_delta_items.js`，保证爬虫与清洗链路一致。
 
+## [2026-09-16] 道具/物资/地图元数据清单全面平替为国内官方已备案 CDN 并物理归档
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 道具清单 `item_manifest.json`：全量 359 件道具（收藏品/消耗品/门卡）的 `remotePicUrl` 和 `remoteThumbUrl` 全面替换为国内官方已备案 CDN（`playerhub.df.qq.com`，顶级域名 `qq.com` 拥有工信部 ICP 备案 粤B2-20090059，可直接添加进微信小程序 downloadFile/request 白名单，经终端实测 359/359 成功率 100%）。
+  2. 图标清单 `icon_manifest.json`：在原有字段上为全量 57 个标记图标平替补充 `remoteUrl`（28 个独立图标直连腾讯官方 CDN `game.gtimg.cn`，29 个官方内联图标采用官方源端的 Base64 Data URI）。
+  3. 地图清单 `map_manifest.json`：在原有字段上为 6 大战术地图补充官方瓦片 CDN 模版 `tileUrlTemplate`、预览图 `previewTileUrl` 以及 Zoom=2 的 16 张切片直链数组 `tileUrls`（来自 `game.gtimg.cn`）。
+  4. 本地路径转备用索引：将三大清单中的 `localPicPath` / `path` 字段统一规范更名为 `backupPath`（指向 `/assets_backup/...`），既避免业务开发时误引用本地 404 路径，又完整保留了本地备份的映射溯源能力。
+  5. 物理资产迁移与主包瘦身：全量 423 个本地图片文件（道具 359 张、图标 58 张、地图 6 张，共 58.07 MB）已安全移动至项目根目录备用文件夹 `assets_backup/`（完全位于 `miniprogram/` 之外，打包 0 占用），`miniprogram/assets/` 仅保留 4 个核心索引与样式文件，总体积从 60MB 骤降至 1.40MB。
+  6. 编写并运行自动化迁移与同步脚本 `scripts/migrate_to_official_cdn.js`。
+
 
 
 
