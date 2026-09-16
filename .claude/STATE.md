@@ -226,6 +226,20 @@
   - `.claude/BUGS.md`
   - `.claude/STATE.md`
 
+## [2026-09-17] 彻底修复球对球切向摩擦力矩耦合与消除拱形浮空死锁
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **彻底根除球对球接触表面摩擦耦合与角速度割裂缺陷**：在切向相对速度 `vt` 计算中补齐双方自转线速度分量（`+ b1.angularVelocity * r1 + b2.angularVelocity * r2`），使 `Kt = 3 * Kn` 实心圆盘有效切向反质量公式物理完全闭环。
+  2. **接触切向摩擦冲量真实反馈角动量**：消除两球相对滑动的切向冲量 `actualDeltaJt` 同时按 `(2 * invMass / radius) * actualDeltaJt` 对双方施加真实力矩，小球在接触面受摩擦力自然滚动耗散，绝不失真自激。
+  3. **彻底移除伪物理阻尼补丁**：删除单步 0.94 刹车片人工衰减以及触点数 $\ge 2$ 强制消旋（乘 0.65）补丁，解决多球接触时道具看起来僵死不转问题。
+  4. **强化挤压收敛与防失控钳位**：将 Gauss-Seidel 速度迭代次数从 4 次提升至 6 次，大幅缓解多球挤压时的非对称拱形浮空现象；爆炸冲击波角速度冲量按半径归一化并统一设置 $\pm 12 \text{ rad/s}$ 上限。
+  5. **全套自动化单测同步核验**：更新 `scripts/verify_watermelon_physics.js` 并执行 `scripts/verify_game_architecture.js`，全部物理回归与架构验证 100% 通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physics.js`
+  - `scripts/verify_watermelon_physics.js`
+  - `.claude/STATE.md`
+
 
 
 

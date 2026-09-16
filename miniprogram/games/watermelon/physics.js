@@ -20,7 +20,9 @@ class PhysicsWorld {
     this.dangerY = options.dangerY !== undefined ? options.dangerY : 70; // 顶部警戒红线 Y 坐标
     this.dangerDwellTime = options.dangerDwellTime || 0.8; // 滞留缓冲时间(秒)
     this.subSteps = options.subSteps || 8; // 子步进数 (CCD 防穿模)
-    this.velocityIterations = options.velocityIterations || 4; // 速度约束迭代次数 (Gauss-Seidel)
+    this.velocityIterations = options.velocityIterations || 6; // 速度约束迭代次数 (Gauss-Seidel)。
+    // 多球同时挤压(拱形/三角堆叠)时 4 次迭代往往不足以收敛，容易出现某个不在
+    // 对称轴上的球被暂时性的错误接触力"顶"在半空的现象；调到 6~8 明显更稳。
 
     this.bodies = [];
     this.nextId = 1;
@@ -181,6 +183,11 @@ class PhysicsWorld {
       const angularDecay = 1 / (1 + subDt * b.angularDamping);
       b.angularVelocity *= angularDecay;
 
+      // 角速度硬上限钳位 (统一入口，防止边界摩擦/爆炸冲击叠加导致小道具失控自旋)
+      const MAX_ANGULAR_VELOCITY = 12; // rad/s，约合每秒不到 2 圈
+      if (b.angularVelocity > MAX_ANGULAR_VELOCITY) b.angularVelocity = MAX_ANGULAR_VELOCITY;
+      else if (b.angularVelocity < -MAX_ANGULAR_VELOCITY) b.angularVelocity = -MAX_ANGULAR_VELOCITY;
+
       // 位移推进
       b.x += b.vx * subDt;
       b.y += b.vy * subDt;
@@ -306,9 +313,12 @@ class PhysicsWorld {
         const rvy = b2.vy - b1.vy;
 
         const vn = rvx * nx + rvy * ny;
-        const vt = rvx * tx + rvy * ty;
+        // 5.1a 接触点表面切向速度 (必须把两个刚体的自转也算进"表面相对滑动速度"，
+        // 否则 Kt=3*Kn 这个假设了转动耦合的有效质量就是在算一个从没被应用过的物理量)
+        // vt = (v2-v1)·t + w1*r1 + w2*r2，与文件顶部注释里写的模型 1:1 对应
+        const vt = rvx * tx + rvy * ty + b1.angularVelocity * b1.radius + b2.angularVelocity * b2.radius;
 
-        // 5.1 切向摩擦约束求解 (消除两球质心相对平动滑动)
+        // 5.1 切向摩擦约束求解 (真实接触点摩擦，同时消除平动滑动与驱动/制动自转)
         const deltaJt = -vt * tangentMass;
         const maxJt = friction * c.normalImpulse;
         const oldTangentImpulse = c.tangentImpulse;
@@ -321,20 +331,13 @@ class PhysicsWorld {
         if (!b1.isStatic) {
           b1.vx -= Ptx * b1.invMass;
           b1.vy -= Pty * b1.invMass;
+          // 摩擦冲量对刚体施加的真实力矩 (τ = r × F，r = radius 沿法线方向，参考边界碰撞里同款 2*invMass/radius 公式)
+          b1.angularVelocity += (2 * b1.invMass / b1.radius) * actualDeltaJt;
         }
         if (!b2.isStatic) {
           b2.vx += Ptx * b2.invMass;
           b2.vy += Pty * b2.invMass;
-        }
-
-        // 接触面滑动摩擦力矩耗散自转 (刹车片效应，绝不在小球网络中像齿轮一样相互传动加速)
-        if (!b1.isStatic && Math.abs(b1.angularVelocity) > 0.001) {
-          b1.angularVelocity *= 0.94;
-          if (Math.abs(b1.angularVelocity) < 0.05) b1.angularVelocity = 0;
-        }
-        if (!b2.isStatic && Math.abs(b2.angularVelocity) > 0.001) {
-          b2.angularVelocity *= 0.94;
-          if (Math.abs(b2.angularVelocity) < 0.05) b2.angularVelocity = 0;
+          b2.angularVelocity += (2 * b2.invMass / b2.radius) * actualDeltaJt;
         }
 
         // 5.2 法向接触约束求解 (非穿透排斥与低速弹性反弹)
@@ -380,26 +383,12 @@ class PhysicsWorld {
       }
     }
 
-    // 7. 多重接触几何死锁与悬空夹持消旋 (彻底斩断 A->B->C->D 闭环自旋传递链)
-    const contactCounts = new Map();
-    for (let k = 0; k < activeContacts.length; k++) {
-      const c = activeContacts[k];
-      contactCounts.set(c.b1, (contactCounts.get(c.b1) || 0) + 1);
-      contactCounts.set(c.b2, (contactCounts.get(c.b2) || 0) + 1);
-    }
-
-    for (let i = 0; i < count; i++) {
-      const b = bodies[i];
-      if (b.isStatic || b.isMerging) continue;
-      const cc = contactCounts.get(b) || 0;
-      if (cc >= 2) {
-        // 凡是处于 2 个或以上接触点挤压/承托中的刚体，转动自由度被几何死锁
-        b.angularVelocity *= 0.65;
-        if (Math.abs(b.angularVelocity) < 0.08) {
-          b.angularVelocity = 0;
-        }
-      }
-    }
+    // 7. (已移除) 此前这里有一段"多重接触强制消旋"补丁，用于压制第 5.1 步里
+    // 摩擦力从未真正驱动角速度所导致的失真自旋。现在 5.1 步已经用标准接触点摩擦
+    // 模型正确耦合了平动与转动 (物理上天然耗散能量、不会自激放大)，这个补丁不再需要，
+    // 继续留着反而会让多球接触时的球看起来"僵住不转"。
+    // 如果调试中仍然观察到极少数密集堆叠场景下的数值抖动，优先尝试调高
+    // this.velocityIterations (比如从 4 调到 6~8)，而不是重新引入强制消旋。
   }
 
   /**
@@ -634,7 +623,10 @@ class PhysicsWorld {
       b.vy += dirY * M - M * 0.22;
 
       // 1:1 斗鱼源码：c.body.angularVelocity += (L >= 0 ? -1 : 1) * M * 0.035
-      b.angularVelocity += (dirX >= 0 ? -1 : 1) * M * 0.035;
+      // 按半径归一化 (以 30px 为基准半径)，防止小半径道具获得不成比例的角速度增量
+      const radiusFactor = Math.min(1, 30 / b.radius);
+      b.angularVelocity += (dirX >= 0 ? -1 : 1) * M * 0.035 * radiusFactor;
+      // (角速度硬上限已在 _subStep 主循环里统一钳位，这里无需重复)
 
       // 速度上限钳位
       const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
