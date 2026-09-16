@@ -383,34 +383,52 @@ Page({
 
     const x = this._engine.currentFruitX;
     const y = this._engine.dropY;
+    const radius = item.radius;
+    const lineWidth = 2.5;
 
     ctx.save();
     ctx.translate(x, y);
 
-    // 绘制圆形底色
+    // 1. 绘制圆形底色
     ctx.fillStyle = item.bgColorHex;
     ctx.beginPath();
-    ctx.arc(0, 0, item.radius, 0, Math.PI * 2);
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // 裁剪正圆贴图
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(0, 0, item.radius, 0, Math.PI * 2);
-    ctx.clip();
-
+    // 2. 贴入高清道具图 (等比包含缩放，不拉伸变形，距边缘留有呼吸空隙)
     const img = this._imgCache[level];
     if (img && img.width) {
-      const size = item.radius * 2;
-      ctx.drawImage(img, -item.radius, -item.radius, size, size);
-    }
-    ctx.restore();
+      const contentRadius = radius * 0.76;
+      const maxDim = contentRadius * 2;
+      let drawW = maxDim;
+      let drawH = maxDim;
 
-    // 绘制高亮圆环边框
+      if (img.height) {
+        const aspect = img.width / img.height;
+        if (aspect >= 1) {
+          drawW = maxDim;
+          drawH = maxDim / aspect;
+        } else {
+          drawH = maxDim;
+          drawW = maxDim * aspect;
+        }
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(0, 0, radius - lineWidth / 2, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+      ctx.restore();
+    }
+
+    // 3. 往内部绘制高亮圆环边框 (内描边，外缘严格贴合物理圆，绝不超出原本面积)
     ctx.strokeStyle = item.colorHex;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
-    ctx.arc(0, 0, item.radius, 0, Math.PI * 2);
+    const strokeRadius = Math.max(0, radius - lineWidth / 2);
+    ctx.arc(0, 0, strokeRadius, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.restore();
@@ -446,30 +464,49 @@ Page({
     }
     ctx.rotate(body.angle); // 贴图随刚体真实旋转滚动
 
+    const radius = body.radius;
+    const lineWidth = body.level >= 9 ? 3.5 : 2; // 高阶大金加粗高光
+
     // 1. 圆形底色
     ctx.fillStyle = item.bgColorHex;
     ctx.beginPath();
-    ctx.arc(0, 0, body.radius, 0, Math.PI * 2);
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. 正圆裁剪并贴入高清透明图
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(0, 0, body.radius, 0, Math.PI * 2);
-    ctx.clip();
-
+    // 2. 贴入高清道具图 (等比包含缩放，不拉伸变形，距边缘留有呼吸空隙)
     const img = this._imgCache[body.level];
     if (img && img.width) {
-      const size = body.radius * 2;
-      ctx.drawImage(img, -body.radius, -body.radius, size, size);
-    }
-    ctx.restore();
+      const contentRadius = radius * 0.76;
+      const maxDim = contentRadius * 2;
+      let drawW = maxDim;
+      let drawH = maxDim;
 
-    // 3. 品质外光圈边框
+      if (img.height) {
+        const aspect = img.width / img.height;
+        if (aspect >= 1) {
+          drawW = maxDim;
+          drawH = maxDim / aspect;
+        } else {
+          drawH = maxDim;
+          drawW = maxDim * aspect;
+        }
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(0, 0, radius - lineWidth / 2, 0, Math.PI * 2);
+      ctx.clip();
+
+      ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+      ctx.restore();
+    }
+
+    // 3. 往内部绘制品质外光圈边框 (内描边，外缘严格贴合物理圆，绝不超出原本面积)
     ctx.strokeStyle = item.colorHex;
-    ctx.lineWidth = body.level >= 9 ? 3.5 : 2; // 高阶大金加粗高光
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
-    ctx.arc(0, 0, body.radius, 0, Math.PI * 2);
+    const strokeRadius = Math.max(0, radius - lineWidth / 2);
+    ctx.arc(0, 0, strokeRadius, 0, Math.PI * 2);
     ctx.stroke();
 
     // 4. 绝密终极大金“非洲之心”专属内部钻石辉光
@@ -477,7 +514,7 @@ Page({
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.arc(0, 0, body.radius - 4, 0, Math.PI * 2);
+      ctx.arc(0, 0, Math.max(0, strokeRadius - 4), 0, Math.PI * 2);
       ctx.stroke();
     }
 

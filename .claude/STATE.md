@@ -327,6 +327,18 @@
   - `.claude/FEATURE-MAP.md`
   - `.claude/STATE.md`
 
+## [2026-09-17] 大西瓜道具图片等比缩放、内描边圆环与边缘呼吸空隙微调
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **等比包含缩放（Contain 模式）**：在 `_drawFruit` 与 `_drawCurrentHeldFruit` 中读取 `img.width` 与 `img.height` 宽高比 `aspect`，根据横版或竖版自适应等比缩放，彻底杜绝强制拉伸变形。
+  2. **圆边框向内绘制（Inner Stroke）**：描边圆半径精确设定为 `strokeRadius = radius - lineWidth / 2`，外缘与刚体物理外圆严丝合缝贴合，杜绝边框超出原本圆面积。
+  3. **边缘呼吸留白空隙（Padding）**：可用内容区半径设定为 `radius * 0.76`，使道具图片四面与内圆环保持匀称空隙，消除贴边与切边压迫感。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
+
 
 
 
