@@ -23,6 +23,29 @@ function getTodayString() {
 const Storage = {
   STORAGE_KEYS,
 
+  getTodayString,
+
+  /**
+   * 获取或生成持久化用户 ID
+   * 纯离线单机环境下为每台设备生成唯一且不可变的 userId
+   * @returns {string} 如 'usr_k9x2m4p1'
+   */
+  getOrCreateUserId() {
+    try {
+      const profile = this.getUserProfile();
+      if (profile && profile.userId) {
+        return profile.userId;
+      }
+      // 生成格式: usr_<时间戳36进制><随机数36进制>
+      const newUserId = 'usr_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+      this.setUserProfile({ userId: newUserId });
+      return newUserId;
+    } catch (e) {
+      console.error('获取或创建用户ID失败:', e);
+      return 'usr_guest_' + getTodayString().replace(/-/g, '');
+    }
+  },
+
   /**
    * 获取玩家信息
    */
@@ -255,6 +278,59 @@ const Storage = {
         };
       }
     });
+  },
+
+  /**
+   * 获取今日运势记录 (支持跨天自动重置改运次数)
+   * @returns {object} { todayDate, rerollCount, todayFortune, fortuneResult }
+   */
+  getFortuneRecord() {
+    try {
+      const today = getTodayString();
+      const record = this.getGameRecord('fortune') || {};
+      // 跨天判断: 若存储的不是今天的记录，重置今日改运次数
+      if (record.todayDate !== today) {
+        return {
+          todayDate: today,
+          rerollCount: 0,
+          todayFortune: '待占卜',
+          fortuneResult: null
+        };
+      }
+      return {
+        todayDate: today,
+        rerollCount: record.rerollCount || 0,
+        todayFortune: record.todayFortune || '待占卜',
+        fortuneResult: record.fortuneResult || null
+      };
+    } catch (e) {
+      console.error('获取今日运势记录失败:', e);
+      return { todayDate: getTodayString(), rerollCount: 0, todayFortune: '待占卜', fortuneResult: null };
+    }
+  },
+
+  /**
+   * 保存今日运势记录 (同步独立命名空间并更新大厅展示文案)
+   * @param {object} fortuneResult 运势计算完整对象
+   * @param {number} rerollCount 当前改运次数
+   */
+  saveFortuneRecord(fortuneResult, rerollCount = 0) {
+    try {
+      const today = getTodayString();
+      const sign = (fortuneResult && fortuneResult.fortune && fortuneResult.fortune.sign) || '吉';
+      const itemName = (fortuneResult && fortuneResult.luckyItem && fortuneResult.luckyItem.name) || '未知物资';
+      const todayFortuneLabel = `${sign} · ${itemName}`;
+
+      return this.saveGameRecord('fortune', {
+        todayDate: today,
+        rerollCount: rerollCount,
+        todayFortune: todayFortuneLabel,
+        fortuneResult: fortuneResult
+      });
+    } catch (e) {
+      console.error('保存今日运势记录失败:', e);
+      return null;
+    }
   },
 
   // 内部辅助：更新今日战报

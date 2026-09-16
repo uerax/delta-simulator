@@ -736,7 +736,7 @@
       "level": 6,
       "name": "火箭燃料",
       "pic": "15020010033.png",
-      "price": 0,
+      "price": 1499562,
       "length": 3,
       "width": 4
     },
@@ -754,7 +754,7 @@
       "level": 6,
       "name": "高级咖啡豆",
       "pic": "15080050069.png",
-      "price": 0,
+      "price": 132667,
       "length": 1,
       "width": 2
     },
@@ -2608,7 +2608,7 @@
       "level": 4,
       "name": "三角洲部队：黑鹰坠落(盒装版)",
       "pic": "15080050070.png",
-      "price": 0,
+      "price": 66666,
       "length": 1,
       "width": 2
     },

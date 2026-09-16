@@ -274,6 +274,13 @@ class ItemManagerService {
   }
 
   /**
+   * 别名方法: 按等级获取道具列表
+   */
+  getItemsByLevel(level) {
+    return this.getLevelList(level);
+  }
+
+  /**
    * 从指定等级的道具池中随机抽取一件道具
    * @param {number} level 1~6
    * @returns {Object|null}
@@ -292,6 +299,13 @@ class ItemManagerService {
   getAll() {
     this._ensureInit();
     return this._allItems;
+  }
+
+  /**
+   * 别名方法: 获取全量道具数组
+   */
+  getAllItems() {
+    return this.getAll();
   }
 }
 
