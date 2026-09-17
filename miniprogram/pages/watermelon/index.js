@@ -31,6 +31,7 @@ Page({
   data: {
     score: 0,
     moneyFormatted: '0',
+    watermelonCount: 0,         // 当前局合成西瓜(非洲之心)数
     combo: 0,
     isWarning: false,
     nextItem: defaultFirstItem, // 静态预置初始首发道具，开屏零等待，杜绝 DOM 二次重排
@@ -261,11 +262,12 @@ Page({
       height: height,
       dropY: Math.round(height * 0.055),   // 对标斗鱼待释放水果顶部居中挂载点
       dangerY: Math.round(height * 0.125), // 对标斗鱼顶部警戒线高度 (约占舞台上沿向下 12.5%)
-      onScoreUpdate: ({ score, moneyFormatted, combo }) => {
+      onScoreUpdate: ({ score, moneyFormatted, combo, watermelonCount }) => {
         this.setData({
           score,
           moneyFormatted,
-          combo
+          combo,
+          watermelonCount: watermelonCount || 0
         });
       },
       onFruitSpawn: ({ nextItem }) => {
@@ -987,14 +989,15 @@ Page({
       money: resultData.money,
       highestLevel: resultData.highestLevel,
       highestItem: resultData.highestItem,
-      maxCombo: resultData.maxCombo
+      maxCombo: resultData.maxCombo,
+      watermelonCount: resultData.watermelonCount || 0
     });
 
     const isNewRecord = saveResult ? saveResult.isNewRecord : false;
 
     const resultItems = [
       { label: '搜刮总身价', value: `¥ ${resultData.moneyFormatted}`, highlight: true, highlightColor: '#fbbf24' },
-      { label: '当局得分', value: `${resultData.score} 分` },
+      { label: '合成非洲之心数', value: `${resultData.watermelonCount || 0} 个`, highlight: (resultData.watermelonCount || 0) > 0, highlightColor: '#e03a3e' },
       { label: '最高合成大金', value: resultData.highestItem, highlight: resultData.highestLevel >= 9, highlightColor: '#e03a3e' },
       { label: '最大连击', value: `${resultData.maxCombo} 连击` },
       { label: '投入物资数', value: `${resultData.dropCount} 件` }
@@ -1016,6 +1019,7 @@ Page({
       showResultModal: false,
       score: 0,
       moneyFormatted: '0',
+      watermelonCount: 0,
       combo: 0,
       isWarning: false
     });

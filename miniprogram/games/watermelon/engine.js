@@ -28,6 +28,7 @@ class WatermelonEngine {
     this.gameState = 'ready'; // ready | playing | ended
     this.score = 0;
     this.money = 0; // 搜刮总身价 (金币)
+    this.watermelonCount = 0; // 当前局合成非洲之心(大西瓜)个数
     this.dropCount = 0;
     this.combo = 0;
     this.maxCombo = 0;
@@ -310,6 +311,7 @@ class WatermelonEngine {
     this.gameState = 'playing';
     this.score = 0;
     this.money = 0;
+    this.watermelonCount = 0;
     this.dropCount = 0;
     this.combo = 0;
     this.maxCombo = 0;
@@ -482,6 +484,11 @@ class WatermelonEngine {
       this.highestLevel = nextLevel;
     }
 
+    // 成功合成终极大金·非洲之心 (大西瓜) 计数
+    if (nextLevel === 11) {
+      this.watermelonCount = (this.watermelonCount || 0) + 1;
+    }
+
     // 触发反馈
     const isBigGold = nextLevel >= 9;
     this._triggerFeedback('merge', { combo: this.combo, isBigGold });
@@ -563,7 +570,8 @@ class WatermelonEngine {
       highestLevel: this.highestLevel,
       highestItem: highestItem ? highestItem.name : '未知',
       maxCombo: this.maxCombo,
-      dropCount: this.dropCount
+      dropCount: this.dropCount,
+      watermelonCount: this.watermelonCount || 0
     };
 
     this._emitState();
@@ -594,6 +602,7 @@ class WatermelonEngine {
       score: this.score,
       money: this.money,
       moneyFormatted: '0',
+      watermelonCount: this.watermelonCount || 0,
       combo: this.combo,
       maxCombo: this.maxCombo,
       currentLevel: this.currentLevel,
@@ -616,6 +625,7 @@ class WatermelonEngine {
         score: this.score,
         money: this.money,
         moneyFormatted: this._formatNumber(this.money),
+        watermelonCount: this.watermelonCount || 0,
         combo: this.combo,
         maxCombo: this.maxCombo,
         highestLevel: this.highestLevel

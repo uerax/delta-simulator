@@ -245,7 +245,20 @@ assert.strictEqual(fullEngine.dropCount, 1, '下落计数应加 1');
 const dropBlocked = fullEngine.dropCurrentFruit(180);
 assert.strictEqual(dropBlocked, false, '冷却时间内连续点击应被拦截防呆');
 
-// 3.5.1 对标斗鱼 Cocos：松手瞄准平移插值、残影拖尾与到位下落全流程
+// 3.4.1 核心需求验证：合成非洲之心(Lv.11)计数与当前局西瓜数派发
+let scoreUpdateData = null;
+const mergeTestEngine = new WatermelonEngine({
+  width: 360,
+  height: 600,
+  onScoreUpdate: (data) => { scoreUpdateData = data; }
+});
+mergeTestEngine.start();
+assert.strictEqual(mergeTestEngine.watermelonCount, 0, '初始合成西瓜数应为 0');
+// 模拟两颗 10 级大金合成出 11 级非洲之心
+mergeTestEngine._handlePhysicsMerge(11, 180, 400, null);
+assert.strictEqual(mergeTestEngine.watermelonCount, 1, '合成11级非洲之心后计数应为 1');
+assert(scoreUpdateData !== null && scoreUpdateData.watermelonCount === 1, 'onScoreUpdate 回调应广播当前合成西瓜数');
+mergeTestEngine.destroy();
 let aimTrailData = null;
 const aimEngine = new WatermelonEngine({
   width: 360,
@@ -305,29 +318,35 @@ const GameRegistry = require('../miniprogram/games/registry');
 const games = GameRegistry.getAllGames();
 assert(Array.isArray(games) && games.length === 4, '当前应注册 4 款小游戏');
 
-// 重点验证顺序：首位为今日鼠鼠运势，第二位为合成大西瓜！
+// 重点验证顺序：首位为今日鼠鼠运势，第二位为合成非洲之心！
 assert.strictEqual(games[0].id, 'fortune', '首位游戏应为今日鼠鼠运势');
-assert.strictEqual(games[1].id, 'watermelon', '核心需求验证：第二位游戏应放置合成大西瓜');
-assert.strictEqual(games[1].title, '合成大西瓜', '第二位游戏标题应为合成大西瓜');
+assert(games[0].iconUrl.includes('15080050142.png'), '今日鼠鼠运势图标应为海洋之泪官方CDN');
+assert.strictEqual(games[1].id, 'watermelon', '核心需求验证：第二位游戏应放置合成非洲之心');
+assert.strictEqual(games[1].title, '合成非洲之心', '第二位游戏标题应为合成非洲之心');
+assert(games[1].bgGradient.includes('#361a1c'), '合成非洲之心图标背景色应换成6级大红专属底色');
+assert(games[1].boxStyle.includes('#E03A3E'), '合成非洲之心边框高光应为6级大红颜色');
 assert.strictEqual(games[2].id, 'reaction', '第三位游戏应为极速反应挑战');
+assert.strictEqual(games[2].hidden, true, '极速反应挑战应标记为hidden');
 assert.strictEqual(games[3].id, 'schulte', '第四位游戏应为舒尔特方格');
+assert.strictEqual(games[3].hidden, true, '舒尔特方格应标记为hidden');
 
 const mockStats = { highScore: 260, schulteBestTime: 14.5 };
 const mockRecords = {
   fortune: { todayFortune: '大吉·今日必出大金' },
-  watermelon: { bestMoney: 12484244, bestMoneyFormatted: '12,484,244' },
+  watermelon: { bestMoney: 12484244, bestMoneyFormatted: '12,484,244', todayWatermelonCount: 3 },
   reaction: { bestScore: 260 },
   schulte: { bestTime: 14.5 }
 };
 
 const lobbyList = GameRegistry.getLobbyList(mockStats, mockRecords);
-assert.strictEqual(lobbyList.length, 4, '大厅卡片数据项数应为 4');
+assert.strictEqual(lobbyList.length, 2, '大厅卡片数据项数应为 2 (隐藏其余两个游戏)');
 assert.strictEqual(lobbyList[0].id, 'fortune');
-assert.strictEqual(lobbyList[1].id, 'watermelon', '大厅第 2 张卡片应为合成大西瓜');
-assert.strictEqual(lobbyList[1].recordVal, '12,484,244 金币', '合成大西瓜战绩应正确展现最高搜刮身价');
-assert.strictEqual(lobbyList[2].id, 'reaction');
-assert.strictEqual(lobbyList[3].id, 'schulte');
-console.log('  ✔ GameRegistry 集中管理、第二展位精准排列与大厅卡片动态适配测试通过！\n');
+assert(lobbyList[0].iconUrl.includes('15080050142.png'), '大厅首项图标应为海洋之泪');
+assert.strictEqual(lobbyList[1].id, 'watermelon', '大厅第 2 张卡片应为合成非洲之心');
+assert.strictEqual(lobbyList[1].title, '合成非洲之心', '大厅第 2 张卡片标题应为合成非洲之心');
+assert.strictEqual(lobbyList[1].recordLabel, '合成非洲之心数', '战绩标签应为合成非洲之心数');
+assert.strictEqual(lobbyList[1].recordVal, '3 个', '合成非洲之心战绩应正确展现合成非洲之心个数');
+console.log('  ✔ GameRegistry 集中管理、非洲之心红品配置、今日合成数战绩与大厅隐藏其他游戏测试通过！\n');
 
 // 5. 验证 Storage 数据层解耦与平滑兼容
 console.log('▶ [5/6] 测试 Storage 数据层解耦与平滑兼容...');
@@ -347,13 +366,14 @@ global.wx = {
 
 const Storage = require('../miniprogram/utils/storage');
 
-// 测试合成大西瓜战绩写入与独立命名空间
+// 测试合成非洲之心战绩写入与今日合成数持久化
 const watermelonRes = Storage.recordWatermelonResult({
   score: 1560,
   money: 12484244,
   highestLevel: 11,
   highestItem: '非洲之心',
-  maxCombo: 6
+  maxCombo: 6,
+  watermelonCount: 2
 });
 
 assert(watermelonRes.isNewRecord === true, '首次记录应为新纪录');
@@ -362,6 +382,7 @@ assert(watermelonGameRecord !== null, '独立命名空间中应存在 watermelon
 assert.strictEqual(watermelonGameRecord.bestMoney, 12484244, '最高搜刮身价应为 12484244');
 assert.strictEqual(watermelonGameRecord.bestLevel, 11, '最高等级应为 11');
 assert.strictEqual(watermelonGameRecord.lastHighestItem, '非洲之心', '最高道具应记录为非洲之心');
+assert.strictEqual(watermelonGameRecord.todayWatermelonCount, 2, '今日合成非洲之心数应记录为 2');
 
 // 测试反应力记录兼容性
 const reactionRes = Storage.recordReactionResult(180, 8);

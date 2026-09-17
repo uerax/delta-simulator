@@ -35,11 +35,14 @@ const GameRegistry = {
 
   /**
    * 自动生成大厅卡片列表所需要的完整数据（动态合并统计与战绩格式化）
+   * 默认自动过滤 hidden: true 的游戏卡片，仅展示未隐藏的游戏
    * @param {object} globalStats 全局统计 (Storage.getGameStats())
    * @param {object} recordsMap 独立游戏命名空间记录表 (wx.getStorageSync('delta_game_records'))
    */
   getLobbyList(globalStats = {}, recordsMap = {}) {
-    return REGISTERED_GAMES.map(game => {
+    return REGISTERED_GAMES
+      .filter(game => !game.hidden)
+      .map(game => {
       const gameRecord = recordsMap[game.id] || null;
       const record = typeof game.getLobbyRecord === 'function'
         ? game.getLobbyRecord(globalStats, gameRecord)

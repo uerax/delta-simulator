@@ -1,6 +1,97 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.6.1`（唯一权威事实源，每次改动必须在此递增并同步记录）
+> **当前全局版本号**：`v1.7.3`（唯一权威事实源，每次改动必须在此递增并同步记录）
+
+## [2026-09-17] 根除首页静态缓存锁死并声明期绑定最新战绩《合成非洲之心数》
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **深度根因排查定位（已验证）**：
+     - 用户在微信开发者工具中看到首页依然显示旧的“最高搜刮身价”，根因有两个：
+       1) `pages/index/index.json` 中配置了微信官方的 `"initialRenderingCache": "static"`，导致微信开发者工具在本地固化了上一次编译生成的静态卡片 DOM 快照，在热重载时优先展示旧快照；
+       2) 之前的提交只修改了底层模块 `miniprogram/games/watermelon/manifest.js`，未改动 `pages/index/` 目录下的主页面文件，导致微信开发者工具的文件监听器（File Watcher）未触发对首页的重新编译，运行内存中的闭包依然是旧版本。
+  2. **彻底解决措施落地**：
+     - `miniprogram/pages/index/index.json`：彻底拔除 `"initialRenderingCache": "static"`，杜绝微信客户端用过期快照覆盖最新战绩；
+     - `miniprogram/pages/index/index.js`：新增 `getInitialGameList()`，在 `Page.data` 声明期即直接通过 `GameRegistry.getLobbyList()` 注入最新战绩标签与数值（`recordLabel: '合成非洲之心数'`, `recordVal: '0 个'`），开屏首帧即为正确内容；
+     - 触动更新 `index.js` 与 `index.wxml`，强制触发微信开发者工具感知页面变动并全量重新编译打包。
+  3. **自动化测试 100% 绿色通过**：
+     - 7 项单测全部正常通过。
+- 涉及文件：
+  - `miniprogram/pages/index/index.json`
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/pages/index/index.wxml`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 游戏内状态栏与首页卡片战绩文案100%纯化对齐为《合成非洲之心数》
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **游戏内顶部状态栏文案修正**：
+     - `miniprogram/pages/watermelon/index.wxml`：将顶部状态栏标签从“当前合成西瓜数”彻底更正为“合成非洲之心数”；
+     - `miniprogram/pages/watermelon/index.js`：结算弹窗明细标签同步更正为“合成非洲之心数”，消灭西瓜字样。
+  2. **首页（大厅）卡片战绩文案修正**：
+     - `miniprogram/games/watermelon/manifest.js`：大厅卡片战绩标签 `recordLabel` 规范更正为“合成非洲之心数”，与游戏内称谓 100% 统一，数值显示 `${count} 个`。
+  3. **自动化测试回归验证**：
+     - `scripts/verify_game_architecture.js`：更新战绩标签为“合成非洲之心数”，全量单测全部 100% 绿色通过。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/games/watermelon/manifest.js`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 游戏内当前得分改造为当前合成西瓜数 & 大厅战绩改造为今日合成非洲之心数
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **游戏内状态栏与引擎计数链路落地（当前合成西瓜数）**：
+     - `miniprogram/games/watermelon/engine.js`：构造函数与 `start()` 初始化 `watermelonCount = 0`；在刚体合成事件 `_handlePhysicsMerge` 中，当 `nextLevel === 11`（合成终极大金·非洲之心）时实时递增 `this.watermelonCount++`；
+     - 在 `_emitScore()`、`getInitialState()` 与 `end()` 回调中均全链路派发 `watermelonCount` 字段；
+     - `miniprogram/pages/watermelon/index.wxml`：顶部状态栏原【当前得分】标签及数值平替为 `<text class="label">当前合成西瓜数</text>`，数据直连绑定 `watermelonCount`；
+     - `miniprogram/pages/watermelon/index.js`：`_setupEngine` 监听 `watermelonCount` 实时 `setData`，并在结算弹窗 `resultItems` 展现合成西瓜数，`restartGame` 时自动复位清零。
+  2. **大厅卡片战绩与存储层跨天改造（今日合成非洲之心数）**：
+     - `miniprogram/utils/storage.js`：`recordWatermelonResult` 接收 `watermelonCount`，基于 `getTodayString()` 实现跨天日期校验；若为同一天则累加 `todayWatermelonCount`，跨天则自动重置归零从当前局起算，并新增 `getWatermelonRecord()` 便捷读取；
+     - `miniprogram/games/watermelon/manifest.js`：大厅战绩格式化函数 `getLobbyRecord` 彻底移除原“最高搜刮身价”，全面替换为 `label: '今日合成非洲之心数', val: `${count} 个``，开局默认显示 `0 个`，合出大金后实时响应。
+  3. **全量自动化测试套件 100% 绿色通过**：
+     - `scripts/verify_game_architecture.js`：新增合成 11 级非洲之心计数、大厅今日合成数标签及 Storage 跨天持久化核验断言，7 项全套单测全部通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/games/watermelon/manifest.js`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 游戏更名《合成非洲之心》、红品视觉与海洋之泪图标对齐及大厅双游戏聚焦
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **游戏命名全面规范为《合成非洲之心》**：
+     - `miniprogram/games/watermelon/manifest.js`：标题从“合成大西瓜”更名为“合成非洲之心”，图标升级为“💎”，文案更新对齐；
+     - `miniprogram/pages/watermelon/index.json`：导航栏标题 `navigationBarTitleText` 同步更名为“合成非洲之心”。
+  2. **图标背景颜色换成 6 级大红设置**：
+     - `manifest.js`：背景渐变色由原翠绿瓜皮色平替为 6 级红品专属暗红渐变（`linear-gradient(135deg, rgba(224, 58, 62, 0.45) 0%, #361a1c 100%)`）；
+     - 边框与阴影对齐 6 级大红高光配置（`border: 2rpx solid #E03A3E; box-shadow: 0 4rpx 16rpx rgba(224, 58, 62, 0.4);`）。
+  3. **今日鼠鼠运势图标改为官方 CDN“海洋之泪”**：
+     - `miniprogram/games/fortune/manifest.js`：图标链接由非洲之心平替为三角洲官方 6 级红品“海洋之泪”高清直链（`15080050142.png`）；
+     - `miniprogram/pages/fortune/index.wxml`：占位卡片图片同步切换为海洋之泪 CDN。
+  4. **大厅聚焦核心游戏，其余两个游戏展示隐藏**：
+     - `miniprogram/games/reaction/manifest.js` 与 `miniprogram/games/schulte/manifest.js`：显式声明 `hidden: true`；
+     - `miniprogram/games/registry.js`：`getLobbyList` 引入 `filter(game => !game.hidden)` 机制，大厅仅展示未隐藏的“今日鼠鼠运势”与“合成非洲之心”，底层路由与游戏注册完整保留。
+  5. **全量自动化测试回归 100% 绿色通过**：
+     - `scripts/verify_game_architecture.js` 等 7 项全套单测断言同步更新，全部 100% 绿色通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/manifest.js`
+  - `miniprogram/pages/watermelon/index.json`
+  - `miniprogram/games/fortune/manifest.js`
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/games/reaction/manifest.js`
+  - `miniprogram/games/schulte/manifest.js`
+  - `miniprogram/games/registry.js`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-17] 消除大西瓜 Canvas 背景抢跑与上下部分割裂慢半拍（接入官方 onRouteDone）
 - 状态：已完成

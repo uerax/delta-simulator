@@ -3,6 +3,19 @@ const Storage = require('../../utils/storage');
 const Feedback = require('../../utils/feedback');
 const GameRegistry = require('../../games/registry');
 
+// 获取初始游戏卡片列表（声明期即刻绑定最新游戏元数据与战绩适配）
+function getInitialGameList() {
+  try {
+    const stats = Storage.getGameStats ? Storage.getGameStats() : {};
+    const recordsMap = (typeof wx !== 'undefined' && wx.getStorageSync)
+      ? (wx.getStorageSync(Storage.STORAGE_KEYS.GAME_RECORDS) || {})
+      : {};
+    return GameRegistry.getLobbyList(stats, recordsMap);
+  } catch (e) {
+    return GameRegistry.getLobbyList();
+  }
+}
+
 Page({
   data: {
     userProfile: {
@@ -23,7 +36,7 @@ Page({
       soundEnabled: true,
       vibrationEnabled: true
     },
-    gameList: []
+    gameList: getInitialGameList()
   },
 
   _isNavigating: false,

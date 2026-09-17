@@ -5,6 +5,7 @@
 module.exports = {
   id: 'reaction',
   title: '极速反应挑战',
+  hidden: true,
   icon: '⚡',
   tag: '手速 / 敏捷',
   desc: '30秒九宫格动态打靶，考验极限反应与连击手速！',

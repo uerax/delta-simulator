@@ -14,18 +14,18 @@
   - 吉凶与战术箴言文案库：`fortuneConfig.js`（1~6 级品质映射大吉~大凶，海量建议池预留口子，支持 `{map}` 与 `{item}` 占位符）
   - 纯 JS 逻辑与持久化驱动引擎：`engine.js`（`FortuneEngine`，自动管理跨天重置、幂等运势读取、付费改运/逆天改命 Reroll 接口）
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
-- **游戏 2：合成大西瓜 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
+- **游戏 2：合成非洲之心 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
   - 11 级阶梯道具元数据：`items.js`（官方已备案 CDN 道具、尺寸、物理质量与交易行身价）
   - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，1:1 对标斗鱼 Cocos 物理参数与 120Hz 子步长累加器，摩擦力0.2，角阻尼0.22，低弹性0.1，偏心防发呆与休眠机制，彻底根除小球无限自旋）
   - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，直接绑定 Planck.js 物理世界，动态下落池难度曲线、搜刮身价、连击算法与状态机）
-  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，6级红品专属底色与高光）
   - 第三方物理核心库：`miniprogram/lib/planck.min.js`（Erin Catto 官方 Box2D 纯 JS 移植版，零 eval，零 new Function，适配微信环境）
-- **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
+- **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`（大厅展示隐藏）
   - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
-  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
-- **游戏 4：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，已配置 hidden: true）
+- **游戏 4：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`（大厅展示隐藏）
   - 纯 JS 核心逻辑引擎：`engine.js`（`SchulteEngine`，管理乱序洗牌、步进按序校验、0.1s 计时与评级算法）
-  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+  - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，已配置 hidden: true）
 
 ## 通用组件 (Components)
 - **通用游戏结算弹窗**：`miniprogram/components/game-result-modal/`
@@ -38,8 +38,8 @@
   - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局音效/震动开关、数据重置。
 - **页面 1：今日鼠鼠运势**：`miniprogram/pages/fortune/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
-  - 职责定位：占位页面（施工与方案对齐中）。
-- **页面 2：合成大西瓜**：`miniprogram/pages/watermelon/`
+  - 职责定位：占位页面（施工与方案对齐中），图标接入官方CDN“海洋之泪”。
+- **页面 2：合成非洲之心**：`miniprogram/pages/watermelon/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
   - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入通用弹窗组件与触感反馈。
 - **页面 3：极速反应挑战**：`miniprogram/pages/game/`

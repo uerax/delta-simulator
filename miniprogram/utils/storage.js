@@ -239,17 +239,19 @@ const Storage = {
   },
 
   /**
-   * 记录【合成大西瓜】战绩 (同步独立存储、金币与每日积分)
+   * 记录【合成非洲之心】战绩 (同步独立存储、今日合成数、金币与每日积分)
    * @param {object} resultData
    * @param {number} resultData.score 最终得分
    * @param {number} resultData.money 搜刮身价
    * @param {number} resultData.highestLevel 最高合成等级
    * @param {string} resultData.highestItem 最高道具名称
    * @param {number} resultData.maxCombo 最高连击
+   * @param {number} resultData.watermelonCount 本局合成非洲之心(大西瓜)数
    */
   recordWatermelonResult(resultData = {}) {
-    const { score = 0, money = 0, highestLevel = 1, highestItem = '', maxCombo = 0 } = resultData;
+    const { score = 0, money = 0, highestLevel = 1, highestItem = '', maxCombo = 0, watermelonCount = 0 } = resultData;
     const coins = Math.max(10, Math.floor(money / 10000));
+    const today = getTodayString();
     return this.recordGamePlay('watermelon', {
       coinsEarned: coins,
       dailyScore: score,
@@ -263,6 +265,11 @@ const Storage = {
         const newBestLevel = Math.max(currentRecord.bestLevel || 1, highestLevel);
         const newBestCombo = Math.max(currentRecord.bestCombo || 0, maxCombo);
 
+        // 跨天判断：若记录的不是今天，今日合成数重置从 0 累加
+        const prevTodayCount = (currentRecord.todayDate === today) ? (currentRecord.todayWatermelonCount || 0) : 0;
+        const newTodayCount = prevTodayCount + watermelonCount;
+        const newTotalCount = (currentRecord.totalWatermelonCount || 0) + watermelonCount;
+
         return {
           isNewRecord,
           updatedRecord: {
@@ -271,13 +278,39 @@ const Storage = {
             bestMoneyFormatted: (newBestMoney).toLocaleString('en-US'),
             bestLevel: newBestLevel,
             bestCombo: newBestCombo,
+            todayDate: today,
+            todayWatermelonCount: newTodayCount,
+            totalWatermelonCount: newTotalCount,
             lastScore: score,
             lastMoney: money,
-            lastHighestItem: highestItem
+            lastHighestItem: highestItem,
+            lastWatermelonCount: watermelonCount
           }
         };
       }
     });
+  },
+
+  /**
+   * 获取合成非洲之心战绩 (支持跨天自动计算今日合成非洲之心数)
+   * @returns {object}
+   */
+  getWatermelonRecord() {
+    try {
+      const today = getTodayString();
+      const record = this.getGameRecord('watermelon') || {};
+      const todayWatermelonCount = (record.todayDate === today)
+        ? (record.todayWatermelonCount || 0)
+        : 0;
+      return {
+        ...record,
+        todayDate: today,
+        todayWatermelonCount
+      };
+    } catch (e) {
+      console.error('获取合成非洲之心记录失败:', e);
+      return { todayWatermelonCount: 0 };
+    }
   },
 
   /**

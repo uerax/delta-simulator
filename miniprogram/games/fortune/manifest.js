@@ -1,14 +1,14 @@
 /**
  * 今日鼠鼠运势 - 游戏元数据与配置
- * 采用官方 CDN 非洲之心高清图片与 6级红品暗红专属底色
+ * 采用官方 CDN 海洋之泪高清图片与 6级红品暗红专属底色
  */
 
 module.exports = {
   id: 'fortune',
   title: '今日鼠鼠运势',
   icon: '💎',
-  // 官方已备案国内 CDN 非洲之心透明背景图
-  iconUrl: 'https://playerhub.df.qq.com/playerhub/60004/object/15080050006.png',
+  // 官方已备案国内 CDN 海洋之泪透明背景图
+  iconUrl: 'https://playerhub.df.qq.com/playerhub/60004/object/15080050142.png',
   tag: '绝密红品 / 运势',
   desc: '每日一测，抽取专属鼠鼠运势与今日摸金逃跑指南！',
   // 6级红品专属暗红底色与高光渐变

@@ -5,6 +5,7 @@
 module.exports = {
   id: 'schulte',
   title: '舒尔特专注方格',
+  hidden: true,
   icon: '🧠',
   tag: '注意力 / 视幅',
   desc: '4x4 随机乱序方格，按序找出 1 到 16，挑战专注极速！',

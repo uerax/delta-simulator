@@ -6,8 +6,8 @@
       <text class="value money-value">¥ {{moneyFormatted}}</text>
     </view>
     <view class="status-item score-item">
-      <text class="label">当前得分</text>
-      <text class="value score-value">{{score}}</text>
+      <text class="label">合成非洲之心数</text>
+      <text class="value score-value">{{watermelonCount}}</text>
     </view>
     <view class="status-item next-item-box" wx:if="{{nextItem}}">
       <text class="label">下一个</text>
