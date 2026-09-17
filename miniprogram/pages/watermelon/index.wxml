@@ -1,4 +1,4 @@
-<view class="watermelon-container">
+<view class="watermelon-container {{pageReady ? 'page-ready' : ''}}">
   <!-- 顶部状态栏：搜刮身价、得分与下一个道具预览 -->
   <view class="status-bar">
     <view class="status-item money-item">

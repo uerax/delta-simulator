@@ -1,27 +1,23 @@
-<root-portal wx:if="{{visible}}">
-  <view class="modal-overlay" catchtouchmove="preventTouchMove">
-    <view class="result-modal">
-      <view class="modal-title">{{title}}</view>
+<view class="modal-overlay" wx:if="{{visible}}" catchtouchmove="preventTouchMove">
+  <view class="result-modal">
+    <view class="modal-title">{{title}}</view>
 
-      <view class="new-record-badge" wx:if="{{isNewRecord}}">
-        {{badgeText}}
-      </view>
+    <view class="new-record-badge" wx:if="{{isNewRecord}}">
+      {{badgeText}}
+    </view>
 
-      <view class="result-list">
-        <block wx:for="{{items}}" wx:key="label">
-          <view class="result-row">
-            <text class="row-label">{{item.label}}：</text>
-            <text class="row-value {{item.highlight ? 'highlight' : ''}}" style="{{item.highlightColor ? 'color: ' + item.highlightColor : ''}}">
-              {{item.value}}
-            </text>
-          </view>
-        </block>
-      </view>
+    <view class="result-list">
+      <block wx:for="{{items}}" wx:key="label">
+        <view class="result-row">
+          <text class="row-label">{{item.label}}：</text>
+          <text class="row-value {{item.highlight ? 'highlight' : ''}}" style="{{item.highlightColor ? 'color: ' + item.highlightColor : ''}}">{{item.value}}</text>
+        </view>
+      </block>
+    </view>
 
-      <view class="modal-actions">
-        <button class="modal-btn play-again-btn" bindtap="onTapPrimary">{{primaryBtnText}}</button>
-        <button class="modal-btn back-home-btn" bindtap="onTapSecondary">{{secondaryBtnText}}</button>
-      </view>
+    <view class="modal-actions">
+      <button class="modal-btn play-again-btn" bindtap="onTapPrimary">{{primaryBtnText}}</button>
+      <button class="modal-btn back-home-btn" bindtap="onTapSecondary">{{secondaryBtnText}}</button>
     </view>
   </view>
-</root-portal>
+</view>

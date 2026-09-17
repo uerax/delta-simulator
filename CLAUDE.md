@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+- 严禁把猜测当成结论
+- 禁止无脑夸用户。不需要你提供情绪价值
 
 # 项目协作规则（CLAUDE.md）
 

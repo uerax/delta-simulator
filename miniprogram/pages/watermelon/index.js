@@ -10,13 +10,31 @@ const Storage = require('../../utils/storage');
 const Feedback = require('../../utils/feedback');
 const MapManager = require('../../utils/mapManager');
 
+const defaultFirstItem = getItemByLevel(1);
+
+// 安全获取窗口与屏幕信息 (彻底消除 wx.getSystemInfoSync is deprecated 告警)
+function getSafeWindowInfo() {
+  if (typeof wx !== 'undefined') {
+    if (typeof wx.getWindowInfo === 'function') {
+      return wx.getWindowInfo();
+    }
+    if (typeof wx.getSystemInfoSync === 'function') {
+      try {
+        return wx.getSystemInfoSync();
+      } catch (e) {}
+    }
+  }
+  return { pixelRatio: 2, windowWidth: 375, windowHeight: 667 };
+}
+
 Page({
   data: {
     score: 0,
     moneyFormatted: '0',
     combo: 0,
     isWarning: false,
-    nextItem: null,
+    nextItem: defaultFirstItem, // 静态预置初始首发道具，开屏零等待，杜绝 DOM 二次重排
+    pageReady: false,           // 整页一体化呈现门控：顶部/画布/底部同一时刻整体亮起
     showResultModal: false,
     modalTitle: '搜刮撤离完成！',
     isNewRecord: false,
@@ -31,13 +49,18 @@ Page({
     this._shockwaves = []; // 爆炸光环视觉粒子
     this._floatingTexts = []; // 连击与加分漂浮字
     this._isDragging = false;
+    this._canvasInited = false;
 
     // 读取用户震动配置
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
+  },
 
-    // 获取画布尺寸并初始化物理引擎与主循环
-    this._initCanvas();
+  onReady() {
+    // 立即启动 Canvas 查找与首帧绘制，首帧就绪后一次性整体点亮全页，绝不分步露馅
+    if (!this._canvasInited) {
+      this._initCanvas();
+    }
   },
 
   onShow() {
@@ -62,31 +85,54 @@ Page({
       this._engine.destroy();
       this._engine = null;
     }
+    this._canvasInited = false;
+    this._canvas = null;
+    this._ctx = null;
     this._imgCache = {};
     this._shockwaves = [];
     this._floatingTexts = [];
+    this.setData({ pageReady: false });
     MapManager.clearCache();
   },
 
   /**
-   * 初始化 Canvas 2D 画布
+   * 初始化 Canvas 2D 画布 (带节点就绪容错与重试机制)
    */
-  _initCanvas() {
+  _initCanvas(retryCount = 0) {
+    if (this._canvasInited) return;
+
+    // 严禁使用 .in(this)，在 Page 作用域下直接使用 wx.createSelectorQuery()
     const query = wx.createSelectorQuery();
     query.select('#gameCanvas').fields({ node: true, size: true }).exec((res) => {
+      if (this._canvasInited) return;
+
       if (!res || !res[0] || !res[0].node) {
-        console.error('Canvas 节点获取失败');
+        if (retryCount < 10) {
+          setTimeout(() => {
+            this._initCanvas(retryCount + 1);
+          }, 100);
+          return;
+        }
+        console.error('Canvas 节点获取失败 (已重试 10 次)');
         return;
       }
 
+      this._canvasInited = true;
       const canvas = res[0].node;
       const ctx = canvas.getContext('2d');
-      const width = res[0].width;
-      const height = res[0].height;
+      if (!ctx) {
+        console.error('Canvas 2D context 获取失败');
+        return;
+      }
 
-      // 适配高清屏幕像素比 (Retina)
-      const systemInfo = wx.getSystemInfoSync();
+      const systemInfo = getSafeWindowInfo();
       const dpr = systemInfo.pixelRatio || 2;
+
+      // 宽高校验与安全兜底 (防止在特定生命周期或 flex 计算阶段宽度为 0 导致画布折叠)
+      const rawW = res[0].width;
+      const rawH = res[0].height;
+      const width = (rawW && rawW > 0) ? rawW : (systemInfo.windowWidth || 360);
+      const height = (rawH && rawH > 0) ? rawH : (systemInfo.windowHeight ? systemInfo.windowHeight - 140 : 560);
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -99,32 +145,83 @@ Page({
       this._dpr = dpr;
 
       // 抽取本局战术地图背景切片
-      MapManager.pickSession({ width, height });
+      try {
+        MapManager.pickSession({ width, height });
+      } catch (err) {
+        console.warn('MapManager.pickSession safe caught:', err);
+      }
 
-      // 预加载所有品级道具的贴图图片
-      this._preloadImages();
+      // 优先轻量载入开局首批道具 (Lv.1~Lv.2) 贴图，其余道具后置加载，彻底避免抢占转场动画 CPU/网络
+      this._preloadInitialImages();
 
       // 创建核心引擎
       this._setupEngine(width, height);
 
-      // 启动游戏并进入 60 FPS Canvas 渲染主循环
+      // 启动游戏状态机
       this._engine.start();
       this._lastFrameTime = Date.now();
+
+      // 立即同步渲染首帧，杜绝依赖 rAF 首帧延迟导致的视觉空白
+      try {
+        this._renderFrame(0.016);
+      } catch (err) {
+        console.warn('First frame render caught:', err);
+      }
+
+      // 首帧已就绪，整页（状态栏+画布+按钮）作为一个整体同时点亮！
+      this.setData({ pageReady: true });
+
+      // 启动 60 FPS Canvas 渲染主循环
       this._startRenderLoop();
+
+      // 避峰加载：在页面转场动画完毕后 (约 350ms) 再静默拉取其余高阶大金道具贴图
+      setTimeout(() => {
+        this._preloadRemainingImages();
+      }, 350);
     });
   },
 
   /**
-   * 预加载道具图片至 Canvas Image 实例缓存
+   * 优先加载开局所需的低阶道具贴图
    */
-  _preloadImages() {
-    if (!this._canvas) return;
+  _preloadInitialImages() {
+    if (!this._canvas || typeof this._canvas.createImage !== 'function') return;
+    const initialItems = WATERMELON_ITEMS.slice(0, 2);
+    initialItems.forEach(item => {
+      this._loadItemImage(item);
+    });
+  },
 
-    WATERMELON_ITEMS.forEach(item => {
+  /**
+   * 静默预加载剩余高阶道具贴图
+   */
+  _preloadRemainingImages() {
+    if (!this._canvas || typeof this._canvas.createImage !== 'function') return;
+    const remainingItems = WATERMELON_ITEMS.slice(2);
+    remainingItems.forEach(item => {
+      this._loadItemImage(item);
+    });
+  },
+
+  /**
+   * 单张道具图片加载与安全缓存
+   */
+  _loadItemImage(item) {
+    if (this._imgCache[item.level]) return;
+    try {
       const img = this._canvas.createImage();
+      img._loaded = false;
+      img.onload = () => {
+        img._loaded = true;
+      };
+      img.onerror = () => {
+        img._loaded = false;
+      };
       img.src = item.iconUrl;
       this._imgCache[item.level] = img;
-    });
+    } catch (e) {
+      console.warn('createImage failed for level', item.level, e);
+    }
   },
 
   /**
@@ -199,26 +296,42 @@ Page({
       }
     });
 
-    // 初始状态挂载到界面
+    // 初始状态挂载到界面 (仅当与当前 data 存在不一致时才 setData，杜绝首屏多余通信)
     const initial = this._engine.getInitialState();
-    this.setData({
-      nextItem: initial.nextItem,
-      score: initial.score,
-      moneyFormatted: initial.moneyFormatted
-    });
+    if (!this.data.nextItem || this.data.nextItem.id !== initial.nextItem.id || this.data.score !== initial.score) {
+      this.setData({
+        nextItem: initial.nextItem,
+        score: initial.score,
+        moneyFormatted: initial.moneyFormatted
+      });
+    }
   },
 
   /**
-   * 启动渲染与物理驱动帧循环 (严格零 setData)
+   * 启动渲染与物理驱动帧循环 (严格零 setData，带跨端 rAF 兼容)
    */
   _startRenderLoop() {
+    if (this._rafId) return;
+
+    // 跨环境 rAF 调度器：优先 canvas.requestAnimationFrame，次选 wx.requestAnimationFrame，保底 setTimeout
+    const requestNext = (fn) => {
+      if (this._canvas && typeof this._canvas.requestAnimationFrame === 'function') {
+        return this._canvas.requestAnimationFrame(fn);
+      }
+      if (typeof wx.requestAnimationFrame === 'function') {
+        return wx.requestAnimationFrame(fn);
+      }
+      return setTimeout(fn, 16);
+    };
+
     const loop = () => {
       const now = Date.now();
-      const dt = (now - this._lastFrameTime) / 1000;
+      const rawDt = this._lastFrameTime > 0 ? (now - this._lastFrameTime) / 1000 : 0.016;
+      const dt = Math.max(0.001, Math.min(rawDt, 0.033));
       this._lastFrameTime = now;
 
-      // 1. 物理世界更新
-      if (this._engine) {
+      // 1. 物理世界与游戏逻辑更新
+      if (this._engine && this._engine.gameState === 'playing') {
         this._engine.update(dt);
       }
 
@@ -226,28 +339,34 @@ Page({
       this._renderFrame(dt);
 
       // 3. 驱动下一帧
-      if (this._canvas) {
-        this._rafId = this._canvas.requestAnimationFrame(loop);
+      if (this._canvas && this._engine && this._engine.gameState === 'playing') {
+        this._rafId = requestNext(loop);
+      } else {
+        this._rafId = null;
       }
     };
 
-    if (this._canvas) {
-      this._rafId = this._canvas.requestAnimationFrame(loop);
-    }
+    this._rafId = requestNext(loop);
   },
 
   /**
    * 停止帧循环
    */
   _stopRenderLoop() {
-    if (this._rafId && this._canvas) {
-      this._canvas.cancelAnimationFrame(this._rafId);
+    if (this._rafId) {
+      if (this._canvas && typeof this._canvas.cancelAnimationFrame === 'function') {
+        this._canvas.cancelAnimationFrame(this._rafId);
+      } else if (typeof wx.cancelAnimationFrame === 'function') {
+        wx.cancelAnimationFrame(this._rafId);
+      } else {
+        clearTimeout(this._rafId);
+      }
       this._rafId = null;
     }
   },
 
   /**
-   * 渲染单帧画面
+   * 渲染单帧画面 (带全局崩溃拦截与容错)
    */
   _renderFrame(dt = 0.016) {
     const ctx = this._ctx;
@@ -255,44 +374,56 @@ Page({
     const height = this._height;
     if (!ctx || !this._engine) return;
 
-    // 清空背景
-    ctx.clearRect(0, 0, width, height);
+    try {
+      // 清空背景
+      ctx.clearRect(0, 0, width, height);
 
-    // 结算弹窗展示期间，完全清空画布并停止绘制小球与警戒线，物理消除模拟器同层图层遮挡
-    if (this.data.showResultModal) {
-      return;
+      // 结算弹窗展示期间，完全清空画布并停止绘制小球与警戒线，物理消除模拟器同层图层遮挡
+      if (this.data.showResultModal) {
+        return;
+      }
+
+      // 1. 绘制战术地图背景与科技网格 (MapManager 方案B，带原生网格优雅降级兜底)
+      try {
+        MapManager.drawBackground(this._canvas, ctx, width, height, {
+          maskColor: 'rgba(15, 18, 26, 0.80)',
+          mapAlpha: 0.38,
+          showGrid: true,
+          showCrosshair: true
+        });
+      } catch (err) {
+        ctx.save();
+        ctx.fillStyle = '#090d13';
+        ctx.fillRect(0, 0, width, height);
+        this._drawTacticalGrid(ctx, width, height);
+        ctx.restore();
+      }
+
+      // 2. 绘制顶部警戒红线 (带呼吸警示虚线)
+      this._drawDangerLine(ctx, width);
+
+      // 3. 绘制顶部准星与投掷导轨
+      this._drawDropperGuide(ctx, height);
+
+      // 4. 绘制物理世界中所有小球道具 (带弹性弹出动画)
+      const bodies = this._engine.physics.bodies;
+      for (let i = 0; i < bodies.length; i++) {
+        this._drawFruit(ctx, bodies[i], dt);
+      }
+
+      // 5. 绘制待下落的当前道具 (位于顶部准星处)
+      if (this._engine.gameState === 'playing' && !this._engine.isDropping) {
+        this._drawCurrentHeldFruit(ctx);
+      }
+
+      // 6. 绘制合成冲击波特效
+      this._drawShockwaves(ctx);
+
+      // 7. 绘制连击与身价浮动文字
+      this._drawFloatingTexts(ctx, dt);
+    } catch (err) {
+      console.warn('_renderFrame safe caught:', err);
     }
-
-    // 1. 绘制战术地图背景与科技网格 (MapManager 方案B)
-    MapManager.drawBackground(this._canvas, ctx, width, height, {
-      maskColor: 'rgba(15, 18, 26, 0.80)',
-      mapAlpha: 0.38,
-      showGrid: true,
-      showCrosshair: true
-    });
-
-    // 2. 绘制顶部警戒红线 (带呼吸警示虚线)
-    this._drawDangerLine(ctx, width);
-
-    // 3. 绘制顶部准星与投掷导轨
-    this._drawDropperGuide(ctx, height);
-
-    // 4. 绘制物理世界中所有小球道具 (带弹性弹出动画)
-    const bodies = this._engine.physics.bodies;
-    for (let i = 0; i < bodies.length; i++) {
-      this._drawFruit(ctx, bodies[i], dt);
-    }
-
-    // 5. 绘制待下落的当前道具 (位于顶部准星处)
-    if (this._engine.gameState === 'playing' && !this._engine.isDropping) {
-      this._drawCurrentHeldFruit(ctx);
-    }
-
-    // 6. 绘制合成冲击波特效
-    this._drawShockwaves(ctx);
-
-    // 7. 绘制连击与身价浮动文字
-    this._drawFloatingTexts(ctx, dt);
   },
 
   /**
@@ -390,40 +521,56 @@ Page({
     ctx.translate(x, y);
 
     // 1. 绘制圆形底色
-    ctx.fillStyle = item.bgColorHex;
+    ctx.fillStyle = item.bgColorHex || '#1e2222';
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. 贴入高清道具图 (等比包含缩放，不拉伸变形，距边缘留有呼吸空隙)
+    // 2. 贴入高清道具图 (等比包含缩放，防拉伸变形，未载入时优雅降级文字)
     const img = this._imgCache[level];
-    if (img && img.width) {
-      const contentRadius = radius * 0.76;
-      const maxDim = contentRadius * 2;
-      let drawW = maxDim;
-      let drawH = maxDim;
+    let imageDrawn = false;
 
-      if (img.height) {
+    if (img && (img._loaded || img.width > 0) && img.width > 0 && img.height > 0) {
+      try {
+        const contentRadius = radius * 0.76;
+        const maxDim = contentRadius * 2;
+        let drawW = maxDim;
+        let drawH = maxDim;
+
         const aspect = img.width / img.height;
         if (aspect >= 1) {
           drawW = maxDim;
-          drawH = maxDim / aspect;
+          drawH = maxDim / (aspect || 1);
         } else {
           drawH = maxDim;
           drawW = maxDim * aspect;
         }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.max(2, radius - lineWidth / 2), 0, Math.PI * 2);
+        ctx.clip();
+
+        ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+        ctx.restore();
+        imageDrawn = true;
+      } catch (e) {
+        // 贴图异常容错
       }
+    }
 
+    // 降级兜底：图片未准备好时居中绘制品质等级
+    if (!imageDrawn && radius >= 12) {
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(0, 0, radius - lineWidth / 2, 0, Math.PI * 2);
-      ctx.clip();
-
-      ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+      ctx.fillStyle = item.colorHex || '#ffffff';
+      ctx.font = `bold ${Math.max(10, Math.round(radius * 0.55))}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`L${level}`, 0, 0);
       ctx.restore();
     }
 
-    // 3. 往内部绘制高亮圆环边框 (内描边，外缘严格贴合物理圆，绝不超出原本面积)
+    // 3. 往内部绘制高亮圆环边框 (内描边，外缘严格贴合物理圆)
     ctx.strokeStyle = item.colorHex;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
@@ -468,40 +615,56 @@ Page({
     const lineWidth = body.level >= 9 ? 3.5 : 2; // 高阶大金加粗高光
 
     // 1. 圆形底色
-    ctx.fillStyle = item.bgColorHex;
+    ctx.fillStyle = item.bgColorHex || '#1e2222';
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. 贴入高清道具图 (等比包含缩放，不拉伸变形，距边缘留有呼吸空隙)
+    // 2. 贴入高清道具图 (等比包含缩放，防拉伸变形)
     const img = this._imgCache[body.level];
-    if (img && img.width) {
-      const contentRadius = radius * 0.76;
-      const maxDim = contentRadius * 2;
-      let drawW = maxDim;
-      let drawH = maxDim;
+    let imageDrawn = false;
 
-      if (img.height) {
+    if (img && (img._loaded || img.width > 0) && img.width > 0 && img.height > 0) {
+      try {
+        const contentRadius = radius * 0.76;
+        const maxDim = contentRadius * 2;
+        let drawW = maxDim;
+        let drawH = maxDim;
+
         const aspect = img.width / img.height;
         if (aspect >= 1) {
           drawW = maxDim;
-          drawH = maxDim / aspect;
+          drawH = maxDim / (aspect || 1);
         } else {
           drawH = maxDim;
           drawW = maxDim * aspect;
         }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.max(2, radius - lineWidth / 2), 0, Math.PI * 2);
+        ctx.clip();
+
+        ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+        ctx.restore();
+        imageDrawn = true;
+      } catch (e) {
+        // 贴图异常容错
       }
+    }
 
+    // 降级兜底：图片未准备好时居中绘制品质等级
+    if (!imageDrawn && radius >= 12) {
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(0, 0, radius - lineWidth / 2, 0, Math.PI * 2);
-      ctx.clip();
-
-      ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
+      ctx.fillStyle = item.colorHex || '#ffffff';
+      ctx.font = `bold ${Math.max(10, Math.round(radius * 0.52))}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`L${body.level}`, 0, 0);
       ctx.restore();
     }
 
-    // 3. 往内部绘制品质外光圈边框 (内描边，外缘严格贴合物理圆，绝不超出原本面积)
+    // 3. 往内部绘制品质外光圈边框 (内描边，外缘严格贴合物理圆)
     ctx.strokeStyle = item.colorHex;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();

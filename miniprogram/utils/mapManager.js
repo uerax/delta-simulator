@@ -8,7 +8,15 @@
  *  4. WXML / DOM 样式生成 (getRandomBackgroundStyle: 供非 Canvas 小游戏一键调用)
  */
 
-const mapManifest = require('../assets/maps/map_manifest.json');
+// 安全加载地图清单 (纯标准 CommonJS 模块，严禁直接 require json 文件以防打包器报错)
+let mapManifest = [];
+try {
+  const loaded = require('../assets/maps/map_manifest.js');
+  mapManifest = Array.isArray(loaded) ? loaded : (loaded && loaded.default) ? loaded.default : [];
+} catch (e) {
+  console.warn('MapManager: Failed to load map_manifest.js, fallback to empty array:', e);
+  mapManifest = [];
+}
 
 class MapManagerService {
   constructor() {
@@ -27,8 +35,10 @@ class MapManagerService {
   init() {
     if (this._initialized) return;
 
-    this.mapList = Array.isArray(mapManifest) ? mapManifest : [];
+    const list = Array.isArray(mapManifest) ? mapManifest : [];
+    this.mapList = list;
     for (const item of this.mapList) {
+      if (!item) continue;
       // 冻结保护并建立双键索引
       const frozenItem = Object.freeze({ ...item });
       if (item.key) this.mapMap.set(item.key, frozenItem);
@@ -164,57 +174,66 @@ class MapManagerService {
 
     const session = this._currentSession;
 
-    // 2. 绘制深色战术底色 (兜底防白屏，渐变质感)
-    ctx.save();
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-    bgGrad.addColorStop(0, '#10121a');
-    bgGrad.addColorStop(1, '#161922');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, width, height);
-    ctx.restore();
+    try {
+      // 2. 绘制深色战术底色 (兜底防白屏，渐变质感)
+      ctx.save();
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+      bgGrad.addColorStop(0, '#10121a');
+      bgGrad.addColorStop(1, '#161922');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
 
-    // 3. 异步获取/预加载当前切片图片实例
-    if (session && session.tileUrl && canvas && typeof canvas.createImage === 'function') {
-      const url = session.tileUrl;
-      let cacheItem = this._imageCache.get(url);
+      // 3. 异步获取/预加载当前切片图片实例
+      if (session && session.tileUrl && canvas && typeof canvas.createImage === 'function') {
+        const url = session.tileUrl;
+        let cacheItem = this._imageCache.get(url);
 
-      if (!cacheItem) {
-        const img = canvas.createImage();
-        cacheItem = { img, loaded: false, error: false };
-        this._imageCache.set(url, cacheItem);
+        if (!cacheItem) {
+          const img = canvas.createImage();
+          cacheItem = { img, loaded: false, error: false };
+          this._imageCache.set(url, cacheItem);
 
-        img.onload = () => {
-          cacheItem.loaded = true;
-        };
-        img.onerror = () => {
-          cacheItem.error = true;
-        };
-        img.src = url;
+          img.onload = () => {
+            cacheItem.loaded = true;
+          };
+          img.onerror = () => {
+            cacheItem.error = true;
+          };
+          img.src = url;
+        }
+
+        // 4. 若图片已就绪且具备真实尺寸，以等比适应拉伸绘制到整个背景层
+        if (cacheItem.loaded && !cacheItem.error && cacheItem.img && cacheItem.img.width > 0 && cacheItem.img.height > 0) {
+          try {
+            ctx.save();
+            ctx.globalAlpha = mapAlpha;
+            ctx.drawImage(cacheItem.img, 0, 0, width, height);
+            ctx.restore();
+          } catch (e) {
+            // 忽略偶发贴图跨域或未完成解码异常
+          }
+        }
       }
 
-      // 4. 若图片已就绪，以等比适应拉伸绘制到整个背景层
-      if (cacheItem.loaded && !cacheItem.error) {
-        ctx.save();
-        ctx.globalAlpha = mapAlpha;
-        ctx.drawImage(cacheItem.img, 0, 0, width, height);
-        ctx.restore();
+      // 5. 绘制战术深色遮罩 (让地图退居氛围层，保证前景游戏主体清晰)
+      ctx.save();
+      ctx.fillStyle = maskColor;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
+
+      // 6. 叠加战术参考经纬网格 (极度轻量，线条透明度极低)
+      if (showGrid) {
+        this._drawTacticalGrid(ctx, width, height);
       }
-    }
 
-    // 5. 绘制战术深色遮罩 (让地图退居氛围层，保证前景游戏主体清晰)
-    ctx.save();
-    ctx.fillStyle = maskColor;
-    ctx.fillRect(0, 0, width, height);
-    ctx.restore();
-
-    // 6. 叠加战术参考经纬网格 (极度轻量，线条透明度极低)
-    if (showGrid) {
-      this._drawTacticalGrid(ctx, width, height);
-    }
-
-    // 7. 叠加四角战术标尺与微十字刻度 (军事沉浸感)
-    if (showCrosshair) {
-      this._drawTacticalCrosshair(ctx, width, height);
+      // 7. 叠加四角战术标尺与微十字刻度 (军事沉浸感)
+      if (showCrosshair) {
+        this._drawTacticalCrosshair(ctx, width, height);
+      }
+    } catch (err) {
+      // 极值容错：保证背景层任何绘制异常不向上传递打崩游戏主循环
+      console.warn('MapManager.drawBackground safe caught:', err);
     }
   }
 

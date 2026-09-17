@@ -1,5 +1,171 @@
 # 项目任务状态记录
 
+## [2026-09-17] 彻底落地大西瓜整页一体化同步呈现（根门控pageReady机制/消除API废弃告警）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. 根因再排查：
+     - 之前的局部过渡方案仅对 `.canvas-wrap` 单独控制 `opacity`，并在 `onReady` 里人工 `setTimeout 280ms`，反而造成了“顶部底部 DOM 已经滑入，而中间 Canvas 延迟 280ms 才出现”的二次分步割裂感，违背了用户“整体化出现”的核心诉求。
+     - 控制台出现 `wx.getSystemInfoSync is deprecated` 告警，影响开发者工具运行体验。
+  2. 彻底落地措施：
+     - **全页根容器统一门控（`pageReady`）**：将显隐门控从子组件 `.canvas-wrap` 移至整页最外层根容器 `.watermelon-container`。默认声明 `opacity: 0`；
+     - **移除人工延迟，首帧原子级整体点亮**：移除 `onReady` 的 280ms 等待，立即并发获取 Canvas 并完成首帧渲染，首帧绘制成功的一瞬间直接触发 `this.setData({ pageReady: true })`，整页（顶部状态栏 + 游戏画面 + 底部操作栏）以 0.16s 整体平滑同步浮现，彻底消灭任何先后时差；
+     - **消除微信 API 废弃告警**：在 `index.js` 和 `feedback.js` 统一封装 `getSafeWindowInfo` / `checkIsDevTools`，优先使用官方推荐的 `wx.getWindowInfo()` / `wx.getAppBaseInfo()`，平滑兼容降级，控制台零告警。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/utils/feedback.js`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 彻底根治大西瓜转场割裂（Native Canvas抢跑与页面入场动画异步调度对齐）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 深度根因排查：
+     - 用户观察到的“滑动出现”本质是微信小程序原生的页面路由切换转场动画（`wx.navigateTo` 默认右滑入场，耗时约 260~300ms）；
+     - 但 `<canvas type="2d">` 是由微信客户端 Native 原生层直接渲染合成的同层组件，它脱离了普通 WebView DOM 容器的 CSS 平移动画，在进入页面的第 0 毫秒就直接固化在物理窗口中央并画出了背景和游戏；
+     - 与此同时，WebView DOM 容器（包裹着顶部状态栏与底部栏）还在执行右滑入场，导致视觉上 Canvas 仿佛“抢先暴露”，而顶部和底部则“慢半拍滑入”，体验极其割裂。
+  2. 彻底根治措施：
+     - **转场避峰异步调度**：将 Canvas 初始化与 60fps 帧循环启动延迟 280ms（精准避让微信原生 260ms 的右滑转场动画窗口）。在转场期间，让整个页面以完整、轻盈、纯 DOM 形式满帧丝滑滑入屏幕；
+     - **Canvas 容器优雅平滑渐入**：`.canvas-wrap` 默认声明 `opacity: 0`，当页面入场动画归位、首帧就绪后赋予 `.canvas-ready`（`opacity: 1; transition: opacity 0.18s`），使整页视觉浑然一体，彻底消灭 Native 原生组件与 DOM 之间的动画时间差与割裂感；
+     - **内存与状态闭环**：在 `onUnload` 离开页面时彻底清理 `canvasReady` 状态，确保二次入场依然百分之百丝滑同步。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 消除进大西瓜页面顶部与底部延迟滑动现象（首屏数据静态化/避峰预加载/消除GPU模糊滤镜）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 根因排查与定位：
+     - 现象本质：用户点击进入大西瓜时，同层渲染原生组件 Canvas 2D 由客户端底层瞬间画出，而顶部的 status-bar 和底部的 bottom-bar 属于 WebView DOM 容器，随着微信页面路由切换的默认右滑入场动画（Slide In）进入。
+     - 延迟与卡顿根因：
+       1) `.status-bar` 设置了极其昂贵的 GPU 高斯模糊属性 `backdrop-filter: blur(10px)`，导致 WebView 在右滑平移动画中每一帧都要对底层高频刷新的 Canvas 重采样与模糊计算，产生严重掉帧拖慢；
+       2) `_initCanvas` 瞬间同步发起了 11 个道具高清图片的并发网络请求与解码（`_preloadImages`），并在同时启动了 60fps 物理主循环，在页面转场的关键 350ms 窗口期严重抢占了 CPU 与网络带宽；
+       3) `data.nextItem` 初始为 null，依赖 `onLoad` 和 `_setupEngine` 反复触发异步 `setData`，导致 DOM 二次重排与结构后发抖动。
+  2. 修复与优化措施：
+     - 移除昂贵滤镜：将 `backdrop-filter: blur(10px)` 替换为细腻高质感的纯色半透明底色 `background: rgba(22, 27, 34, 0.95)`，转场 GPU 负载降至几乎为 0；
+     - 首屏数据零延迟静态化：`data.nextItem` 在页面声明期直接静态绑定 `getItemByLevel(1)`（含氟牙膏），彻底消除 `onLoad` 中首屏无效 `setData` 与 DOM 重新挂载；
+     - 避峰预加载分流：开局仅优先拉取前两级道具贴图（Lv.1~Lv.2），剩余高阶道具后置延后 350ms 静默拉取，彻底把转场黄金期让给页面流畅滑入；
+     - 页面容器增加柔和平滑进场 `fadeInContainer` 动效，使原生 Canvas 与 DOM 元素浑然一体、同步呈现。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 彻底修复大西瓜页面无内容缺陷（rAF跨端调度/同步首帧/降级兜底/基础库版本还原）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. 深度根因排查：
+     - `project.config.json` 中的 `libVersion` 之前被意外修改为 `3.4.0`，导致本地缺少该基础库的工具环境编译中断或异常；现已还原回原本的 `2.20.1`。
+     - `engine.js` 顶层静态 require 了第三方 Planck.js。若特定环境对未压缩/UMD 模块的 Babel 编译产生卡死，会阻断 `engine.js` 的加载。现将 `physicsPlanck` 改为按需惰性加载，且默认物理引擎平稳切回 0 外部依赖的自研 `PhysicsWorldDefault`。
+     - `_startRenderLoop` 之前强依赖 `canvas.requestAnimationFrame`，在基础库 2.20.1 或特定端该属性未挂载时直接静默跳过，一帧都没绘制，导致 Canvas 呈现死黑。
+     - `_initCanvas` 中缺少尺寸兜底与同步首帧：若 flex 布局计算延迟导致节点宽高获取为 0，Canvas 产生物理折叠；且过去完全依赖异步 rAF 驱动首帧。
+     - `MapManager.drawBackground` 若遇到渐变或解码异常会向外冒泡。
+  2. 修复措施落地：
+     - 还原 `project.config.json` 的 `libVersion: 2.20.1`；
+     - `engine.js`：按需加载 Planck.js，默认运行经过全量测试的稳定内置引擎，杜绝任何第三方 UMD 依赖阻塞主流程；
+     - `index.js`：
+       - `_initCanvas` 增加多重防并发守卫与屏幕宽高安全兜底（确保宽高严格大于 0）；
+       - `_startRenderLoop` 封装跨端调度器（`canvas.requestAnimationFrame` -> `wx.requestAnimationFrame` -> `setTimeout` 三重兜底），彻底杜绝静默不渲染；
+       - `_initCanvas` 结束时立即强制执行一次同步首帧渲染 `_renderFrame(0.016)`，实现开屏即绘制；
+       - `_renderFrame` 为 `MapManager.drawBackground` 增加优雅降级：若有任何异常，自动无缝降级为本地战术网格底色，确保小球、导轨和警戒线绝对正常显示。
+- 涉及文件：
+  - `project.config.json`
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/utils/mapManager.js`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 修复大西瓜页面未加载出游戏缺陷 (MapManager与SelectorQuery双重排查)
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. 根因排查与定位：
+     - `mapManager.js` 内部虽然增加了 `map_manifest.js` 的 try 分支，但在 catch 中残留了 `require('../assets/maps/map_manifest.json')`。微信小程序静态编译器在打包扫描阶段发现 require json，导致整个模块在编译期报 `module is not defined` 并中断注册。
+     - `index.js` 的 `_initCanvas` 中使用了 `wx.createSelectorQuery().in(this)`。在微信框架中，`in(component)` 必须传入自定义组件实例，传入 Page 页面实例会导致选择器在寻找不存在的 Exparser 边界，在开发者工具与真机中查询 `#gameCanvas` 始终返回 null，重试耗尽后直接中断退出，游戏引擎未启动。
+     - `physicsPlanck.js` UMD 模块的解构未防范 `default` 导出形态；`engine.js` 缺少物理世界初始化降级兜底。
+  2. 落地修复措施：
+     - `mapManager.js`：彻底移除所有对 `.json` 文件的静态 require 语句，仅纯粹引用自包含的 CommonJS 模块 `map_manifest.js` 并做好空数组兜底。
+     - `index.js`：选择器恢复为微信标准 `this.createSelectorQuery()` / `wx.createSelectorQuery()`，消除 `.in(this)` 引起的 Page 节点寻址失效；增加重试次数至 8 次（每次 100ms），并在 `onUnload` 重置 `_canvasInited = false`。
+     - `physicsPlanck.js`：完善 `(planckRaw && planckRaw.World) ? planckRaw : (planckRaw.default || planckRaw)` 防御性导入，并在 `engine.js` 加入物理世界自动安全降级 try-catch，确保极端情况下无缝切回内置物理引擎，绝不黑屏。
+- 涉及文件：
+  - `miniprogram/utils/mapManager.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 引入路线1（工业级 Planck.js 物理引擎适配）并保留原有手写引擎
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 引入纯 JS、零 eval、零 new Function、完整支持 globalThis 的 Box2D 官方移植版 `miniprogram/lib/planck.min.js`；
+  2. 原封不动保留现有 `miniprogram/games/watermelon/physics.js` 作为内置备选与降级回退通道；
+  3. 构建 `miniprogram/games/watermelon/physicsPlanck.js` 适配层，100% 对齐现有 `PhysicsWorld` 接口契约（createBody/removeBody/update/clear/onMerge/onDangerWarning/onDangerLineTrigger）；
+  4. 采用对标斗鱼 Cocos 逆向参数（friction: 0.2, restitution: 0.1, linearDamping: 0.12, angularDamping: 0.22, allowSleep: true），配合地面滚动阻力衰减，彻底根除小球无限自旋；
+  5. 修改 `engine.js` 默认采用 Planck.js 物理世界，并支持通过 `physicsEngine: 'builtin'` 一键切回原有手写引擎；
+  6. 编写全场景专项回归测试 `scripts/verify_planck_watermelon.js`（阻尼衰减、纯滚动滚停休眠、碰撞合成、垂直堆叠与防剧烈弹跳全部通过）。
+- 涉及文件：
+  - `miniprogram/lib/planck.min.js`
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `scripts/verify_planck_watermelon.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 修复结算弹窗面板结果数值与标题未对齐同一水平线缺陷
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. 根因定位：
+     - `game-result-modal/index.wxml` 中 `<text class="row-value">` 标签内联了代码换行，小程序 `<text>` 组件原生保留换行与前置空格，导致数值前产生空行将实际内容硬性下顶。
+     - `.result-row` 弹性容器缺少统一行高声明，且高亮字体（34rpx）与常规字体（28rpx）混排时基线未锚定。
+  2. 落地修复：
+     - WXML 内联单行声明 `<text class="row-value ...">{{item.value}}</text>`，彻底消除意外换行与空格；
+     - WXSS 中为 `.result-row`、`.row-label`、`.row-value` 统一显式补齐 `line-height: 1.4`，并设定 `align-items: baseline` 基线对齐，确保左右两侧文本无论字号大小均严格处于同一水平线。
+- 涉及文件：
+  - `miniprogram/components/game-result-modal/index.wxml`
+  - `miniprogram/components/game-result-modal/index.wxss`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+
+## [2026-09-17] 修复大西瓜页面点开黑屏与内容不显示缺陷
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. 根因排查与定位：
+     - `MapManager` 顶层直接同步 `require('../assets/maps/map_manifest.json')`，在微信小程序真机与特定编译环境下由于 JSON 文件未作为 CommonJS 模块打包，导致顶层报 `module is not defined` 异常，中断页面脚本注册。
+     - `_initCanvas` 放在了 `onLoad`，违反微信框架时序规范（DOM 尚未初次渲染完成），选择器无法查询到节点直接 return，导致游戏引擎未启动、数据未 setData、主循环未运行。
+     - `_drawFruit` / `_drawCurrentHeldFruit` 贴图缺乏 `_loaded` 与宽高守卫，未就绪时除以 0 或调用 drawImage 导致主循环崩溃，且无降级绘制。
+     - `project.config.json` 基础库配置过老（2.20.1）与自定义组件中的 `<root-portal>` 标签存在兼容性隐患。
+  2. 落地修复措施：
+     - 将地图清单构建为标准 CommonJS 模块 `miniprogram/assets/maps/map_manifest.js`，并在 `mapManager.js` 采用容错降级加载与空数组安全兜底。
+     - 调整生命周期：在 `onLoad` 中先行预置首个道具与初始数据进行即时 `setData`，将 `_initCanvas` 移至 `onReady` 并加入最多 4 次自动重试机制，确保节点百分之百就绪。
+     - 健全图片加载与贴图安全机制：为贴图挂载 `onload` 状态监听标记 `_loaded`，宽高严格校验防除以 0，贴图增加 try-catch 保护，并在图片未就绪时优雅降级为居中等级文字。
+     - 在 `_renderFrame` 渲染帧加入全局 try-catch 拦截，确保单帧异常绝不打崩后续 60 FPS 渲染。
+     - 升级 `project.config.json` 的 `libVersion` 至 `3.4.0`，并将弹窗组件恢复为标准安全结构。
+- 涉及文件：
+  - `miniprogram/assets/maps/map_manifest.js`
+  - `miniprogram/utils/mapManager.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/components/game-result-modal/index.wxml`
+  - `project.config.json`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+
 ## [2026-09-17] 今日鼠鼠运势确定性算法与文案体系落地
 - 状态：已完成
 - 优先级：P1

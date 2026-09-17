@@ -58,23 +58,31 @@
 .result-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 12rpx 0;
+  align-items: baseline;
+  padding: 14rpx 0;
   font-size: 28rpx;
+  line-height: 1.4;
 }
 
 .row-label {
   color: #a6adc8;
+  font-size: 28rpx;
+  line-height: 1.4;
+  flex-shrink: 0;
 }
 
 .row-value {
   color: #cdd6f4;
   font-weight: bold;
+  font-size: 28rpx;
+  line-height: 1.4;
+  text-align: right;
 }
 
 .row-value.highlight {
-  font-size: 36rpx;
+  font-size: 34rpx;
   color: #fab387;
+  line-height: 1.3;
 }
 
 .modal-actions {

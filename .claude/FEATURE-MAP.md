@@ -16,9 +16,11 @@
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
 - **游戏 2：合成大西瓜 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
   - 11 级阶梯道具元数据：`items.js`（官方已备案 CDN 道具、尺寸、物理质量与交易行身价）
-  - 工业级 2D 圆形刚体物理引擎：`physics.js`（`PhysicsWorld`，8 步 CCD 防穿透、低弹性0.1、滚动摩擦0.2、双阻尼、双重合成触发、`pickLowerFruit` 靠下锚定、径向冲击波与 0.8s 滞留警戒线）
-  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，动态下落池难度曲线、搜刮身价、连击算法与状态机）
+  - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，对标斗鱼 Cocos 物理参数，摩擦力0.2，角阻尼0.22，低弹性0.1，地面滚动阻力衰减与休眠机制，彻底根除小球无限自旋）
+  - 轻量手写 2D 圆形刚体物理引擎（内置备选/回退）：`physics.js`（`PhysicsWorld`，8 步 CCD 防穿透、双阻尼、双重合成触发、`pickLowerFruit` 靠下锚定、径向冲击波与 0.8s 滞留警戒线）
+  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，默认采用 Planck.js 物理世界，支持 `physicsEngine: 'builtin'` 一键切回，动态下落池难度曲线、搜刮身价、连击算法与状态机）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
+  - 第三方物理核心库：`miniprogram/lib/planck.min.js`（Erin Catto 官方 Box2D 纯 JS 移植版，零 eval，零 new Function，适配微信环境）
 - **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
   - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）

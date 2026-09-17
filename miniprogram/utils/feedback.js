@@ -11,9 +11,17 @@ let _isDevTools = null;
 function checkIsDevTools() {
   if (_isDevTools === null) {
     try {
-      if (typeof wx !== 'undefined' && wx.getSystemInfoSync) {
-        const sys = wx.getSystemInfoSync();
-        _isDevTools = (sys.platform === 'devtools');
+      if (typeof wx !== 'undefined') {
+        if (typeof wx.getAppBaseInfo === 'function') {
+          _isDevTools = (wx.getAppBaseInfo().platform === 'devtools');
+        } else if (typeof wx.getDeviceInfo === 'function') {
+          _isDevTools = (wx.getDeviceInfo().platform === 'devtools');
+        } else if (typeof wx.getSystemInfoSync === 'function') {
+          const sys = wx.getSystemInfoSync();
+          _isDevTools = (sys.platform === 'devtools');
+        } else {
+          _isDevTools = false;
+        }
       } else {
         _isDevTools = false;
       }
