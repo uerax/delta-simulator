@@ -288,8 +288,8 @@ assert(rollB1.angularVelocity >= 0, '角速度衰减方向应平稳且自洽');
 // 3.7 核心手感验证：地面接触纯滚动驱动与静止休眠
 const groundWorld = new PhysicsWorld({ width: 360, height: 600 });
 const dropBall = groundWorld.createBody(1, 180, 500, { vx: 80, vy: 0 });
-// 运行 2 秒物理模拟
-for (let f = 0; f < 120; f++) {
+// 运行物理模拟至小球平抛落地撞墙并自然滚停休眠 (约 3.8 秒，240 帧)
+for (let f = 0; f < 240; f++) {
   groundWorld.update(0.016);
 }
 assert(dropBall.y >= 600 - 18 - 1, '小球应落在地面');

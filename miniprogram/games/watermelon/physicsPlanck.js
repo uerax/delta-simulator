@@ -37,6 +37,7 @@ class PhysicsWorldPlanck {
     this.nextId = 1;
     this._mergePairs = [];
     this._accumulator = 0; // 120Hz 物理步进累加器 (严格对标斗鱼 fixedTimeStep: 1/120)
+    this._mergeScanTimer = 0; // 50ms 空间兜底扫描计时器 (对标斗鱼 mergeScanTimer)
 
     // 初始化 Planck.js 物理世界 (重力在屏幕坐标系下 Y 轴向下为正)
     const gravityMeter = this.gravity / SCALE;
@@ -90,6 +91,7 @@ class PhysicsWorldPlanck {
 
       if (!bA || !bB) return;
       if (bA.isMerging || bB.isMerging) return;
+      if (bA.isStatic || bB.isStatic) return;
 
       // 仅同等级水果且未达最高等级触发合成 (1:1 斗鱼 onFruitContact)
       if (bA.level === bB.level && bA.level < MAX_LEVEL) {
@@ -99,14 +101,15 @@ class PhysicsWorldPlanck {
   }
 
   /**
-   * 尝试将碰撞对加入合成队列
+   * 尝试将碰撞对加入合成队列 (1:1 严格对标斗鱼 Cocos tryQueueMerge)
    */
   _tryQueueMerge(b1, b2) {
     if (b1.isMerging || b2.isMerging) return;
-    const exists = this._mergePairs.some(p => p.b1 === b1 || p.b1 === b2 || p.b2 === b1 || p.b2 === b2);
-    if (!exists) {
-      this._mergePairs.push({ b1, b2 });
-    }
+
+    // 即时加锁，防止同一帧内同一个刚体被多个接触事件重复入队 (1:1 斗鱼 s.merging = true)
+    b1.isMerging = true;
+    b2.isMerging = true;
+    this._mergePairs.push({ b1, b2 });
   }
 
   /**
@@ -127,14 +130,14 @@ class PhysicsWorldPlanck {
     const initAngularVelocity = options.angularVelocity || 0;
     const initBullet = options.bullet !== undefined ? options.bullet : true;
 
-    // 创建 Planck 动态刚体 (严格对标斗鱼 Cocos 逆向参数，优化角阻尼刹车防自旋)
+    // 创建 Planck 动态刚体 (严格 1:1 对标斗鱼 Cocos Fruit2.ts 逆向参数)
     const pBody = this.world.createDynamicBody({
       position: new Vec2(xMeter, yMeter),
       angle: initAngle,
       linearVelocity: new Vec2(vxMeter, vyMeter),
       angularVelocity: initAngularVelocity,
-      linearDamping: 1.1,    // 优化阻尼：快速吸能减速平稳停靠，绝不打断原生休眠
-      angularDamping: 2.0,   // 优化角阻尼：滚落平滑刹车，杜绝齿轮互搓自转
+      linearDamping: 0.12,   // 严格 1:1 对标斗鱼 Fruit2.ts 逆向参数 0.12，恢复轻盈落体与自然重力势能
+      angularDamping: 0.22,  // 严格 1:1 对标斗鱼 Fruit2.ts 逆向参数 0.22，恢复自然滚动与摩擦
       allowSleep: true,      // 开启休眠，彻底避免微幅自转与持续计算
       bullet: initBullet     // 动态 CCD：下落防穿模，沉降后关闭杜绝真机卡死
     });
@@ -159,8 +162,8 @@ class PhysicsWorldPlanck {
       angularVelocity: initAngularVelocity,
       restitution: 0.1,
       friction: 0.2,
-      linearDamping: 1.1,
-      angularDamping: 2.0,
+      linearDamping: 0.12,
+      angularDamping: 0.22,
       isStatic: !!options.isStatic,
       isMerging: false,
       isSleeping: false,
@@ -247,7 +250,7 @@ class PhysicsWorldPlanck {
 
     const heightMeter = this.height / SCALE;
 
-    // 2. 将 Planck.js 物理刚体的位置与姿态同步回渲染层 body
+    // 2. 将 Planck.js 物理刚体的位置与姿态同步回渲染层 body (1:1 严格对标斗鱼 Cocos 原生物理驱动，零人工干预)
     for (let i = 0; i < this.bodies.length; i++) {
       const b = this.bodies[i];
       if (!b._pBody || b.isMerging) continue;
@@ -269,13 +272,13 @@ class PhysicsWorldPlanck {
       b.isSleeping = !b._pBody.isAwake();
     }
 
-    // 3. 存活时间与警戒线检测
+    // 3. 存活时间与警戒线检测 (对标斗鱼 0.8s 稳定滞留模型)
     this._checkDangerAndAge(clampedDt);
 
-    // 4. 兜底扫描：空间欧式距离辅助判定 (防止两球在极低速度静止接触时接触事件未重发)
-    this._scanProximityMerges();
+    // 4. 兜底扫描：接触丢失兜底扫描 (1:1 严格对标斗鱼 Cocos scanProximityMergeCandidates，每 50ms 周期执行)
+    this._scanProximityMerges(clampedDt);
 
-    // 5. 执行合成消除与新球生成
+    // 5. 执行合成消除与新球生成 (1:1 严格对标斗鱼 Cocos resolveMergeQueue)
     if (this._mergePairs.length > 0) {
       const pairsToProcess = this._mergePairs.slice();
       this._mergePairs.length = 0;
@@ -326,11 +329,18 @@ class PhysicsWorldPlanck {
   }
 
   /**
-   * 兜底：空间欧式距离轮询扫描
+   * 兜底：空间距离接触兜底扫描 (1:1 严格对标斗鱼 Cocos scanProximityMergeCandidates)
+   * 严格按照斗鱼 50ms 周期执行，且按舞台比例 8 * (width / 690) 换算容差，严禁隔空吸附
    */
-  _scanProximityMerges() {
+  _scanProximityMerges(dt) {
+    this._mergeScanTimer = (this._mergeScanTimer || 0) + dt;
+    if (this._mergeScanTimer < 0.05) return;
+    this._mergeScanTimer = 0;
+
     const bodies = this.bodies;
     const count = bodies.length;
+    // 斗鱼官方容差: 8px 在 690px 舞台下，等比映射到当前宽度
+    const tolerance = 8 * (this.width / 690);
 
     for (let i = 0; i < count; i++) {
       const b1 = bodies[i];
@@ -343,9 +353,8 @@ class PhysicsWorldPlanck {
         if (b1.level === b2.level && b1.level < MAX_LEVEL) {
           const dx = b2.x - b1.x;
           const dy = b2.y - b1.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          // 允许 6px 贴合容差
-          if (dist <= (b1.radius + b2.radius) + 6) {
+          const touchDist = b1.radius + b2.radius + tolerance;
+          if (dx * dx + dy * dy <= touchDist * touchDist) {
             this._tryQueueMerge(b1, b2);
           }
         }
@@ -354,19 +363,16 @@ class PhysicsWorldPlanck {
   }
 
   /**
-   * 执行合成消除与新球生成
+   * 执行合成消除与新球生成 (1:1 严格对标斗鱼 Cocos mergeFruits)
    */
   _resolveMerges(mergePairs) {
     for (const pair of mergePairs) {
       const { b1, b2 } = pair;
-      if (b1.isMerging || b2.isMerging) continue;
-
-      b1.isMerging = true;
-      b2.isMerging = true;
+      if (!b1 || !b2 || !b1._pBody || !b2._pBody) continue;
 
       const nextLevel = b1.level + 1;
 
-      // 核心手感：pickLowerFruit (Y 越大代表越靠下)
+      // 1:1 斗鱼 pickLowerFruit (Canvas 坐标系 Y 越大代表在屏幕越靠下)
       const lower = (b1.y >= b2.y) ? b1 : b2;
       const newItem = getItemByLevel(nextLevel);
       const newRadius = newItem ? newItem.radius : lower.radius;
@@ -378,9 +384,9 @@ class PhysicsWorldPlanck {
       this.removeBody(b1);
       this.removeBody(b2);
 
-      // 1:1 对标斗鱼 Cocos mergeFruits：
-      // 线速度初值设为 (0, 0)，不人为施加 vy: -30 向上顶飞扰动周围刚体
-      // 角速度仅继承旧球的 20%：0.2 * lower.angularVelocity
+      // 1:1 斗鱼 Cocos mergeFruits：
+      // 线速度初值严格设为 (0, 0)
+      // 角速度仅继承旧球 20%：0.2 * lower.angularVelocity
       // 旋转角度继承旧球当前姿态：lower.angle
       const newBody = this.createBody(nextLevel, spawnX, spawnY, {
         vx: 0,
@@ -390,7 +396,7 @@ class PhysicsWorldPlanck {
         bullet: false // 合成小球原地生成无需开启高速 CCD
       });
 
-      // 施加合成冲击波
+      // 1:1 斗鱼 triggerMergeExplosion：施加合成爆炸冲击波
       if (newBody) {
         this.applyRadialExplosion(spawnX, spawnY, newRadius, nextLevel, newBody);
       }
@@ -403,12 +409,16 @@ class PhysicsWorldPlanck {
   }
 
   /**
-   * 斗鱼 1:1 二次方非线性径向合成爆炸冲击波
+   * 1:1 严格对标斗鱼 Cocos triggerMergeExplosion / applyRadialExplosion 径向合成爆炸冲击波
    */
   applyRadialExplosion(cx, cy, radius, level, sourceBody = null) {
+    // 斗鱼官方 core: explosionLevelPower(level, 4)
     const power = level <= 4 ? 1 : level - 3;
-    const blastRadius = (240 + 42 * power + 0.45 * radius) * 0.25;
-    const baseForce = 2.5; // 极微弱速度冲击，只产生轻微震颤不击飞
+    // 斗鱼官方: blastRadius = 240 + 42 * e + 0.45 * radius (自适应缩放至当前宽度)
+    const stageScale = this.width / 690;
+    const blastRadius = (240 + 42 * power + 0.45 * (radius / stageScale)) * stageScale;
+    // 斗鱼官方推力系数: o = 3 + 1 * e (非彩票模式)
+    const baseForce = (3.0 + 1.0 * power) * 20;
 
     for (const b of this.bodies) {
       if (b === sourceBody || b.isMerging || b.isStatic || !b._pBody) continue;
@@ -423,16 +433,24 @@ class PhysicsWorldPlanck {
       this.wakeBody(b);
 
       const s = 1 - y / blastRadius;
+      // 斗鱼官方二次方非线性衰减: M = o * S * S
       const M = baseForce * s * s;
 
       const dirX = dx / dist;
       const dirY = dy / dist;
 
-      // 转换为冲量施加给刚体
-      const impulseX = (dirX * M * b.mass) / SCALE;
-      const impulseY = (dirY * M * b.mass) / SCALE;
+      // 斗鱼官方 1:1 偏置与冲量方程: b = (L * M, (g/p)*M + M * r), r = 0.22 (向上偏置)
+      // 在 Canvas 坐标系中，Y 轴向下为正，天空为负方向，因此向上偏置力为 - M * 0.22
+      const F = b._pBody.getMass();
+      if (F > 0) {
+        const impulseX = (dirX * M * F) / SCALE;
+        const impulseY = ((dirY * M - M * 0.22) * F) / SCALE;
+        b._pBody.applyLinearImpulse(new Vec2(impulseX, impulseY), b._pBody.getWorldCenter(), true);
+      }
 
-      b._pBody.applyLinearImpulse(new Vec2(impulseX, impulseY), b._pBody.getWorldCenter(), true);
+      // 斗鱼官方受击自转扰动: (L >= 0 ? -1 : 1) * M * 0.035
+      const rotDir = dirX >= 0 ? -1 : 1;
+      b._pBody.setAngularVelocity(b._pBody.getAngularVelocity() + rotDir * M * 0.035);
     }
   }
 }

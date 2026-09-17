@@ -1,5 +1,35 @@
 # 项目任务状态记录
 
+## [2026-09-17] 彻底剥离人工补丁并100%纯净复刻斗鱼Cocos物理管线（杜绝后期返修隐患）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底拔除自加的临时人工补丁（防后期返修）**：
+     - **移除 `immuneTime`（出生保护期时间锁）**：斗鱼官方没有该锁；经推演证实若强加 0.18s 锁，玩家连续快速下落碰撞时会直接丢失单次 `begin-contact` 事件，导致两颗同级水果紧贴发呆、彻底卡死无法合成。现已彻底移除，合成判定完全回归斗鱼原生 `begin-contact` 碰撞事件驱动；
+     - **移除 `update` 中逐帧修改速度的 `rollDecay`**：斗鱼官方没有在 update 中人工衰减速度，完全依赖 Box2D 原生 `linearDamping: 0.12`、`angularDamping: 0.22`、`friction: 0.2` 与 `allowSleep: true` 自然滚停休眠。实测纯 Box2D 物理在小球撞击右墙后约 3.8 秒自然静止入眠（`vx: 0, w: 0, isSleeping: true`），无需任何人工侵入。
+  2. **1:1 严格对标斗鱼 Cocos 碰撞与合成消除链路**：
+     - `physicsPlanck.js`：碰撞接触监听器 `begin-contact` 为唯一主驱动；
+     - `_tryQueueMerge`：入队瞬间即时加锁标记 `b1.isMerging = true; b2.isMerging = true`（1:1 对标斗鱼 `s.merging = true`），杜绝同一帧内同一个刚体被多个接触事件重复入队；
+     - `_scanProximityMerges`：1:1 严格对标斗鱼 `scanProximityMergeCandidates`，每 50ms 周期执行，容差按舞台比例换算为 `8 * (width / 690)`，仅作极低速接触丢失兜底，彻底杜绝运动中隔空吸附。
+  3. **1:1 严格还原斗鱼 Cocos triggerMergeExplosion 径向爆炸冲击波**：
+     - 爆炸半径公式：`blastRadius = (240 + 42 * power + 0.45 * radius_scaled) * stageScale`；
+     - 斗鱼官方推力参数：`baseForce = (3.0 + 1.0 * power) * 20`，二次方非线性衰减 $M = \text{baseForce} \cdot S^2$；
+     - 斗鱼官方偏置力：向天空偏置冲量 `- M * 0.22`，受击角速度扰动 `rotDir * M * 0.035`；
+     - 合成瞬间强力将周围邻近水果推散弹开，拉开物理间距，从根本上杜绝新球因半径膨胀贴脸吸附。
+  4. **恢复斗鱼 1:1 真实重力加速度与质量阶梯（$m \propto r^2$）**：
+     - `linearDamping: 0.12`，`angularDamping: 0.22`（下落空气阻力降低近 10 倍，重力加速度 1300 px/s² 势能完全释放，落体迅猛势大力沉，彻底消除羽毛气球般的悬浮漂浮感）；
+     - `items.js`：质量严格对标圆面积平方分布（1 级含氟牙膏 mass: 1.0，11 级非洲之心 mass: 44.4，质量比达到 44.4 倍）；
+     - 大金质量极大、正压力大、静摩擦力大，落地卡得极紧、稳如泰山；小球质量小、惯性小，撞击大金被反弹，大金纹丝不动。
+  5. **全套自动化测试回归 100% 绿色通过**：
+     - `verify_watermelon_merge_behavior.js` (4/4)、`verify_planck_watermelon.js` (5/5)、`verify_game_architecture.js` (6/6)、`verify_item_manager.js` (5/5)、`verify_map_manager.js` (6/6) 全部通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/items.js`
+  - `scripts/verify_watermelon_merge_behavior.js`
+  - `scripts/verify_planck_watermelon.js`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 遵循微信官方 app.json#resolveAlias 规范落地别名映射与规则写入
 - 状态：已完成
 - 优先级：P0

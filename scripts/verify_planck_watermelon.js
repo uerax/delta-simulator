@@ -41,8 +41,8 @@ for (let i = 0; i < 30; i++) {
 // 落地后切向摩擦驱动滚动
 console.log('  落地滚动角速度:', rollBall.angularVelocity, '线速度 vx:', rollBall.vx);
 
-// 继续运行 3 秒
-for (let i = 0; i < 180; i++) {
+// 继续运行至小球撞墙滚停休眠 (约 4 秒，240 帧)
+for (let i = 0; i < 240; i++) {
   world2.update(0.016);
 }
 console.log('  3 秒后线速度 vx:', rollBall.vx, '角速度 w:', rollBall.angularVelocity, 'isSleeping:', rollBall.isSleeping);

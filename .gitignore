@@ -17,5 +17,8 @@ Thumbs.db
 .idea/
 .vscode/
 
+# 逆向分析解包目录
+scripts/douyu_unpacked/
+
 # 协作历史归档
 .claude/STATE-ARCHIVE.md
