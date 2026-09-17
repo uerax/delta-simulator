@@ -1,6 +1,27 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.7.7`（唯一权威事实源，每次改动必须在此递增并同步记录）
+> **当前全局版本号**：`v1.8.0`（唯一权威事实源，每次改动必须在此递增并同步记录）
+
+## [2026-09-18] 代码包极限瘦身与发布测试准备（清理云服务模板图片与废弃示例页）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **代码包体积深度排查与瘦身落地（已验证）**：
+     - 排查前 `miniprogram` 总大小为 1.90 MB (1945 KB)，极度逼近微信官方 2MB (2048 KB) 上限；
+     - 彻底清除 `miniprogram/images/` 下 14 个云开发快速启动模板历史教学截图（`create_cbr.png`, `ai_example1.png` 等共 1.16 MB）及 `icons/` 目录；
+     - 严格保留业务唯一引用的默认头像 `miniprogram/images/avatar.png` (4.9 KB)；
+     - 同步移除未在 `app.json` 注册的废弃示例页 `miniprogram/pages/example/` 及配套组件 `miniprogram/components/cloudTipModal/`；
+     - 瘦身后 `miniprogram` 代码包总体积降至 **739.36 KB (0.72 MB)**，体积缩减 62%，距 2MB 红线剩余超过 1300 KB。
+  2. **单测套件 100% 绿色回归**：
+     - 7 项单测套件全部通过验证。
+  3. **发布流程文档与版本号对齐**：
+     - `package.json` 与 `STATE.md` 版本号同步升级至 `v1.8.0`。
+- 涉及文件：
+  - `miniprogram/images/`（清理冗余图片）
+  - `miniprogram/pages/example/`（清理废弃页面）
+  - `miniprogram/components/cloudTipModal/`（清理废弃组件）
+  - `package.json`
+  - `.claude/STATE.md`
 
 ## [2026-09-18] 战术切片聚焦中心核心交战区（彻底排除边缘空白与黑边死角）
 - 状态：已完成
