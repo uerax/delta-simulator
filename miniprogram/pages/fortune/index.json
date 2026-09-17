@@ -1,5 +1,6 @@
 {
   "usingComponents": {},
+  "initialRenderingCache": "static",
   "navigationBarTitleText": "今日鼠鼠运势",
   "navigationBarBackgroundColor": "#1e1e2e",
   "navigationBarTextStyle": "white",

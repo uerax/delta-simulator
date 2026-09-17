@@ -57,21 +57,37 @@ Page({
     });
   },
 
-  // 选择游戏进入（增加防重节流锁与环境自适应反馈）
+  // 卡片点击触感反馈 (异步延后触发，0ms 不阻塞原生路由派发)
+  onCardTap() {
+    if (this.data.settings && this.data.settings.vibrationEnabled) {
+      setTimeout(() => {
+        Feedback.vibrateShort(true, 'light');
+      }, 0);
+    }
+  },
+
+  // 选择游戏进入（编程式跳转兜底）
   onSelectGame(e) {
     if (this._isNavigating) return;
-    const { path } = e.currentTarget.dataset;
-    if (path) {
-      this._isNavigating = true;
-      Feedback.vibrateShort(this.data.settings.vibrationEnabled, 'light');
-      wx.navigateTo({
-        url: path,
-        complete: () => {
-          setTimeout(() => {
-            this._isNavigating = false;
-          }, 300);
-        }
-      });
+    const path = (e && e.currentTarget && e.currentTarget.dataset && e.currentTarget.dataset.path) || (typeof e === 'string' ? e : '');
+    if (!path) return;
+
+    this._isNavigating = true;
+    // 立即发起跳转，绝不在 navigateTo 之前插入任何同步阻塞或系统硬件调用
+    wx.navigateTo({
+      url: path,
+      complete: () => {
+        setTimeout(() => {
+          this._isNavigating = false;
+        }, 200);
+      }
+    });
+
+    // 触感反馈异步触发
+    if (this.data.settings && this.data.settings.vibrationEnabled) {
+      setTimeout(() => {
+        Feedback.vibrateShort(true, 'light');
+      }, 0);
     }
   },
 

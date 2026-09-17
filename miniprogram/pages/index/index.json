@@ -1,5 +1,6 @@
 {
   "usingComponents": {},
+  "initialRenderingCache": "static",
   "navigationBarTitleText": "鼠鼠今天得吃了",
   "navigationBarBackgroundColor": "#1e1e2e",
   "navigationBarTextStyle": "white",

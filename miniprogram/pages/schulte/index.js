@@ -6,7 +6,7 @@ const SchulteEngine = require('../../games/schulte/engine');
 Page({
   data: {
     gameState: 'ready', // 'ready' | 'playing' | 'ended'
-    gridNumbers: [],
+    gridNumbers: Array.from({ length: 16 }, (_, i) => ({ num: i + 1, cleared: false, isWrong: false })),
     currentTarget: 1,
     timeStr: '0.0',
     showResultModal: false,

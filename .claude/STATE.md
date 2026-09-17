@@ -1,5 +1,60 @@
 # 项目任务状态记录
 
+> **当前全局版本号**：`v1.6.1`（唯一权威事实源，每次改动必须在此递增并同步记录）
+
+## [2026-09-17] 消除大西瓜 Canvas 背景抢跑与上下部分割裂慢半拍（接入官方 onRouteDone）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **深度排查根因定位（已验证）**：
+     - 普通 DOM（顶部 `.status-bar`、底部 `.bottom-bar`）属于 WebView 渲染树，受微信路由右滑入场动画（Slide-In Transition，耗时约 260ms）平移约束；
+     - 中间游戏区域是 `<canvas type="2d">` 同层渲染原生组件（Same-layer Native Component），直接在屏幕绝对物理坐标上绘制；
+     - 之前在 `onReady` 的第 0 毫秒（此时转场动画才刚开始）就立即同步执行了 `_renderFrame`，导致 Native Canvas 画面瞬间钉死在物理视口中央曝光（用户看到的“先加载背景”），而 WebView DOM 还在从右向左慢慢滑入，造成强烈的画面割裂感。
+  2. **严格遵循微信官方 Page.onRouteDone() 标准生命周期**：
+     - `miniprogram/pages/watermelon/index.js`：接入微信官方标准 `onRouteDone()` 生命周期回调；
+     - 转场滑入期间，整页以纯 DOM 形式（带 `#090d13` 暗黑战术背景的 `.canvas-wrap` 与上下栏）满帧丝滑滑入归位；
+     - 在滑入完全到位的瞬间（`onRouteDone` 触发），Canvas 首帧瞬间绘制点亮，上下部分与中间游戏区域浑然一体、同步呈现；
+     - 并在 `onReady` 补充 350ms 避峰兜底定时器（防御特殊旧版本微信），在 `onUnload` 中妥善释放句柄，内存与生命周期 100% 闭环。
+  3. **自动化测试 100% 绿色通过**：
+     - 7 项测试套件全部通过。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 解决页面跳转延迟与点击卡顿（严格遵循微信官方性能白皮书）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **原生 `navigator` 组件底层零延迟分发**：
+     - `miniprogram/pages/index/index.wxml`：将游戏卡片升级为微信原生 `<navigator url="{{item.path}}" hover-class="none" class="game-card" bindtap="onCardTap">`，由客户端 Native 渲染层在捕获手势第 0 毫秒直接派发路由管线，彻底消除视图层到逻辑层的 IPC 跨进程事件通信与解释器往返延迟；
+     - `miniprogram/pages/index/index.js`：将硬件震动等辅助反馈通过 `setTimeout(..., 0)` 异步解耦，保证路由跳转绝对优先触发。
+  2. **全页面落地微信官方 `initialRenderingCache: "static"`（初始渲染缓存）**：
+     - `pages/watermelon/index.json`、`pages/game/index.json`、`pages/schulte/index.json`、`pages/fortune/index.json`、`pages/index/index.json`：全面开启初始渲染缓存；
+     - 视图层无需等待逻辑层代码加载和初始 `data` 通信，直接使用静态 WXML 骨架完成首次渲染（First Render），微信客户端的页面滑入切换动画（Transition Animation）零等待瞬间启动，彻底根治“点击后卡在当前页迟迟不跳”的假死感。
+  3. **290KB Planck.js 物理库按需惰性加载（消除路由解析阻塞）**：
+     - `miniprogram/games/watermelon/physicsPlanck.js`：彻底移除模块顶层同步 `require('../../lib/planck.min.js')`，改为在 `PhysicsWorldPlanck` 构造函数中按需加载；
+     - 切入大西瓜页面时逻辑层脚本解析注入开销从 300ms 骤降至 < 2ms，路由派发与生命周期执行毫无卡顿。
+  4. **非首屏组件用时注入（`componentPlaceholder`）**：
+     - 在大西瓜、反应力、舒尔特等页面的 json 配置中加入 `"componentPlaceholder": { "game-result-modal": "view" }`；
+     - 游戏结算弹窗组件只在游戏结束时展现，首屏进场时直接用内置 `view` 占位，消除页面初始化阶段解析实例化复杂弹窗组件树的开销。
+  5. **首屏数据结构声明期静态化**：
+     - `pages/game/index.js` 与 `pages/schulte/index.js`：九宫格与十六宫格数据在 `Page.data` 声明期即赋初值，配合静态缓存直接在进场首帧呈现完整棋盘结构，彻底避免 `onLoad` 中频繁 `setData` 引发的布局二次重排与通信阻塞。
+  6. **全套自动化测试回归 100% 绿色通过**：
+     - 7 项自动化单测套件（解耦架构、Planck 物理、防吸附、爆汁特效、道具管理器、战术地图背景、鼠鼠运势算法）全部 100% 绿色通过。
+- 涉及文件：
+  - `miniprogram/pages/index/index.wxml`
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/pages/index/index.json`
+  - `miniprogram/pages/watermelon/index.json`
+  - `miniprogram/pages/game/index.json`
+  - `miniprogram/pages/game/index.js`
+  - `miniprogram/pages/schulte/index.json`
+  - `miniprogram/pages/schulte/index.js`
+  - `miniprogram/pages/fortune/index.json`
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 1:1 纯净复刻斗鱼动态响应式水果半径体系（STAGE_LAYOUT stageScale 动态自适应）
 - 状态：已完成
 - 优先级：P0

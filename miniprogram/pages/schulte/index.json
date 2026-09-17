@@ -2,6 +2,10 @@
   "usingComponents": {
     "game-result-modal": "/components/game-result-modal/index"
   },
+  "componentPlaceholder": {
+    "game-result-modal": "view"
+  },
+  "initialRenderingCache": "static",
   "navigationBarTitleText": "舒尔特专注方格",
   "navigationBarBackgroundColor": "#1e1e2e",
   "navigationBarTextStyle": "white",

@@ -10,7 +10,7 @@ Page({
     score: 0,
     combo: 0,
     maxCombo: 0,
-    gridCells: [],
+    gridCells: Array.from({ length: 9 }, () => ({ isActive: false, isWrong: false })),
     showResultModal: false,
     isNewRecord: false,
     resultItems: []

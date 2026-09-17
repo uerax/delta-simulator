@@ -11,17 +11,31 @@
  * 6. 靠下锚定算法 pickLowerFruit 与极微弱径向爆炸冲击波
  */
 
-const planckRaw = require('../../lib/planck.min.js');
-const planck = (planckRaw && planckRaw.World) ? planckRaw : ((planckRaw && planckRaw.default) ? planckRaw.default : planckRaw);
-const { getItemByLevel, MAX_LEVEL } = require('./items');
+let planck = null;
+let Vec2 = null;
 
-const Vec2 = planck.Vec2 || (planckRaw && planckRaw.Vec2);
+/**
+ * 惰性按需载入 290KB Planck.js 物理库
+ * 遵循微信官方性能最佳实践：消除模块被 require 时同步解析大文件的阻塞，
+ * 保证页面路由跳转在 0ms 瞬间派发，只有在物理世界真正构造时才按需加载。
+ */
+function ensurePlanck() {
+  if (!planck) {
+    const planckRaw = require('../../lib/planck.min.js');
+    planck = (planckRaw && planckRaw.World) ? planckRaw : ((planckRaw && planckRaw.default) ? planckRaw.default : planckRaw);
+    Vec2 = planck.Vec2 || (planckRaw && planckRaw.Vec2);
+  }
+  return planck;
+}
+
+const { getItemByLevel, MAX_LEVEL } = require('./items');
 
 // 像素与米制转换比率：50 像素 = 1 米
 const SCALE = 50;
 
 class PhysicsWorldPlanck {
   constructor(options = {}) {
+    ensurePlanck();
     this.width = options.width || 360;
     this.height = options.height || Math.round(this.width * (976 / 702)); // 严格 1:1 对标斗鱼官方 STAGE_LAYOUT (702:976)
     this.stageScale = this.width / 702; // 1:1 对标斗鱼官方 stageScale 响应式缩放系数
@@ -455,5 +469,7 @@ class PhysicsWorldPlanck {
     }
   }
 }
+
+PhysicsWorldPlanck.preload = ensurePlanck;
 
 module.exports = PhysicsWorldPlanck;

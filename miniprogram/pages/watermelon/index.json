@@ -2,8 +2,13 @@
   "navigationBarTitleText": "合成大西瓜",
   "navigationBarBackgroundColor": "#0d1117",
   "navigationBarTextStyle": "white",
+  "backgroundColor": "#0d1117",
+  "initialRenderingCache": "static",
   "usingComponents": {
     "game-result-modal": "/components/game-result-modal/index"
+  },
+  "componentPlaceholder": {
+    "game-result-modal": "view"
   },
   "disableScroll": true
 }

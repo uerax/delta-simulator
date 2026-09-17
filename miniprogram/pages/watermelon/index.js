@@ -56,10 +56,30 @@ Page({
     // 读取用户震动配置
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
+    this._routeDoneTimer = null;
   },
 
   onReady() {
-    // 立即启动 Canvas 查找与首帧绘制，首帧就绪后一次性整体点亮全页，绝不分步露馅
+    // 防御性兜底：若特定旧版本微信环境未触发 onRouteDone，350ms 避峰超时后自动启动初始化
+    if (!this._canvasInited) {
+      this._routeDoneTimer = setTimeout(() => {
+        if (!this._canvasInited) {
+          this._initCanvas();
+        }
+      }, 350);
+    }
+  },
+
+  /**
+   * 微信官方标准生命周期：页面路由转场动画完成时触发
+   * 严格遵循官方最佳实践：等整页 DOM 从右侧完全滑入归位后，再激活同层渲染 Native Canvas，
+   * 彻底消除“中间 Canvas 背景抢跑钉在屏幕中央、顶部和底部 DOM 慢半拍滑入”的割裂现象。
+   */
+  onRouteDone() {
+    if (this._routeDoneTimer) {
+      clearTimeout(this._routeDoneTimer);
+      this._routeDoneTimer = null;
+    }
     if (!this._canvasInited) {
       this._initCanvas();
     }
@@ -82,6 +102,10 @@ Page({
   },
 
   onUnload() {
+    if (this._routeDoneTimer) {
+      clearTimeout(this._routeDoneTimer);
+      this._routeDoneTimer = null;
+    }
     this._stopRenderLoop();
     if (this._engine) {
       this._engine.destroy();
