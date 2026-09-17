@@ -12,7 +12,7 @@ const BACKUP_DIR = path.join(ROOT_DIR, 'assets_backup');
 // 1. 更新道具清单 item_manifest.json
 async function updateItemManifest() {
   console.log('--- 1. 更新 item_manifest.json 官方 CDN 链接与 backupPath ---');
-  const manifestPath = path.join(MINIPROGRAM_DIR, 'assets/items/item_manifest.json');
+  const manifestPath = path.join(ROOT_DIR, 'scripts/data/items/item_manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
   let count = 0;
@@ -35,7 +35,7 @@ async function updateItemManifest() {
 // 2. 更新图标清单 icon_manifest.json
 async function updateIconManifest() {
   console.log('--- 2. 更新 icon_manifest.json 官方 CDN / Base64 链接与 backupPath ---');
-  const manifestPath = path.join(MINIPROGRAM_DIR, 'assets/icons/icon_manifest.json');
+  const manifestPath = path.join(ROOT_DIR, 'scripts/data/icons/icon_manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
   // 获取官方 main.css 中的图标映射
@@ -99,7 +99,7 @@ async function updateIconManifest() {
 // 3. 更新地图清单 map_manifest.json
 async function updateMapManifest() {
   console.log('--- 3. 更新 map_manifest.json 官方 CDN 瓦片切片链接与 backupPath ---');
-  const manifestPath = path.join(MINIPROGRAM_DIR, 'assets/maps/map_manifest.json');
+  const manifestPath = path.join(ROOT_DIR, 'scripts/data/maps/map_manifest.json');
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
   for (const m of manifest) {

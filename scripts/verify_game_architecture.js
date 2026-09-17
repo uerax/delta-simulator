@@ -5,6 +5,14 @@
 
 const assert = require('assert');
 const path = require('path');
+const Module = require('module');
+const origResolve = Module._resolveFilename;
+Module._resolveFilename = function (request, parent, isMain, options) {
+  if (request.startsWith('@/')) {
+    request = path.resolve(__dirname, '../miniprogram', request.slice(2));
+  }
+  return origResolve.call(this, request, parent, isMain, options);
+};
 
 console.log('🧪 开始小游戏解耦架构全面验证...\n');
 
@@ -133,16 +141,43 @@ console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通�
 
 // 3. 验证 WatermelonEngine & PhysicsWorld (合成大西瓜物理与逻辑引擎)
 console.log('▶ [3/6] 测试 WatermelonEngine 逻辑与 PhysicsWorld 刚体物理引擎...');
-const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL } = require('../miniprogram/games/watermelon/items');
+const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL, refreshWatermelonItems } = require('../miniprogram/games/watermelon/items');
 const PhysicsWorld = require('../miniprogram/games/watermelon/physicsPlanck');
 const WatermelonEngine = require('../miniprogram/games/watermelon/engine');
 
-// 3.1 道具元数据 11 阶验证
+// 3.1 道具元数据 11 阶与动态随机池验证
 assert.strictEqual(WATERMELON_ITEMS.length, 11, '道具清单应包含严格 11 个品阶');
-assert.strictEqual(WATERMELON_ITEMS[0].name, '含氟牙膏', 'Lv.1 道具应为含氟牙膏');
+assert.strictEqual(MAX_LEVEL, 11, '最大等级应为 11');
+
+// 校验 grade 映射与 tierName 删除
+const expectedGrades = [1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6];
+const itemIds = new Set();
+WATERMELON_ITEMS.forEach((it, idx) => {
+  assert.strictEqual(it.grade, expectedGrades[idx], `Lv.${it.level} 的 grade 应为 ${expectedGrades[idx]}`);
+  assert.strictEqual(it.tierName, undefined, 'tierName 字段应已彻底删除');
+  assert.ok(it.name, `Lv.${it.level} 道具应有名称`);
+  assert.ok(it.id, `Lv.${it.level} 道具应有 ID`);
+  assert.ok(it.iconUrl, `Lv.${it.level} 道具应有 iconUrl`);
+  assert(!itemIds.has(it.id), `各级道具 ID 不应重复: ${it.name}(${it.id})`);
+  itemIds.add(it.id);
+});
+
+// 终极大金恒定为非洲之心
 assert.strictEqual(WATERMELON_ITEMS[10].name, '非洲之心', 'Lv.11 终极大金应为非洲之心');
 assert(WATERMELON_ITEMS[10].iconUrl.includes('15080050006.png'), '终极大金应直连非洲之心官方CDN');
-assert.strictEqual(MAX_LEVEL, 11, '最大等级应为 11');
+assert.strictEqual(WATERMELON_ITEMS[10].isUltimate, true, '终极大金应标记 isUltimate');
+
+// 测试调用 refreshWatermelonItems() 重新随机抽取与 Lv.10 绝对过滤非洲之心 (1000 次压测)
+for (let round = 0; round < 1000; round++) {
+  refreshWatermelonItems();
+  assert.strictEqual(WATERMELON_ITEMS.length, 11);
+  const lv10 = WATERMELON_ITEMS[9];
+  const lv11 = WATERMELON_ITEMS[10];
+  assert.notStrictEqual(lv10.name, '非洲之心', `Lv.10 绝对不能是非洲之心 (第 ${round} 轮异常: ${lv10.name})`);
+  assert.notStrictEqual(lv10.id, 15080050006, `Lv.10 绝对不能是非洲之心 ID (第 ${round} 轮异常)`);
+  assert.strictEqual(lv11.name, '非洲之心', `Lv.11 必须恒为非洲之心 (第 ${round} 轮异常)`);
+  assert.strictEqual(lv11.id, 15080050006, `Lv.11 ID 必须恒为 15080050006 (第 ${round} 轮异常)`);
+}
 
 // 3.2 动态下落池难度曲线算法 (全新快节奏：一开始1~2级，前15次快速进阶至Lv.7)
 const watermelonEngine = new WatermelonEngine({ width: 360, height: 600, autoInitSilent: true });

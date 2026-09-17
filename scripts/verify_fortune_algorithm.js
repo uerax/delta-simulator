@@ -2,6 +2,16 @@
  * 每日运势确定性算法全场景校验脚本
  */
 
+const Module = require('module');
+const path = require('path');
+const origResolve = Module._resolveFilename;
+Module._resolveFilename = function (request, parent, isMain, options) {
+  if (request.startsWith('@/')) {
+    request = path.resolve(__dirname, '../miniprogram', request.slice(2));
+  }
+  return origResolve.call(this, request, parent, isMain, options);
+};
+
 const { calculateDailyFortune, murmurHash3, Mulberry32PRNG } = require('../miniprogram/games/fortune/fortuneAlgorithm');
 const mapManager = require('../miniprogram/utils/mapManager');
 const itemManager = require('../miniprogram/utils/itemManager');

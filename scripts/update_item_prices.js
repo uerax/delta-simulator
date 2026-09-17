@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { decodeZhouPack } = require('./lib/zhou_pack_decoder.js');
 
-const MANIFEST_PATH = path.resolve(__dirname, '../miniprogram/assets/items/item_manifest.json');
+const MANIFEST_PATH = path.resolve(__dirname, 'data/items/item_manifest.json');
 const MARKET_API_URL = 'https://api.wwery.com/api/%E4%BA%A4%E6%98%93%E8%A1%8C%E6%95%B0%E6%8D%AE';
 
 async function fetchMarketData() {

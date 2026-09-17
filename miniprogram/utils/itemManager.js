@@ -282,13 +282,31 @@ class ItemManagerService {
   }
 
   /**
-   * 从指定等级的道具池中随机抽取一件道具
+   * 从指定等级的道具池中随机抽取一件道具 (支持可选的排除集合)
    * @param {number} level 1~6
+   * @param {Set|Array|null} excludeSet 可选的排除 ID 或名称集合
    * @returns {Object|null}
    */
-  getRandomByLevel(level) {
-    const pool = this.getLevelList(level);
+  getRandomByLevel(level, excludeSet = null) {
+    let pool = this.getLevelList(level);
     if (!pool || pool.length === 0) return null;
+
+    if (excludeSet) {
+      const hasExclude = (it) => {
+        if (typeof excludeSet.has === 'function') {
+          return excludeSet.has(it.id) || excludeSet.has(String(it.id)) || excludeSet.has(it.name);
+        }
+        if (Array.isArray(excludeSet)) {
+          return excludeSet.includes(it.id) || excludeSet.includes(String(it.id)) || excludeSet.includes(it.name);
+        }
+        return false;
+      };
+      const filtered = pool.filter(it => !hasExclude(it));
+      if (filtered.length > 0) {
+        pool = filtered;
+      }
+    }
+
     const randomIndex = Math.floor(Math.random() * pool.length);
     return pool[randomIndex];
   }

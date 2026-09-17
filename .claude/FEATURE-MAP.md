@@ -64,22 +64,13 @@
 - **战术地图背景管理器 (MapManager)**：`miniprogram/utils/mapManager.js`
   - 核心能力：6 大战术地图双键索引（按 Key 与名称 O(1) 检索）、开局独立战术背景会话（`pickSession` 随机抽取 96 张官方切片之一）、Canvas 2D 独立渲染适配（`drawBackground`，自带图象内存缓存、深色遮罩与军事经纬十字刻度）、DOM 样式生成器（`getRandomBackgroundStyle`，供非 Canvas 页面一键绑定）。
 - **三角洲战术物资资源库**：
-  - 地图底图资源目录：`miniprogram/assets/maps/`（6大核心战术地图 1024x1024 纯净底图，总体积 760KB）
-  - 地图元数据清单：`miniprogram/assets/maps/map_manifest.json`
-  - 图标资源分级目录：`miniprogram/assets/icons/`
-    - 物资与搜集容器：`miniprogram/assets/icons/containers/` (30 个)
-    - 出生点：`miniprogram/assets/icons/spawns/` (1 个)
-    - 撤离点：`miniprogram/assets/icons/extractions/` (9 个)
-    - 任务与接取站：`miniprogram/assets/icons/tasks/` (2 个)
-    - 首领Boss：`miniprogram/assets/icons/bosses/` (1 个)
-    - 特种/辐射设施：`miniprogram/assets/icons/facilities/` (14 个)
-  - 分类索引清单：`miniprogram/assets/icons/icon_manifest.json`
+  - 地图运行时清单：`miniprogram/assets/maps/map_manifest.js`（CommonJS 标准导出）
+  - 道具运行时清单：`miniprogram/assets/items/item_manifest.js`（CommonJS 标准导出）
   - 稀有度等级图标与样式：`miniprogram/assets/icons/levels/` (红/橙/紫/蓝/绿/白 6 级图标雪碧图与 `level_icons.wxss`)
-  - 道具高清图片与元数据：`miniprogram/assets/items/`
-    - 收藏品 (270件)：`miniprogram/assets/items/collection/`
-    - 消耗品 (30件)：`miniprogram/assets/items/consume/`
-    - 门卡 (59件)：`miniprogram/assets/items/keys/`
-    - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`（纯简体规范化轻量清单，总计 359 件核心道具）
+  - 离线维护数据源：`scripts/data/`
+    - 地图源数据：`scripts/data/maps/map_manifest.json`
+    - 图标源数据：`scripts/data/icons/icon_manifest.json`
+    - 道具源数据：`scripts/data/items/item_manifest.json`
   - 数据爬取、价格同步与导出脚本：`scripts/verify_watermelon_merge_behavior.js`、`scripts/verify_game_architecture.js`、`scripts/verify_planck_watermelon.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能

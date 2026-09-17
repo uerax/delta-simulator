@@ -8,6 +8,16 @@
  */
 
 const assert = require('assert');
+const path = require('path');
+const Module = require('module');
+const origResolve = Module._resolveFilename;
+Module._resolveFilename = function (request, parent, isMain, options) {
+  if (request.startsWith('@/')) {
+    request = path.resolve(__dirname, '../miniprogram', request.slice(2));
+  }
+  return origResolve.call(this, request, parent, isMain, options);
+};
+
 const PhysicsWorldPlanck = require('../miniprogram/games/watermelon/physicsPlanck');
 const { getItemByLevel } = require('../miniprogram/games/watermelon/items');
 

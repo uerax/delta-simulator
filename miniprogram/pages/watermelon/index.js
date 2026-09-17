@@ -5,7 +5,7 @@
  */
 
 const WatermelonEngine = require('../../games/watermelon/engine');
-const { WATERMELON_ITEMS, getItemByLevel } = require('../../games/watermelon/items');
+const { WATERMELON_ITEMS, getItemByLevel, refreshWatermelonItems } = require('../../games/watermelon/items');
 const Storage = require('../../utils/storage');
 const Feedback = require('../../utils/feedback');
 const MapManager = require('../../utils/mapManager');
@@ -46,6 +46,9 @@ Page({
   },
 
   onLoad() {
+    // 每次打开游戏时重新随机拉取本局道具组合
+    refreshWatermelonItems();
+
     this._isNavigating = false;
     this._rafId = null;
     this._lastFrameTime = 0;
@@ -64,6 +67,7 @@ Page({
     // 读取用户付费特权状态 (默认 false)
     this._privileges = Storage.getPrivileges ? Storage.getPrivileges() : { aimGuideLine: false, nextItemPreview: false };
     this.setData({
+      nextItem: getItemByLevel(1),
       isGuideLineUnlocked: !!this._privileges.aimGuideLine,
       isNextItemUnlocked: !!this._privileges.nextItemPreview
     });
@@ -1041,6 +1045,14 @@ Page({
 
     // 重新抽取下一局战术地图切片
     MapManager.pickSession({ width: this._width, height: this._height });
+
+    // 重新抽取本局随机道具组合并重置贴图缓存
+    refreshWatermelonItems();
+    this._imgCache = {};
+    this._preloadInitialImages();
+    setTimeout(() => {
+      this._preloadRemainingImages();
+    }, 350);
 
     // 重置视觉粒子与状态
     this._shockwaves = [];

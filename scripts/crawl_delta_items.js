@@ -93,7 +93,7 @@ const API_URL = 'https://sg-apps.vasdgame.com/ide/';
 const LANG_PACK_URL = 'https://deltaforcewiki.vasdgame.com/playerhub/40001/language/language_zh-tw_2025012019.json';
 
 // 输出目录配置
-const BASE_ASSETS_DIR = path.resolve(__dirname, '../miniprogram/assets/items');
+const BASE_ASSETS_DIR = path.resolve(__dirname, 'data/items');
 const MANIFEST_PATH = path.join(BASE_ASSETS_DIR, 'item_manifest.json');
 
 async function fetchOfficialProps() {

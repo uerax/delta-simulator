@@ -9,6 +9,16 @@
  */
 
 const assert = require('assert');
+const path = require('path');
+const Module = require('module');
+const origResolve = Module._resolveFilename;
+Module._resolveFilename = function (request, parent, isMain, options) {
+  if (request.startsWith('@/')) {
+    request = path.resolve(__dirname, '../miniprogram', request.slice(2));
+  }
+  return origResolve.call(this, request, parent, isMain, options);
+};
+
 const PhysicsWorldPlanck = require('../miniprogram/games/watermelon/physicsPlanck');
 
 console.log('🧪 开始 Planck.js 大西瓜物理引擎专项回归测试...\n');

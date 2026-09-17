@@ -39,7 +39,7 @@ const NON_TRADABLE_NAMES = {
   15020040001: '工具箱'
 };
 
-const MANIFEST_PATH = path.resolve(__dirname, '../miniprogram/assets/items/item_manifest.json');
+const MANIFEST_PATH = path.resolve(__dirname, 'data/items/item_manifest.json');
 const MARKET_API_URL = 'https://api.wwery.com/api/%E4%BA%A4%E6%98%93%E8%A1%8C%E6%95%B0%E6%8D%AE';
 
 async function fetchMarketNames() {

@@ -208,7 +208,7 @@ async function main() {
   console.log(`已清理根目录下散落的 ${cleanedCount} 个平铺旧 PNG 文件`);
 
   // 6. 保存清单文件
-  const manifestPath = path.join(baseDir, 'icon_manifest.json');
+  const manifestPath = path.resolve(__dirname, 'data/icons/icon_manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8');
   console.log(`已更新分类索引文件: ${manifestPath}`);
 

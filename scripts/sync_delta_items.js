@@ -20,7 +20,8 @@ const fs = require('fs');
 const path = require('path');
 const { decodeZhouPack } = require('./lib/zhou_pack_decoder.js');
 
-const MANIFEST_PATH = path.resolve(__dirname, '../miniprogram/assets/items/item_manifest.json');
+const MANIFEST_PATH = path.resolve(__dirname, 'data/items/item_manifest.json');
+const JS_MANIFEST_PATH = path.resolve(__dirname, '../miniprogram/assets/items/item_manifest.js');
 const BACKUP_PATH = path.resolve(__dirname, '../assets_backup/items/item_manifest.backup.json');
 const MARKET_API_URL = 'https://api.wwery.com/api/%E4%BA%A4%E6%98%93%E8%A1%8C%E6%95%B0%E6%8D%AE';
 const CDN_BASE_URL = 'https://playerhub.df.qq.com/playerhub/60004/object/';
@@ -144,6 +145,7 @@ async function main() {
 
   console.log('[4/4] 正在写入精简后的新清单文件...');
   fs.writeFileSync(MANIFEST_PATH, JSON.stringify(outputManifest, null, 2), 'utf-8');
+  fs.writeFileSync(JS_MANIFEST_PATH, `/**\n * 三角洲行动 - 物资清单 (标准 CommonJS 导出)\n */\nmodule.exports = ${JSON.stringify(outputManifest, null, 2)};\n`, 'utf-8');
 
   const stats = fs.statSync(MANIFEST_PATH);
   console.log('\n=== 道具数据同步与精简完成 ===');

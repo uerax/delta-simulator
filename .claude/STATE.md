@@ -1,6 +1,65 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.0`（唯一权威事实源，每次改动必须在此递增并同步记录）
+> **当前全局版本号**：`v1.8.1`（唯一权威事实源，每次改动必须在此递增并同步记录）
+
+## [2026-09-18] 合成非洲之心道具动态随机化重构（基于 grade 分阶去重抽取与 Lv.11 非洲之心锁定）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **道具模型改造与字段精简（已验证）**：
+     - `miniprogram/games/watermelon/items.js`：彻底删除无用的 `tierName` 字段；
+     - 引入 `grade` 属性，精确映射为 1~11 级水果对应的道具品质：`[1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6]`；
+     - 严格保持斗鱼经典的物理几何尺寸（`baseRadius` 从 26 到 170）与分数质量体系不变，确保手感、碰撞体积与堆叠手感 100% 稳定。
+  2. **基于 ItemManager 的动态随机抽取与本局全局去重**：
+     - 新增 `refreshWatermelonItems()` 方法：每次触发时，从 `ItemManager` 对应品阶的道具池（474 件官方道具）中随机挑选道具，绑定其 `id`, `name`, `price`, `iconUrl`, `colorHex`, `bgColorHex`；
+     - 维护 `usedIds = new Set()`，严格保证同一局内 1~11 级道具互不相同（例如同为 grade 2 的 Lv.2 与 Lv.3 不会抽到同名道具）；
+     - Lv.11 终极大金严格锚定为“非洲之心”（`isUltimate: true`），其他低阶随机池自动排除非洲之心。
+  3. **页面生命周期无缝联动（每次打开/再来一局即时重新拉取）**：
+     - `miniprogram/pages/watermelon/index.js`：在 `onLoad` 以及 `restartGame` 时即时调用 `refreshWatermelonItems()`，清空上局贴图缓存并重新预加载本局低阶贴图；
+     - `data.nextItem` 首屏声明期及首帧即时更新为本局抽取的新道具，零延迟、零卡顿。
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 更新 `scripts/verify_game_architecture.js` 等测试套件中关于 items 的断言，7 项全套单测 100% 通过。
+  5. **版本号同步**：
+     - `package.json` 与 `STATE.md` 版本号递增至 `v1.8.1`。
+- 涉及文件：
+  - `miniprogram/games/watermelon/items.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `scripts/verify_game_architecture.js`
+  - `scripts/verify_watermelon_merge_behavior.js`
+  - `scripts/verify_planck_watermelon.js`
+  - `scripts/verify_watermelon_burst_effect.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-18] 剥离 assets 冗余 JSON 维护数据至 scripts/data（主包再次净瘦身 148KB）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **冗余数据剥离与主包绝对纯净化（已验证）**：
+     - 将原本留在 `miniprogram/assets/` 下的三份维护用 JSON 数据（`items/item_manifest.json` 84KB、`icons/icon_manifest.json` 49KB、`maps/map_manifest.json` 11KB，共 144KB）彻底移出小程序源码目录，归档至项目根目录 `scripts/data/{items,icons,maps}/`；
+     - 业务运行时 100% 依赖已封装好的 CommonJS 模块（`miniprogram/assets/items/item_manifest.js` 与 `map_manifest.js`），无任何业务代码依赖这些 JSON；
+     - 迁移后 `miniprogram/` 代码包总大小由 **856 KB 降至 708 KB (0.69 MB)**，再腾出 148 KB 宝贵主包空间，距 2MB 上限剩余逾 1340 KB（仅占 34%）。
+  2. **离线爬虫与更新脚本路径修正**：
+     - `scripts/sync_delta_items.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/crawl_delta_items.js`、`scripts/download_icons.js`、`scripts/migrate_to_official_cdn.js` 统一更新数据源指向 `scripts/data/`，并在 `sync_delta_items.js` 中补齐自动同步生成 `item_manifest.js` 导出链路。
+  3. **修复 Node.js 单测别名解析 & 7 项测试 100% 绿色通过**：
+     - `scripts/verify_fortune_algorithm.js` 补齐 `@/` 别名解析 hook；
+     - 运势算法、解耦架构、道具管理、地图管理、Planck 物理、爆汁特效、防吸附等全套 7 项自动化测试 100% 通过。
+  4. **版本号维护**：
+     - 遵照用户明确指示，纯资源目录归档整理不修改业务代码，维持版本号 `v1.8.0` 不变。
+- 涉及文件：
+  - `miniprogram/assets/items/item_manifest.json` (移至 `scripts/data/items/`)
+  - `miniprogram/assets/maps/map_manifest.json` (移至 `scripts/data/maps/`)
+  - `miniprogram/assets/icons/icon_manifest.json` (移至 `scripts/data/icons/`)
+  - `scripts/sync_delta_items.js`
+  - `scripts/simplify_item_manifest.js`
+  - `scripts/update_item_prices.js`
+  - `scripts/crawl_delta_items.js`
+  - `scripts/download_icons.js`
+  - `scripts/migrate_to_official_cdn.js`
+  - `scripts/verify_fortune_algorithm.js`
+  - `miniprogram/games/watermelon/items.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-18] 代码包极限瘦身与发布测试准备（清理云服务模板图片与废弃示例页）
 - 状态：已完成
