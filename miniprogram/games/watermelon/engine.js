@@ -4,17 +4,8 @@
  * 包含：动态下落池难度曲线、搜刮身价计分、连续合成连击算法、状态机与反馈调度
  */
 
-const PhysicsWorldDefault = require('./physics');
+const PhysicsWorld = require('./physicsPlanck');
 const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL } = require('./items');
-
-function getPlanckPhysicsClass() {
-  try {
-    return require('./physicsPlanck');
-  } catch (e) {
-    console.warn('Cannot load physicsPlanck, fallback to default:', e);
-    return PhysicsWorldDefault;
-  }
-}
 
 class WatermelonEngine {
   constructor(options = {}) {
@@ -22,10 +13,6 @@ class WatermelonEngine {
     this.height = options.height || 600;
     this.dropY = options.dropY || 40; // 顶部待下落果实的 Y 坐标
     this.dangerY = options.dangerY || 80;
-
-    // 物理引擎选型：默认优先采用稳定且零外部依赖的内置物理引擎 ('builtin')，支持动态按需切换至 'planck'
-    this.physicsEngineType = options.physicsEngine || 'builtin';
-    const PhysicsWorldClass = this.physicsEngineType === 'planck' ? getPlanckPhysicsClass() : PhysicsWorldDefault;
 
     // 回调函数
     this.onStateChange = options.onStateChange || null;
@@ -56,7 +43,7 @@ class WatermelonEngine {
     this.currentFruitX = this.width / 2;
     this._recentDropHistory = [];
 
-    // 初始化物理世界 (带自动安全降级机制)
+    // 初始化 Planck.js 物理世界
     const physicsOptions = {
       width: this.width,
       height: this.height,
@@ -74,12 +61,7 @@ class WatermelonEngine {
       }
     };
 
-    try {
-      this.physics = new PhysicsWorldClass(physicsOptions);
-    } catch (err) {
-      console.warn('PhysicsWorldClass init failed, falling back to PhysicsWorldDefault:', err);
-      this.physics = new PhysicsWorldDefault(physicsOptions);
-    }
+    this.physics = new PhysicsWorld(physicsOptions);
 
     // 静默初始化
     if (!options.autoInitSilent) {

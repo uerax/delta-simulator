@@ -1,5 +1,17 @@
 # 项目任务状态记录
 
+## [2026-09-17] 大西瓜全面切换至 Planck.js 物理引擎（剥离双引擎分支与兼容代码）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. 彻底移除 `engine.js` 中所有对自建物理引擎的依赖引用，移除多引擎动态切换判断 (`this.physicsEngineType`) 及降级 try-catch 分支代码；
+  2. `WatermelonEngine` 直接绑定新引入的工业级 Planck.js 物理引擎适配层（`physicsPlanck.js`），实现唯一单一引擎运行；
+  3. 执行单测回归（`verify_game_architecture.js` 与 `verify_planck_watermelon.js`），物理碰撞、刚体阻尼滚停休眠、合成逻辑全部 100% 正常。
+- 涉及文件：
+  - `miniprogram/games/watermelon/engine.js`
+  - `.claude/STATE.md`
+
+
 ## [2026-09-17] 彻底落地大西瓜整页一体化同步呈现（根门控pageReady机制/消除API废弃告警）
 - 状态：已完成
 - 优先级：P0
