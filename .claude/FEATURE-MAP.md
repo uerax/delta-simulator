@@ -16,9 +16,8 @@
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
 - **游戏 2：合成大西瓜 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
   - 11 级阶梯道具元数据：`items.js`（官方已备案 CDN 道具、尺寸、物理质量与交易行身价）
-  - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，对标斗鱼 Cocos 物理参数，摩擦力0.2，角阻尼0.22，低弹性0.1，地面滚动阻力衰减与休眠机制，彻底根除小球无限自旋）
-  - 轻量手写 2D 圆形刚体物理引擎（内置备选/回退）：`physics.js`（`PhysicsWorld`，8 步 CCD 防穿透、双阻尼、双重合成触发、`pickLowerFruit` 靠下锚定、径向冲击波与 0.8s 滞留警戒线）
-  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，默认采用 Planck.js 物理世界，支持 `physicsEngine: 'builtin'` 一键切回，动态下落池难度曲线、搜刮身价、连击算法与状态机）
+  - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，1:1 对标斗鱼 Cocos 物理参数与 120Hz 子步长累加器，摩擦力0.2，角阻尼0.22，低弹性0.1，偏心防发呆与休眠机制，彻底根除小球无限自旋）
+  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，直接绑定 Planck.js 物理世界，动态下落池难度曲线、搜刮身价、连击算法与状态机）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配）
   - 第三方物理核心库：`miniprogram/lib/planck.min.js`（Erin Catto 官方 Box2D 纯 JS 移植版，零 eval，零 new Function，适配微信环境）
 - **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`
@@ -80,7 +79,7 @@
     - 消耗品 (30件)：`miniprogram/assets/items/consume/`
     - 门卡 (59件)：`miniprogram/assets/items/keys/`
     - 道具元数据清单：`miniprogram/assets/items/item_manifest.json`（纯简体规范化轻量清单，总计 359 件核心道具）
-  - 数据爬取、价格同步与导出脚本：`scripts/verify_game_architecture.js`、`scripts/verify_watermelon_physics.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+  - 数据爬取、价格同步与导出脚本：`scripts/verify_game_architecture.js`、`scripts/verify_planck_watermelon.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

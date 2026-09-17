@@ -357,10 +357,10 @@ class WatermelonEngine {
     const x = targetX !== null ? targetX : this.currentFruitX;
     const clampedX = Math.max(radius, Math.min(this.width - radius, x));
 
-    // 在物理世界中生成下落刚体
+    // 在物理世界中生成下落刚体 (1:1 对标斗鱼 Cocos: 初速度归零，由 1300 重力自然加速驱动下落)
     const droppedBody = this.physics.createBody(this.currentLevel, clampedX, this.dropY + radius, {
       vx: 0,
-      vy: 60 // 赋予初始下落速度
+      vy: 0
     });
 
     if (!droppedBody) return false;

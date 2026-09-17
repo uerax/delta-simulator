@@ -1,5 +1,42 @@
 # 项目任务状态记录
 
+## [2026-09-17] 彻底剥离旧版自研手写物理引擎与旧单测脚本
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **安全移除物理冗余代码**：
+     - 彻底删除 `miniprogram/games/watermelon/physics.js`（原手写 2D 刚体物理引擎，480行）；
+     - 彻底删除 `scripts/verify_watermelon_physics.js`（原手写引擎专项测试脚本）；
+  2. **单测套件与索引同步迁移**：
+     - `scripts/verify_game_architecture.js`：将测试项 3 中的 `require('./physics')` 切换指向为 `require('./physicsPlanck')`，保持全套架构单测 100% 绿色通过；
+     - `.claude/FEATURE-MAP.md`：同步清理旧引擎索引，统一为 `physicsPlanck.js` 与 `verify_planck_watermelon.js`；
+  3. 执行全景架构单测与 Planck.js 物理单测双回归，通过率 100%。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physics.js` (删除)
+  - `scripts/verify_watermelon_physics.js` (删除)
+  - `scripts/verify_game_architecture.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 1:1 对标斗鱼 Cocos 物理调度器 (120Hz累加器/18速24位迭代/1300重力/偏心防发呆)
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **物理调度器与求解精度 1:1 对齐**：
+     - `physicsPlanck.js`：将单次变长 step（16~33ms）重构为斗鱼官方同款 120Hz 固定步长累加器（`fixedTimeStep = 1/120`，每帧最大 2 个子步进），速度迭代次数从 8 次提升至 18 次，位置迭代次数从 3 次提升至 24 次，从根本上解决穿透纠偏迟钝和接触数值阻尼问题；
+     - 重力加速度由 1100 px/s² 提升至 1300 px/s²，100% 对齐斗鱼 Cocos 官方参数（`gravity = 1300`）；
+  2. **解决水果偏心堆叠“原地发呆”物理力学缺陷（问题 3）**：
+     - 在 `_setupContactListener` 碰撞接触监听器中实现偏心接触防发呆机制：当上球落在下球顶部偏斜区域（非绝对对称死中心）时，主动施加 0.45 m/s (~22 px/s) 轻微水平切向分离引导速度，瞬间打破 Coulomb 静摩擦死锁（±11.3° 摩擦锥），小球接触后顺畅滑落，彻底消除发呆停滞；
+  3. **释放机制与地面滚动阻力纯物理化**：
+     - `engine.js`：下落释放初始速度从人工 `vy = 60` 恢复为 `vy = 0`，对齐斗鱼从静止纯重力加速落体；
+     - `physicsPlanck.js`：保留地面纯滚动阻力衰减与滚停休眠，确保小球平抛/落地后在地面能稳定减速停稳。
+  4. 执行全量架构测试与物理回归测试全部 100% 通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 修复大西瓜再来一局重启失效缺陷与消除进场一两秒黑屏延迟
 - 状态：已完成
 - 优先级：P1

@@ -24,7 +24,7 @@ class PhysicsWorldPlanck {
   constructor(options = {}) {
     this.width = options.width || 360;
     this.height = options.height || 600;
-    this.gravity = options.gravity !== undefined ? options.gravity : 1100; // px/s^2
+    this.gravity = options.gravity !== undefined ? options.gravity : 1300; // px/s^2 严格对标斗鱼 1:1 重力 (1300)
     this.dangerY = options.dangerY !== undefined ? options.dangerY : 70;
     this.dangerDwellTime = options.dangerDwellTime || 0.8;
 
@@ -36,6 +36,7 @@ class PhysicsWorldPlanck {
     this.bodies = [];
     this.nextId = 1;
     this._mergePairs = [];
+    this._accumulator = 0; // 120Hz 物理步进累加器 (严格对标斗鱼 fixedTimeStep: 1/120)
 
     // 初始化 Planck.js 物理世界 (重力在屏幕坐标系下 Y 轴向下为正)
     const gravityMeter = this.gravity / SCALE;
@@ -89,7 +90,25 @@ class PhysicsWorldPlanck {
       if (!bA || !bB) return;
       if (bA.isMerging || bB.isMerging) return;
 
-      // 仅同等级水果且未达最高等级触发合成
+      // 1. 偏心接触防发呆机制：若上球落在下球偏斜顶部 (偏心非0)，打破静摩擦死锁引导顺畅滑落
+      const upper = (bA.y < bB.y) ? bA : bB;
+      const lower = (upper === bA) ? bB : bA;
+      const dx = upper.x - lower.x;
+      const dy = lower.y - upper.y; // 向上为正
+
+      if (dy > lower.radius * 0.4 && Math.abs(dx) > 0.5 && Math.abs(dx) < (upper.radius + lower.radius) * 0.8) {
+        if (upper._pBody && !upper.isStatic && !upper.isMerging) {
+          const dir = dx > 0 ? 1 : -1;
+          const currentLv = upper._pBody.getLinearVelocity();
+          // 若当前水平速度较低，施加轻微水平分离引导速度 (0.4 m/s ~ 20 px/s)
+          if (Math.abs(currentLv.x * SCALE) < 25) {
+            upper._pBody.setLinearVelocity(new Vec2(dir * 0.45, currentLv.y));
+            upper._pBody.setAwake(true);
+          }
+        }
+      }
+
+      // 2. 仅同等级水果且未达最高等级触发合成
       if (bA.level === bB.level && bA.level < MAX_LEVEL) {
         this._tryQueueMerge(bA, bB);
       }
@@ -212,17 +231,30 @@ class PhysicsWorldPlanck {
     this.bodies = [];
     this._mergePairs = [];
     this.isWarning = false;
+    this._accumulator = 0;
   }
 
   /**
-   * 物理主步进更新
+   * 物理主步进更新 (1:1 严格对标斗鱼 Cocos 物理调度)
    * @param {number} dt 秒为单位的帧间隔时间 (如 0.016s)
    */
   update(dt = 0.016) {
     const clampedDt = Math.max(0.001, Math.min(dt, 0.033));
 
-    // 1. Planck.js 物理世界步进 (8次速度迭代，3次位置迭代，保证高速碰撞收敛)
-    this.world.step(clampedDt, 8, 3);
+    // 1. 严格 1:1 对标斗鱼 Cocos 物理引擎调度：120Hz 固定步长累加器，每帧最多 2 个子步进
+    const FIXED_DT = 1 / 120;
+    this._accumulator += clampedDt;
+    let subSteps = 0;
+    while (this._accumulator >= FIXED_DT && subSteps < 2) {
+      // 18 次速度迭代，24 次位置迭代，消除碰撞发呆与穿模
+      this.world.step(FIXED_DT, 18, 24);
+      this._accumulator -= FIXED_DT;
+      subSteps++;
+    }
+    // 限制残余累加时间，防止掉帧后螺旋追帧
+    if (this._accumulator > FIXED_DT) {
+      this._accumulator = 0;
+    }
 
     const heightMeter = this.height / SCALE;
 
@@ -234,17 +266,16 @@ class PhysicsWorldPlanck {
       const pos = b._pBody.getPosition();
       const radiusMeter = b.radius / SCALE;
 
-      // 地面滚动阻力 (Rolling Resistance)：消除纯滚动球体的无衰减长滑行
+      // 地面滚动阻力 (Rolling Resistance)：消除纯滚动实心球体的无衰减长滑行
       if (pos.y >= heightMeter - radiusMeter - 0.02) {
         const lv = b._pBody.getLinearVelocity();
         const av = b._pBody.getAngularVelocity();
-        // 施加平滑滚动阻力衰减
         const rollDecay = Math.max(0, 1 - clampedDt * 1.8);
         b._pBody.setLinearVelocity(new Vec2(lv.x * rollDecay, lv.y));
         b._pBody.setAngularVelocity(av * rollDecay);
 
         // 低能静止时直接休眠冻结，杜绝地面微幅蠕动
-        if (Math.abs(lv.x * SCALE) < 1.5 && Math.abs(av) < 0.1) {
+        if (Math.abs(lv.x * SCALE) < 1.0 && Math.abs(av) < 0.08) {
           b._pBody.setLinearVelocity(new Vec2(0, 0));
           b._pBody.setAngularVelocity(0);
           b._pBody.setAwake(false);

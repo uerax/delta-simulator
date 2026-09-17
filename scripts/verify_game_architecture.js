@@ -134,7 +134,7 @@ console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通�
 // 3. 验证 WatermelonEngine & PhysicsWorld (合成大西瓜物理与逻辑引擎)
 console.log('▶ [3/6] 测试 WatermelonEngine 逻辑与 PhysicsWorld 刚体物理引擎...');
 const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL } = require('../miniprogram/games/watermelon/items');
-const PhysicsWorld = require('../miniprogram/games/watermelon/physics');
+const PhysicsWorld = require('../miniprogram/games/watermelon/physicsPlanck');
 const WatermelonEngine = require('../miniprogram/games/watermelon/engine');
 
 // 3.1 道具元数据 11 阶验证
@@ -204,7 +204,7 @@ const dangerWorld = new PhysicsWorld({
 
 // 在警戒线上方创建静止刚体 (y=80 < dangerY=100)
 const highBall = dangerWorld.createBody(1, 180, 80, { isStatic: false });
-highBall.age = 0.9; // 越过 0.8s 新生保护期
+highBall.age = 1.1; // 越过 1.0s 新生保护期
 highBall.vx = 0;
 highBall.vy = 0;
 
