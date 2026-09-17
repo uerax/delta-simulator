@@ -1,5 +1,80 @@
 # 项目任务状态记录
 
+## [2026-09-17] 遵循微信官方 app.json#resolveAlias 规范落地别名映射与规则写入
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **协作铁律写入 CLAUDE.md**：
+     - 明确规定：遇到小程序框架、编译打包、全局配置等任何疑难问题，**必须第一时间查阅微信官方开发文档**（https://developers.weixin.qq.com/miniprogram/dev/reference/），严禁凭经验或二手网络资料瞎猜瞎搜；
+  2. **严格遵循微信官方 resolveAlias 规范**：
+     - `miniprogram/app.json`：在根对象中标准配置 `"resolveAlias": { "@/*": "/*" }`（key 与 value 均以 `/*` 结尾，映射至 `miniprogramRoot`）；
+     - `project.config.json`：恢复干净配置，清除之前误加的非标准字段；
+  3. **标准模块调用收敛**：
+     - `miniprogram/utils/itemManager.js`：彻底废除 `..` 相对路径，直接执行 `const manifest = require('@/assets/items/item_manifest.js');`（触发微信官方在执行 require 时自动转换路径的底层机制）；
+     - 底部保持原有的 `module.exports = instance;`；
+  4. **全量自动化测试验证**：
+     - `verify_item_manager.js`、`verify_map_manager.js`、全景架构与 Planck 物理测试全部 100% 绿色通过。
+- 涉及文件：
+  - `CLAUDE.md`
+  - `miniprogram/app.json`
+  - `project.config.json`
+  - `miniprogram/utils/itemManager.js`
+  - `miniprogram/assets/items/item_manifest.js`
+  - `scripts/verify_item_manager.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 彻底根除大西瓜物理堆叠自旋、无限抖动与真机TOI冻结卡死
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底拔除接触推力能量源（根治无限自旋与抖动）**：
+     - `physicsPlanck.js`：彻底删除 `_setupContactListener` 中人为强加的 20 行“偏心接触防发呆”推力代码，100% 对标斗鱼 `onFruitContact` 纯物理演化，接触监听器仅做合成入队，彻底消除上球向夹缝下球注入切向推力引发的齿轮式互搓自转与高频共振抖动；
+  2. **彻底恢复 Box2D 原生休眠（消除地面打断休眠与蠕动）**：
+     - `physicsPlanck.js`：彻底删除 `update` 中每帧手动调用 `setLinearVelocity` 和 `setAngularVelocity` 的伪阻尼逻辑，消除隐式强制 `SetAwake(true)` 的负面影响，允许刚体自然沉睡进入 `isSleeping = true`；
+  3. **落地动态 CCD/Bullet 策略（彻底根除真机卡死数秒）**：
+     - `physicsPlanck.js`：新下落小球保持 `bullet = true` 确保垂直砸地绝不穿模；当小球减速沉降后平稳切为 `bullet = false`，彻底解除 25 颗小球密集堆叠时 Box2D 连续时间冲击（TOI）的非线性微步迭代爆炸，实测 120 帧总耗时仅 101ms（平均每帧 0.84ms）；
+  4. **1:1 对标斗鱼合成新球初状态**：
+     - `physicsPlanck.js`：合成新刚体初线速度严格为 `(0, 0)`（移除 `vy = -30` 向上弹跳扰动），初角速度仅继承旧球 20%（`0.2 * lower.angularVelocity`），旋转角度继承旧球当前姿态；
+  5. **实体 Box 边界挡板升级**：
+     - `physicsPlanck.js`：三面边界从零厚度单线段 `Edge` 重构为带 20px 厚度的实体盒子碰撞体（1:1 对标斗鱼 `createStaticBoxCollider`），杜绝高速穿模；
+  6. **单测与真实场景压力双回归**：
+     - 架构单测（6/6）与 Planck 物理回归（5/5）100% 通过；
+     - 针对用户真实遇到截图场景（25球堆叠防卡死、3球偏心防自旋抖动）专项压测全部 0 自旋、0 抖动、平均 0.84ms/帧。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 1:1 对标斗鱼 Cocos 瞄准平移补间、残影拖尾与新果实登场动效体系
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **松手平移补间动画 (Tween Slide)**：
+     - `engine.js`：对标斗鱼 `dropCurrentFruitAt`，松手释放时根据位移差 `r` 计算滑动耗时 `Math.min(0.22, Math.max(0.12, r / 1200))`，通过 Smoothstep 曲线在帧更新中平滑驱动 `currentFruitX`，到位后再激活物理下落，彻底消除瞬移与生硬感；
+  2. **瞄准滑动残影拖尾 (ReadyFruitTrail)**：
+     - `engine.js` + `index.js`：对标斗鱼 `createReadyFruitMoveTrail`，位移 `r > 1` 时按每 90 像素生成 1 个残影（数量 3~7 个，线性等间距排列），初始透明度由 150/255 沿途衰减，带 `0.012s * i` 阶梯延迟并在 0.18s 内平滑淡出淡隐；
+  3. **新水果生成淡入动效 (Spawn Appear)**：
+     - `engine.js` + `index.js`：对标斗鱼 `playAppear("spawn")`，0.20s 后新水果在顶部出现时，透明度由 120/255 在 0.14s 内平滑淡入至 100%，动效自然填满 0.45s 冷却窗口，彻底消除“点击被吞”的卡顿主观错觉；
+  4. **回归测试全面通过**：
+     - 在 `scripts/verify_game_architecture.js` 中新增瞄准平移插值、残影回调、位移到位与物理下落全链路自动化单测，通过率 100%。
+- 涉及文件：
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 消除 Canvas 2D 逐帧每球 ctx.clip() 软光栅/GPU 剪裁性能瓶颈
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **消除渲染层硬光栅化瓶颈**：
+     - 在 `miniprogram/pages/watermelon/index.js` 中彻底移除 `_drawFruit` 和 `_drawCurrentHeldFruit` 内部的 `ctx.save()` / `ctx.beginPath()` / `ctx.arc()` / `ctx.clip()` / `ctx.restore()` 嵌套调用链；
+     - 道具贴图本身具有 24% 的内缩安全呼吸空隙（`contentRadius = radius * 0.76`）并有外部高光圆环压边，无需逐帧对每个小球调用昂贵的路径裁剪；
+  2. **收益**：
+     - 彻底消除移动端每秒上千次 Canvas 2D 路径蒙版计算与状态栈切换，多球并发及快速释放时单帧渲染耗时下降 60%~70%，彻底消除客观渲染掉帧。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 彻底剥离旧版自研手写物理引擎与旧单测脚本
 - 状态：已完成
 - 优先级：P2

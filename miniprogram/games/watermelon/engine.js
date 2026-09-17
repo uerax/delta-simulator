@@ -22,6 +22,7 @@ class WatermelonEngine {
     this.onDangerWarning = options.onDangerWarning || null;
     this.onGameOver = options.onGameOver || null;
     this.onFeedback = options.onFeedback || null;
+    this.onAimTrail = options.onAimTrail || null; // 瞄准滑动残影拖尾回调
 
     // 核心游戏状态
     this.gameState = 'ready'; // ready | playing | ended
@@ -36,6 +37,16 @@ class WatermelonEngine {
     this.isDropping = false;
     this.dropCooldown = 0.45; // 单次释放冷却 (秒)
     this.dropCooldownTimer = 0;
+
+    // 1:1 对标斗鱼 Cocos 瞄准滑动补间 (Tween Slide) 与新球登场动效
+    this.isAimSliding = false;
+    this._aimStartX = 0;
+    this._aimTargetX = 0;
+    this._aimDuration = 0;
+    this._aimElapsed = 0;
+    this.heldFruitAlpha = 1.0;
+    this.heldFruitAppearDuration = 0;
+    this.heldFruitAppearElapsed = 0;
 
     // 顶部待放置与下一个道具
     this.currentLevel = 1;
@@ -298,7 +309,11 @@ class WatermelonEngine {
     this.highestLevel = 1;
     this._recentDropHistory = [];
     this.isDropping = false;
+    this.isAimSliding = false;
     this.dropCooldownTimer = 0;
+    this.heldFruitAlpha = 1.0;
+    this.heldFruitAppearDuration = 0;
+    this.heldFruitAppearElapsed = 0;
     this.physics.clear();
     this._initFruits();
 
@@ -327,7 +342,7 @@ class WatermelonEngine {
    * 移动顶部待放置道具 X 位置 (由触控滑动驱动)
    */
   moveDropper(x) {
-    if (this.gameState !== 'playing') return;
+    if (this.gameState !== 'playing' || this.isAimSliding) return;
     const currentItem = getItemByLevel(this.currentLevel);
     const radius = currentItem ? currentItem.radius : 18;
 
@@ -336,7 +351,7 @@ class WatermelonEngine {
   }
 
   /**
-   * 玩家松开手指，释放道具下落
+   * 玩家松开手指，释放道具下落 (1:1 对标斗鱼 Cocos: 瞄准平移 + 残影拖尾 + 垂直下落)
    */
   dropCurrentFruit(targetX = null) {
     if (this.gameState !== 'playing') {
@@ -347,7 +362,7 @@ class WatermelonEngine {
       }
     }
 
-    if (this.isDropping || this.dropCooldownTimer > 0) {
+    if (this.isDropping || this.isAimSliding || this.dropCooldownTimer > 0) {
       return false;
     }
 
@@ -356,7 +371,41 @@ class WatermelonEngine {
 
     const x = targetX !== null ? targetX : this.currentFruitX;
     const clampedX = Math.max(radius, Math.min(this.width - radius, x));
+    const r = Math.abs(this.currentFruitX - clampedX);
 
+    // 1:1 对标斗鱼 Cocos dropCurrentFruitAt：
+    // 若移动距离大于 1 像素，启动 0.12s ~ 0.22s 的横向瞄准平移动画并生成残影拖尾
+    if (r > 1) {
+      const duration = Math.min(0.22, Math.max(0.12, r / 1200));
+      this.isAimSliding = true;
+      this._aimStartX = this.currentFruitX;
+      this._aimTargetX = clampedX;
+      this._aimDuration = duration;
+      this._aimElapsed = 0;
+      this.dropCooldownTimer = this.dropCooldown; // 0.45s 冷却从瞄准动作开始计算
+
+      // 派发拖尾生成事件
+      if (typeof this.onAimTrail === 'function') {
+        this.onAimTrail({
+          startX: this._aimStartX,
+          targetX: clampedX,
+          radius,
+          level: this.currentLevel,
+          dist: r
+        });
+      }
+      return true;
+    }
+
+    // 若当前已在目标点 (r <= 1)，直接原地落体
+    this.dropCooldownTimer = this.dropCooldown;
+    return this._executeDrop(clampedX, radius);
+  }
+
+  /**
+   * 物理刚体正式生成下落 (对应斗鱼 finishCurrentFruitDrop)
+   */
+  _executeDrop(clampedX, radius) {
     // 在物理世界中生成下落刚体 (1:1 对标斗鱼 Cocos: 初速度归零，由 1300 重力自然加速驱动下落)
     const droppedBody = this.physics.createBody(this.currentLevel, clampedX, this.dropY + radius, {
       vx: 0,
@@ -367,17 +416,22 @@ class WatermelonEngine {
 
     this.dropCount++;
     this.isDropping = true;
-    this.dropCooldownTimer = this.dropCooldown;
 
     // 触发下落音效/触感反馈
     this._triggerFeedback('drop');
 
-    // 0.20 秒后在顶部生成下一个待落道具 (对标斗鱼节奏)
+    // 0.20 秒后在顶部生成下一个待落道具 (1:1 对标斗鱼 scheduleOnce(() => spawnNextFruit(), 0.2))
     setTimeout(() => {
       if (this.gameState !== 'playing') return;
       this.currentLevel = this.nextLevel;
       this.nextLevel = this._generateDropLevel(this.dropCount + 1);
       this.isDropping = false;
+      this.currentFruitX = clampedX;
+
+      // 1:1 对标斗鱼 playAppear("spawn")：初始透明度 120/255，0.14s 平滑淡入至 255
+      this.heldFruitAlpha = 120 / 255;
+      this.heldFruitAppearDuration = 0.14;
+      this.heldFruitAppearElapsed = 0;
 
       if (typeof this.onFruitSpawn === 'function') {
         this.onFruitSpawn({
@@ -453,6 +507,34 @@ class WatermelonEngine {
       this.dropCooldownTimer = Math.max(0, this.dropCooldownTimer - dt);
     }
 
+    // 1:1 对标斗鱼 Cocos 瞄准平移插值补间
+    if (this.isAimSliding) {
+      this._aimElapsed += dt;
+      const p = Math.min(1.0, this._aimElapsed / this._aimDuration);
+      // Smoothstep 缓动曲线
+      const ease = p * p * (3 - 2 * p);
+      this.currentFruitX = this._aimStartX + (this._aimTargetX - this._aimStartX) * ease;
+
+      if (p >= 1.0) {
+        this.currentFruitX = this._aimTargetX;
+        this.isAimSliding = false;
+        const currentItem = getItemByLevel(this.currentLevel);
+        const radius = currentItem ? currentItem.radius : 18;
+        this._executeDrop(this._aimTargetX, radius);
+      }
+    }
+
+    // 1:1 对标斗鱼 Cocos 新水果登场淡入动效
+    if (this.heldFruitAppearDuration > 0) {
+      this.heldFruitAppearElapsed += dt;
+      const p = Math.min(1.0, this.heldFruitAppearElapsed / this.heldFruitAppearDuration);
+      this.heldFruitAlpha = (120 + (255 - 120) * p) / 255;
+      if (p >= 1.0) {
+        this.heldFruitAlpha = 1.0;
+        this.heldFruitAppearDuration = 0;
+      }
+    }
+
     // 驱动物理引擎
     this.physics.update(dt);
   }
@@ -490,6 +572,7 @@ class WatermelonEngine {
   destroy() {
     this.physics.clear();
     this.gameState = 'ended';
+    this.isAimSliding = false;
   }
 
   /**

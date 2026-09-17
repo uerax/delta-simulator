@@ -245,6 +245,30 @@ assert.strictEqual(fullEngine.dropCount, 1, '下落计数应加 1');
 const dropBlocked = fullEngine.dropCurrentFruit(180);
 assert.strictEqual(dropBlocked, false, '冷却时间内连续点击应被拦截防呆');
 
+// 3.5.1 对标斗鱼 Cocos：松手瞄准平移插值、残影拖尾与到位下落全流程
+let aimTrailData = null;
+const aimEngine = new WatermelonEngine({
+  width: 360,
+  height: 600,
+  onAimTrail: (data) => { aimTrailData = data; }
+});
+aimEngine.start();
+aimEngine.moveDropper(180);
+const slideSuccess = aimEngine.dropCurrentFruit(80);
+assert.strictEqual(slideSuccess, true, '合法状态下松手应成功接管');
+assert.strictEqual(aimEngine.isAimSliding, true, '移动距离 > 1px 应进入瞄准滑行状态');
+assert(aimTrailData !== null, '瞄准滑行应触发残影拖尾派发');
+assert.strictEqual(aimTrailData.dist, 100, '拖尾距离应准确匹配');
+
+aimEngine.update(0.05);
+assert(aimEngine.currentFruitX < 180 && aimEngine.currentFruitX > 80, '更新帧中应沿缓动曲线平滑平移');
+
+aimEngine.update(0.20);
+assert.strictEqual(aimEngine.isAimSliding, false, '滑行完毕应退出滑行状态');
+assert.strictEqual(aimEngine.currentFruitX, 80, '滑行结束应精准到位');
+assert.strictEqual(aimEngine.isDropping, true, '滑行到位后应正式转为刚体下落');
+aimEngine.destroy();
+
 // 3.6 核心对标验证：两球接触切向表面速度差耦合、库仑摩擦制动与绝无 NaN
 const frictionWorld = new PhysicsWorld({ width: 360, height: 600 });
 // 创建两颗不同等级（无法合成）的刚体，接触并置于地面上

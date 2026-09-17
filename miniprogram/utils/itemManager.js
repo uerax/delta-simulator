@@ -126,7 +126,8 @@ class ItemManagerService {
     if (this._initialized) return this;
 
     try {
-      const manifest = require('../assets/items/item_manifest.json');
+      // 触发微信官方 app.json#resolveAlias 路径映射 (@/ 映射到 miniprogram 根目录)
+      const manifest = require('@/assets/items/item_manifest.js');
       const rawList = Array.isArray(manifest) ? manifest : (manifest.items || []);
       const cdnBase = manifest.cdnBaseUrl || this.cdnBaseUrl;
       this.cdnBaseUrl = cdnBase;

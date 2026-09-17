@@ -50,35 +50,36 @@ class PhysicsWorldPlanck {
   }
 
   /**
-   * 创建场地三面静态碰撞刚体
+   * 创建场地三面静态碰撞刚体 (1:1 对标斗鱼 Cocos createStaticBoxCollider 实体多边形挡板)
    */
   _createBoundaries() {
     const widthMeter = this.width / SCALE;
     const heightMeter = this.height / SCALE;
+    const wallThick = 0.4; // 20px 厚实体碰撞盒，彻底消灭零厚度 Edge 单线段穿模风险
 
     this.groundBody = this.world.createBody();
 
-    // 地面
-    this.groundBody.createFixture(planck.Edge(new Vec2(0, heightMeter), new Vec2(widthMeter, heightMeter)), {
+    // 地面实体碰撞盒
+    this.groundBody.createFixture(planck.Box(widthMeter / 2, wallThick / 2, new Vec2(widthMeter / 2, heightMeter + wallThick / 2)), {
       friction: 0.2,
       restitution: 0.1
     });
 
-    // 左墙
-    this.groundBody.createFixture(planck.Edge(new Vec2(0, 0), new Vec2(0, heightMeter)), {
+    // 左墙实体碰撞盒
+    this.groundBody.createFixture(planck.Box(wallThick / 2, heightMeter / 2, new Vec2(-wallThick / 2, heightMeter / 2)), {
       friction: 0.2,
       restitution: 0.1
     });
 
-    // 右墙
-    this.groundBody.createFixture(planck.Edge(new Vec2(widthMeter, 0), new Vec2(widthMeter, heightMeter)), {
+    // 右墙实体碰撞盒
+    this.groundBody.createFixture(planck.Box(wallThick / 2, heightMeter / 2, new Vec2(widthMeter + wallThick / 2, heightMeter / 2)), {
       friction: 0.2,
       restitution: 0.1
     });
   }
 
   /**
-   * 注册碰撞接触监听器
+   * 注册碰撞接触监听器 (1:1 严格对标斗鱼 Cocos onFruitContact，纯物理仿真绝无人工干预推力)
    */
   _setupContactListener() {
     this.world.on('begin-contact', (contact) => {
@@ -90,25 +91,7 @@ class PhysicsWorldPlanck {
       if (!bA || !bB) return;
       if (bA.isMerging || bB.isMerging) return;
 
-      // 1. 偏心接触防发呆机制：若上球落在下球偏斜顶部 (偏心非0)，打破静摩擦死锁引导顺畅滑落
-      const upper = (bA.y < bB.y) ? bA : bB;
-      const lower = (upper === bA) ? bB : bA;
-      const dx = upper.x - lower.x;
-      const dy = lower.y - upper.y; // 向上为正
-
-      if (dy > lower.radius * 0.4 && Math.abs(dx) > 0.5 && Math.abs(dx) < (upper.radius + lower.radius) * 0.8) {
-        if (upper._pBody && !upper.isStatic && !upper.isMerging) {
-          const dir = dx > 0 ? 1 : -1;
-          const currentLv = upper._pBody.getLinearVelocity();
-          // 若当前水平速度较低，施加轻微水平分离引导速度 (0.4 m/s ~ 20 px/s)
-          if (Math.abs(currentLv.x * SCALE) < 25) {
-            upper._pBody.setLinearVelocity(new Vec2(dir * 0.45, currentLv.y));
-            upper._pBody.setAwake(true);
-          }
-        }
-      }
-
-      // 2. 仅同等级水果且未达最高等级触发合成
+      // 仅同等级水果且未达最高等级触发合成 (1:1 斗鱼 onFruitContact)
       if (bA.level === bB.level && bA.level < MAX_LEVEL) {
         this._tryQueueMerge(bA, bB);
       }
@@ -140,14 +123,20 @@ class PhysicsWorldPlanck {
     const vxMeter = (options.vx || 0) / SCALE;
     const vyMeter = (options.vy || 0) / SCALE;
 
-    // 创建 Planck 动态刚体 (严格对标斗鱼 Cocos 逆向参数)
+    const initAngle = options.angle || 0;
+    const initAngularVelocity = options.angularVelocity || 0;
+    const initBullet = options.bullet !== undefined ? options.bullet : true;
+
+    // 创建 Planck 动态刚体 (严格对标斗鱼 Cocos 逆向参数，优化角阻尼刹车防自旋)
     const pBody = this.world.createDynamicBody({
       position: new Vec2(xMeter, yMeter),
+      angle: initAngle,
       linearVelocity: new Vec2(vxMeter, vyMeter),
-      linearDamping: 0.12,   // 1:1 斗鱼 Cocos 线性阻尼
-      angularDamping: 0.22,  // 1:1 斗鱼 Cocos 角阻尼
-      allowSleep: true,      // 开启休眠，彻底避免微幅自转
-      bullet: true           // CCD 防高速下落穿模
+      angularVelocity: initAngularVelocity,
+      linearDamping: 1.1,    // 优化阻尼：快速吸能减速平稳停靠，绝不打断原生休眠
+      angularDamping: 2.0,   // 优化角阻尼：滚落平滑刹车，杜绝齿轮互搓自转
+      allowSleep: true,      // 开启休眠，彻底避免微幅自转与持续计算
+      bullet: initBullet     // 动态 CCD：下落防穿模，沉降后关闭杜绝真机卡死
     });
 
     // 创建圆形碰撞夹具 (Fixture)
@@ -166,12 +155,12 @@ class PhysicsWorldPlanck {
       y: y,
       vx: options.vx || 0,
       vy: options.vy || 0,
-      angle: 0,
-      angularVelocity: 0,
+      angle: initAngle,
+      angularVelocity: initAngularVelocity,
       restitution: 0.1,
       friction: 0.2,
-      linearDamping: 0.12,
-      angularDamping: 0.22,
+      linearDamping: 1.1,
+      angularDamping: 2.0,
       isStatic: !!options.isStatic,
       isMerging: false,
       isSleeping: false,
@@ -258,28 +247,14 @@ class PhysicsWorldPlanck {
 
     const heightMeter = this.height / SCALE;
 
-    // 2. 将 Planck.js 物理刚体的位置与姿态同步回渲染层 body，并施加地面滚动阻力
+    // 2. 将 Planck.js 物理刚体的位置与姿态同步回渲染层 body
     for (let i = 0; i < this.bodies.length; i++) {
       const b = this.bodies[i];
       if (!b._pBody || b.isMerging) continue;
 
-      const pos = b._pBody.getPosition();
-      const radiusMeter = b.radius / SCALE;
-
-      // 地面滚动阻力 (Rolling Resistance)：消除纯滚动实心球体的无衰减长滑行
-      if (pos.y >= heightMeter - radiusMeter - 0.02) {
-        const lv = b._pBody.getLinearVelocity();
-        const av = b._pBody.getAngularVelocity();
-        const rollDecay = Math.max(0, 1 - clampedDt * 1.8);
-        b._pBody.setLinearVelocity(new Vec2(lv.x * rollDecay, lv.y));
-        b._pBody.setAngularVelocity(av * rollDecay);
-
-        // 低能静止时直接休眠冻结，杜绝地面微幅蠕动
-        if (Math.abs(lv.x * SCALE) < 1.0 && Math.abs(av) < 0.08) {
-          b._pBody.setLinearVelocity(new Vec2(0, 0));
-          b._pBody.setAngularVelocity(0);
-          b._pBody.setAwake(false);
-        }
+      // 动态 CCD 策略：小球下落减速沉降后关闭 bullet，彻底杜绝密集堆叠下的 TOI 级联计算卡死
+      if (b._pBody.isBullet() && (b.age > 0.6 || Math.abs(b.vy) < 120)) {
+        b._pBody.setBullet(false);
       }
 
       const syncPos = b._pBody.getPosition();
@@ -403,10 +378,16 @@ class PhysicsWorldPlanck {
       this.removeBody(b1);
       this.removeBody(b2);
 
-      // 创建合成后的新刚体 (继承旧球 20% 速度并微向上跃)
+      // 1:1 对标斗鱼 Cocos mergeFruits：
+      // 线速度初值设为 (0, 0)，不人为施加 vy: -30 向上顶飞扰动周围刚体
+      // 角速度仅继承旧球的 20%：0.2 * lower.angularVelocity
+      // 旋转角度继承旧球当前姿态：lower.angle
       const newBody = this.createBody(nextLevel, spawnX, spawnY, {
-        vx: (b1.vx + b2.vx) * 0.2,
-        vy: -30
+        vx: 0,
+        vy: 0,
+        angle: lower.angle || 0,
+        angularVelocity: (lower.angularVelocity || 0) * 0.2,
+        bullet: false // 合成小球原地生成无需开启高速 CCD
       });
 
       // 施加合成冲击波

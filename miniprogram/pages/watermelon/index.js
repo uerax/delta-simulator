@@ -48,6 +48,7 @@ Page({
     this._imgCache = {};
     this._shockwaves = []; // 爆炸光环视觉粒子
     this._floatingTexts = []; // 连击与加分漂浮字
+    this._readyFruitTrails = []; // 1:1 对标斗鱼 Cocos 瞄准平移残影拖尾
     this._isDragging = false;
     this._canvasInited = false;
 
@@ -91,6 +92,7 @@ Page({
     this._imgCache = {};
     this._shockwaves = [];
     this._floatingTexts = [];
+    this._readyFruitTrails = [];
     this.setData({ pageReady: false });
     MapManager.clearCache();
   },
@@ -278,6 +280,9 @@ Page({
           scale: combo > 1 ? 1.2 : 1.0
         });
       },
+      onAimTrail: ({ startX, targetX, radius, level, dist }) => {
+        this._createReadyFruitTrails(startX, targetX, radius, level, dist);
+      },
       onFeedback: (fb) => {
         if (fb.type === 'drop') {
           Feedback.vibrateShort(this._vibrationEnabled, 'light');
@@ -411,6 +416,9 @@ Page({
         this._drawFruit(ctx, bodies[i], dt);
       }
 
+      // 4.5 绘制 1:1 斗鱼瞄准滑动残影拖尾
+      this._drawReadyFruitTrails(ctx, dt);
+
       // 5. 绘制待下落的当前道具 (位于顶部准星处)
       if (this._engine.gameState === 'playing' && !this._engine.isDropping) {
         this._drawCurrentHeldFruit(ctx);
@@ -520,6 +528,12 @@ Page({
     ctx.save();
     ctx.translate(x, y);
 
+    // 1:1 对标斗鱼 playAppear("spawn") 淡入动效
+    const alpha = (this._engine && this._engine.heldFruitAlpha !== undefined)
+      ? this._engine.heldFruitAlpha
+      : 1.0;
+    ctx.globalAlpha = Math.max(0, Math.min(1.0, alpha));
+
     // 1. 绘制圆形底色
     ctx.fillStyle = item.bgColorHex || '#1e2222';
     ctx.beginPath();
@@ -546,13 +560,8 @@ Page({
           drawW = maxDim * aspect;
         }
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(0, 0, Math.max(2, radius - lineWidth / 2), 0, Math.PI * 2);
-        ctx.clip();
-
+        // 移除高开销的每帧每球 ctx.clip()，贴图内置 24% 呼吸空隙无溢出风险
         ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
-        ctx.restore();
         imageDrawn = true;
       } catch (e) {
         // 贴图异常容错
@@ -640,13 +649,8 @@ Page({
           drawW = maxDim * aspect;
         }
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(0, 0, Math.max(2, radius - lineWidth / 2), 0, Math.PI * 2);
-        ctx.clip();
-
+        // 移除高开销的每帧每球 ctx.clip()，贴图内置 24% 呼吸空隙无溢出风险
         ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
-        ctx.restore();
         imageDrawn = true;
       } catch (e) {
         // 贴图异常容错
@@ -681,6 +685,85 @@ Page({
       ctx.stroke();
     }
 
+    ctx.restore();
+  },
+
+  /**
+   * 生成瞄准滑动残影拖尾 (1:1 斗鱼 Cocos createReadyFruitMoveTrail)
+   */
+  _createReadyFruitTrails(startX, targetX, radius, level, r) {
+    const item = getItemByLevel(level);
+    if (!item) return;
+
+    // 1:1 斗鱼算法: 每 90 像素生成 1 个残影，数量夹紧在 3 ~ 7 之间
+    const n = Math.min(7, Math.max(3, Math.ceil(r / 90)));
+    for (let i = 0; i < n; i++) {
+      const ratio = (i + 1) / (n + 1);
+      this._readyFruitTrails.push({
+        x: startX + (targetX - startX) * ratio,
+        y: this._engine.dropY,
+        radius: radius,
+        level: level,
+        item: item,
+        // 1:1 斗鱼初始透明度: Math.max(48, Math.round(150 * (1 - ratio))) / 255
+        initialAlpha: Math.max(48, Math.round(150 * (1 - ratio))) / 255,
+        delay: 0.012 * i, // 1:1 斗鱼阶梯延迟: 0.012s * i
+        duration: 0.18,   // 1:1 斗鱼淡出耗时: 0.18s
+        elapsed: 0
+      });
+    }
+  },
+
+  /**
+   * 绘制并衰减瞄准滑动残影拖尾
+   */
+  _drawReadyFruitTrails(ctx, dt = 0.016) {
+    if (!this._readyFruitTrails || this._readyFruitTrails.length === 0) return;
+
+    ctx.save();
+    for (let i = this._readyFruitTrails.length - 1; i >= 0; i--) {
+      const tr = this._readyFruitTrails[i];
+      tr.elapsed += dt;
+      if (tr.elapsed < tr.delay) continue;
+
+      const p = (tr.elapsed - tr.delay) / tr.duration;
+      if (p >= 1.0) {
+        this._readyFruitTrails.splice(i, 1);
+        continue;
+      }
+
+      const alpha = tr.initialAlpha * (1.0 - p);
+      ctx.globalAlpha = Math.max(0, Math.min(1.0, alpha));
+
+      // 1. 绘制圆形底色
+      ctx.fillStyle = tr.item.bgColorHex || '#1e2222';
+      ctx.beginPath();
+      ctx.arc(tr.x, tr.y, tr.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. 贴入半透明道具图 (防溢出安全边距)
+      const img = this._imgCache[tr.level];
+      if (img && (img._loaded || img.width > 0) && img.width > 0 && img.height > 0) {
+        const contentRadius = tr.radius * 0.76;
+        const maxDim = contentRadius * 2;
+        const aspect = img.width / img.height;
+        let drawW = maxDim;
+        let drawH = maxDim;
+        if (aspect >= 1) {
+          drawH = maxDim / (aspect || 1);
+        } else {
+          drawW = maxDim * aspect;
+        }
+        ctx.drawImage(img, tr.x - drawW / 2, tr.y - drawH / 2, drawW, drawH);
+      }
+
+      // 3. 绘制半透明外圆边框
+      ctx.strokeStyle = tr.item.colorHex;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(tr.x, tr.y, Math.max(0, tr.radius - 0.75), 0, Math.PI * 2);
+      ctx.stroke();
+    }
     ctx.restore();
   },
 
@@ -828,6 +911,7 @@ Page({
     // 重置视觉粒子与状态
     this._shockwaves = [];
     this._floatingTexts = [];
+    this._readyFruitTrails = [];
     this._isDragging = false;
 
     if (this._engine) {

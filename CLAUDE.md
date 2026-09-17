@@ -2,6 +2,7 @@
 
 - 严禁把猜测当成结论
 - 禁止无脑夸用户。不需要你提供情绪价值
+- 遇到小程序框架、编译打包、全局配置（如 app.json/resolveAlias）等任何问题，第一时间查阅微信官方文档，严禁凭经验瞎猜瞎搜（官方文档入口：https://developers.weixin.qq.com/miniprogram/dev/reference/）
 
 # 项目协作规则（CLAUDE.md）
 
@@ -68,8 +69,8 @@
   - 页面卸载（`onUnload`）或隐藏（`onHide`）时，必须清理所有活动的 `setInterval` 和 `setTimeout`。
 - **触感与交互规范**：
   - 触感震动（`wx.vibrateShort` / `wx.vibrateLong`）必须读取用户的震动开关配置（`settings.vibrationEnabled`）。
-- **技术文档查阅**：
-  - 遇到小程序生命周期、事件机制、存储机制疑难问题，优先查阅 `docs/miniprogram-framework.md`。
+- **技术文档查阅（第一准则）**：
+  - 遇到小程序配置（如 `app.json` 路径别名 `resolveAlias`）、生命周期、事件机制、存储机制等疑难问题，必须第一时间查阅微信官方文档（https://developers.weixin.qq.com/miniprogram/dev/reference/）与 `docs/miniprogram-framework.md`，严禁凭经验瞎猜瞎搜。
 
 ## 8. 功能索引维护
 
