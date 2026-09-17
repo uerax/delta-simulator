@@ -297,17 +297,29 @@ class WatermelonEngine {
     this.maxCombo = 0;
     this.highestLevel = 1;
     this._recentDropHistory = [];
+    this.isDropping = false;
+    this.dropCooldownTimer = 0;
     this.physics.clear();
     this._initFruits();
 
     this._emitState();
     this._emitScore();
+
+    if (typeof this.onFruitSpawn === 'function') {
+      this.onFruitSpawn({
+        currentLevel: this.currentLevel,
+        nextLevel: this.nextLevel,
+        currentItem: getItemByLevel(this.currentLevel),
+        nextItem: getItemByLevel(this.nextLevel)
+      });
+    }
   }
 
   /**
-   * 重置游戏
+   * 重置游戏 (无条件重置状态并启动)
    */
   restart() {
+    this.gameState = 'ready';
     this.start();
   }
 

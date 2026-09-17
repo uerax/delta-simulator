@@ -19,11 +19,6 @@ page {
   padding: 16rpx 20rpx env(safe-area-inset-bottom, 20rpx);
   position: relative;
   background-color: #0d1117;
-  opacity: 0;
-  transition: opacity 0.16s ease-out;
-}
-
-.watermelon-container.page-ready {
   opacity: 1;
 }
 

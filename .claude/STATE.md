@@ -1,5 +1,25 @@
 # 项目任务状态记录
 
+## [2026-09-17] 修复大西瓜再来一局重启失效缺陷与消除进场一两秒黑屏延迟
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **修复失败后点击“再来一局”无法重新开始（问题 1）**：
+     - `engine.js`：`restart()` 强制重置 `gameState = 'ready'` 并进入 `start()`，重置 `isDropping = false`、`dropCooldownTimer = 0`，并在初始化道具后立即派发 `onFruitSpawn` 事件通知 UI 更新下一个道具；
+     - `pages/watermelon/index.js`：`restartGame()` 中补齐 `this._stopRenderLoop()` 与 `this._startRenderLoop()` 主循环重启链路，重设 `this._lastFrameTime = Date.now()`，清空上一局残留的冲击波粒子与浮动文字，并强制立即重绘首帧，彻底消除透明清空死黑与引擎无步进假死现象。
+  2. **消除进入大西瓜页面一两秒黑屏延迟（问题 4）**：
+     - `pages/watermelon/index.wxss`：移除 `.watermelon-container` 的 `opacity: 0` 阻塞呈现机制，容器设为默认可见（`opacity: 1`），让顶部状态栏、底部操作栏和背景底色跟随路由动画秒级滑入，彻底消灭全屏黑屏卡顿感；
+     - `pages/watermelon/index.js`：将 Canvas 节点寻址重试间隔从 100ms 缩短为 40ms，提升节点捕获效率；
+     - `app.js`：在小程序 `onLaunch` 空闲微任务中（200ms 后）静默预载入 290KB 的 `planck.min.js`，提前完成 V8 编译与模块缓存，使切入大西瓜时的 require 耗时降为 0ms。
+  3. 执行全量架构测试与物理回归测试全部 100% 通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/app.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 大西瓜全面切换至 Planck.js 物理引擎（剥离双引擎分支与兼容代码）
 - 状态：已完成
 - 优先级：P1

@@ -107,13 +107,13 @@ Page({
       if (this._canvasInited) return;
 
       if (!res || !res[0] || !res[0].node) {
-        if (retryCount < 10) {
+        if (retryCount < 15) {
           setTimeout(() => {
             this._initCanvas(retryCount + 1);
-          }, 100);
+          }, 40); // 缩短轮询间隔至 40ms，消除不必要的等待延迟
           return;
         }
-        console.error('Canvas 节点获取失败 (已重试 10 次)');
+        console.error('Canvas 节点获取失败 (已重试 15 次)');
         return;
       }
 
@@ -825,9 +825,22 @@ Page({
     // 重新抽取下一局战术地图切片
     MapManager.pickSession({ width: this._width, height: this._height });
 
+    // 重置视觉粒子与状态
+    this._shockwaves = [];
+    this._floatingTexts = [];
+    this._isDragging = false;
+
     if (this._engine) {
       this._engine.restart();
     }
+
+    // 重新启动 Canvas 渲染主循环，并立即重绘首帧
+    this._stopRenderLoop();
+    this._lastFrameTime = Date.now();
+    try {
+      this._renderFrame(0.016);
+    } catch (e) {}
+    this._startRenderLoop();
   },
 
   /**

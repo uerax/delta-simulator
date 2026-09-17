@@ -12,6 +12,15 @@ App({
       userProfile: Storage.getUserProfile(),
       settings: Storage.getSettings()
     };
+
+    // 避峰静默预热：在小程序启动空闲时预载入物理引擎，提前建立 V8 模块缓存，消除首次进大西瓜的 290KB 解析卡顿
+    setTimeout(() => {
+      try {
+        require('./lib/planck.min.js');
+      } catch (e) {
+        // 静默预热容错
+      }
+    }, 200);
   },
 
   onShow: function () {
