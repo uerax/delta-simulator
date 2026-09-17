@@ -47,6 +47,7 @@ Page({
     this._lastFrameTime = 0;
     this._imgCache = {};
     this._shockwaves = []; // 爆炸光环视觉粒子
+    this._mergeParticles = []; // 1:1 对标斗鱼 Cocos 合成爆汁飞溅遮瑕粒子 (中心光爆 + 果汁水滴)
     this._floatingTexts = []; // 连击与加分漂浮字
     this._readyFruitTrails = []; // 1:1 对标斗鱼 Cocos 瞄准平移残影拖尾
     this._isDragging = false;
@@ -91,6 +92,7 @@ Page({
     this._ctx = null;
     this._imgCache = {};
     this._shockwaves = [];
+    this._mergeParticles = [];
     this._floatingTexts = [];
     this._readyFruitTrails = [];
     this.setData({ pageReady: false });
@@ -130,11 +132,11 @@ Page({
       const systemInfo = getSafeWindowInfo();
       const dpr = systemInfo.pixelRatio || 2;
 
-      // 宽高校验与安全兜底 (防止在特定生命周期或 flex 计算阶段宽度为 0 导致画布折叠)
+      // 宽高校验与 1:1 斗鱼官方 STAGE_LAYOUT (702:976) 长宽比严格锁定
       const rawW = res[0].width;
-      const rawH = res[0].height;
-      const width = (rawW && rawW > 0) ? rawW : (systemInfo.windowWidth || 360);
-      const height = (rawH && rawH > 0) ? rawH : (systemInfo.windowHeight ? systemInfo.windowHeight - 140 : 560);
+      const width = (rawW && rawW > 0) ? Math.round(rawW) : (systemInfo.windowWidth || 360);
+      // 严格 1:1 基于斗鱼官方舞台比例 (702:976) 计算画布高度，多余长度留给广告展位
+      const height = Math.round(width * (976 / 702));
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -227,14 +229,14 @@ Page({
   },
 
   /**
-   * 组装逻辑引擎与事件中继
+   * 组装逻辑引擎与事件中继 (1:1 对齐斗鱼官方相对高度比例)
    */
   _setupEngine(width, height) {
     this._engine = new WatermelonEngine({
       width: width,
       height: height,
-      dropY: 36,
-      dangerY: 76,
+      dropY: Math.round(height * 0.055),   // 对标斗鱼待释放水果顶部居中挂载点
+      dangerY: Math.round(height * 0.125), // 对标斗鱼顶部警戒线高度 (约占舞台上沿向下 12.5%)
       onScoreUpdate: ({ score, moneyFormatted, combo }) => {
         this.setData({
           score,
@@ -252,21 +254,14 @@ Page({
         }
       },
       onMerge: ({ level, item, spawnX, spawnY, combo, addedMoney, addedScore, newBody }) => {
-        // 1. 添加合成视觉微光环 (仅在刚体边缘闪现微弱光圈)
-        this._shockwaves.push({
-          x: spawnX,
-          y: spawnY,
-          radius: item.radius * 0.85,
-          maxRadius: item.radius * 1.2,
-          color: item.colorHex,
-          alpha: 0.8
-        });
+        // 1. 1:1 对标斗鱼 Cocos createMergeEffect：全套合成爆汁遮瑕特效 (中心光晕爆闪 + 18 颗彩色果汁飞溅水滴)
+        this._createMergeBurstEffects(spawnX, spawnY, item.radius, item.colorHex);
 
-        // 2. 为新生成的刚体施加弹性缩放弹出动画 (Squash & Stretch)
+        // 2. 1:1 对标斗鱼 Cocos Fruit2.ts playAppear("merge")：尺寸严格 1:1 绝不膨胀变形，透明度 210 在 0.10s 内平滑淡入
         if (newBody) {
-          newBody.popScale = 0.55;
-          newBody.popDuration = 0.16; // 0.16 秒弹性回弹
-          newBody.popElapsed = 0;
+          newBody.appearAlpha = 210 / 255;
+          newBody.appearDuration = 0.10;
+          newBody.appearElapsed = 0;
         }
 
         // 3. 添加浮动得分/身价文字 (Floating Score)
@@ -424,8 +419,9 @@ Page({
         this._drawCurrentHeldFruit(ctx);
       }
 
-      // 6. 绘制合成冲击波特效
+      // 6. 绘制合成冲击波与 1:1 斗鱼爆汁遮瑕飞溅粒子
       this._drawShockwaves(ctx);
+      this._drawMergeParticles(ctx, dt);
 
       // 7. 绘制连击与身价浮动文字
       this._drawFloatingTexts(ctx, dt);
@@ -517,7 +513,7 @@ Page({
    */
   _drawCurrentHeldFruit(ctx) {
     const level = this._engine.currentLevel;
-    const item = getItemByLevel(level);
+    const item = getItemByLevel(level, this._width);
     if (!item) return;
 
     const x = this._engine.currentFruitX;
@@ -598,25 +594,23 @@ Page({
     const item = getItemByLevel(body.level);
     if (!item) return;
 
-    // 1. 弹性弹出动画计算 (Squash & Stretch / Pop Animation)
-    let scale = 1.0;
-    if (body.popScale !== undefined && body.popDuration > 0) {
-      body.popElapsed += dt;
-      const p = body.popElapsed / body.popDuration;
-      if (p < 1.0) {
-        // 先快速弹性放大至 1.15，再平滑回弹至 1.0
-        scale = 0.55 + 0.65 * Math.sin(p * Math.PI * 0.85);
-      } else {
-        delete body.popScale;
-        delete body.popDuration;
-        delete body.popElapsed;
+    // 1. 1:1 对标斗鱼 Cocos Fruit2.ts playAppear("merge") 透明度平滑淡入 (尺寸绝对保持 1:1 物理真实比例，严禁形变膨胀)
+    let alpha = 1.0;
+    if (body.appearDuration !== undefined && body.appearDuration > 0) {
+      body.appearElapsed += dt;
+      const p = Math.min(1.0, body.appearElapsed / body.appearDuration);
+      alpha = body.appearAlpha + (1.0 - body.appearAlpha) * p;
+      if (p >= 1.0) {
+        delete body.appearAlpha;
+        delete body.appearDuration;
+        delete body.appearElapsed;
       }
     }
 
     ctx.save();
     ctx.translate(body.x, body.y);
-    if (scale !== 1.0) {
-      ctx.scale(scale, scale);
+    if (alpha < 1.0) {
+      ctx.globalAlpha = Math.max(0, Math.min(1.0, alpha));
     }
     ctx.rotate(body.angle); // 贴图随刚体真实旋转滚动
 
@@ -692,7 +686,7 @@ Page({
    * 生成瞄准滑动残影拖尾 (1:1 斗鱼 Cocos createReadyFruitMoveTrail)
    */
   _createReadyFruitTrails(startX, targetX, radius, level, r) {
-    const item = getItemByLevel(level);
+    const item = getItemByLevel(level, this._width);
     if (!item) return;
 
     // 1:1 斗鱼算法: 每 90 像素生成 1 个残影，数量夹紧在 3 ~ 7 之间
@@ -790,6 +784,103 @@ Page({
       ctx.beginPath();
       ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
       ctx.stroke();
+    }
+    ctx.restore();
+  },
+
+  /**
+   * 1:1 对标斗鱼 Cocos createMergeEffect：生成合成爆汁飞溅遮瑕粒子
+   * @param {number} x 合成生成 X 坐标
+   * @param {number} y 合成生成 Y 坐标
+   * @param {number} radius 新水果半径
+   * @param {string} colorHex 道具品质主题色
+   */
+  _createMergeBurstEffects(x, y, radius, colorHex) {
+    if (!this._mergeParticles) this._mergeParticles = [];
+
+    // 1. 中心光爆光晕 (Merge Flash Splat：0.12s 快速膨胀淡出，高光遮掩两球消失与新球刷出瞬间)
+    this._mergeParticles.push({
+      type: 'flash',
+      x,
+      y,
+      radius: radius * 0.4,
+      maxRadius: radius * 1.5,
+      color: '#FFFFFF',
+      tintColor: colorHex || '#FFFFFF',
+      alpha: 0.95,
+      duration: 0.12,
+      elapsed: 0
+    });
+
+    // 2. 18 颗彩色果汁飞溅水滴 (Juice Droplets：向四周高速径向爆散，带重力下坠微弧线与渐隐)
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.35;
+      const speed = radius * (3.0 + Math.random() * 3.5);
+      const pRadius = Math.max(1.8, Math.min(4.2, radius * (0.07 + Math.random() * 0.05)));
+      this._mergeParticles.push({
+        type: 'droplet',
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 15,
+        gravity: 480, // 重力加速度
+        radius: pRadius,
+        color: colorHex || '#FFFFFF',
+        alpha: 0.95,
+        duration: 0.26 + Math.random() * 0.08,
+        elapsed: 0
+      });
+    }
+  },
+
+  /**
+   * 绘制并更新 1:1 斗鱼合成爆汁遮瑕飞溅粒子
+   */
+  _drawMergeParticles(ctx, dt = 0.016) {
+    if (!this._mergeParticles || this._mergeParticles.length === 0) return;
+
+    ctx.save();
+    for (let i = this._mergeParticles.length - 1; i >= 0; i--) {
+      const p = this._mergeParticles[i];
+      p.elapsed += dt;
+      if (p.elapsed >= p.duration) {
+        this._mergeParticles.splice(i, 1);
+        continue;
+      }
+
+      const progress = p.elapsed / p.duration;
+
+      if (p.type === 'flash') {
+        // 中心光爆：迅速膨胀并极速淡出，完美遮瑕
+        const r = p.radius + (p.maxRadius - p.radius) * progress;
+        const a = p.alpha * (1.0 - progress);
+        ctx.globalAlpha = Math.max(0, a);
+
+        // 外层品质柔光
+        ctx.fillStyle = p.tintColor;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 核心高光白爆
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (p.type === 'droplet') {
+        // 水滴粒子：带重力位移与自然缩小淡出
+        p.vy += p.gravity * dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        const a = p.alpha * (1.0 - progress * progress);
+        ctx.globalAlpha = Math.max(0, a);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.5, p.radius * (1.0 - progress * 0.4)), 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     ctx.restore();
   },
@@ -910,6 +1001,7 @@ Page({
 
     // 重置视觉粒子与状态
     this._shockwaves = [];
+    this._mergeParticles = [];
     this._floatingTexts = [];
     this._readyFruitTrails = [];
     this._isDragging = false;

@@ -23,9 +23,10 @@ const SCALE = 50;
 class PhysicsWorldPlanck {
   constructor(options = {}) {
     this.width = options.width || 360;
-    this.height = options.height || 600;
+    this.height = options.height || Math.round(this.width * (976 / 702)); // 严格 1:1 对标斗鱼官方 STAGE_LAYOUT (702:976)
+    this.stageScale = this.width / 702; // 1:1 对标斗鱼官方 stageScale 响应式缩放系数
     this.gravity = options.gravity !== undefined ? options.gravity : 1300; // px/s^2 严格对标斗鱼 1:1 重力 (1300)
-    this.dangerY = options.dangerY !== undefined ? options.dangerY : 70;
+    this.dangerY = options.dangerY !== undefined ? options.dangerY : Math.round(this.height * 0.125); // 对标斗鱼警戒线比例
     this.dangerDwellTime = options.dangerDwellTime || 0.8;
 
     this.onMerge = options.onMerge || null;
@@ -116,7 +117,7 @@ class PhysicsWorldPlanck {
    * 创建并加入一个物理圆形刚体
    */
   createBody(level, x, y, options = {}) {
-    const item = getItemByLevel(level);
+    const item = getItemByLevel(level, this.width);
     if (!item) return null;
 
     const radius = item.radius;
@@ -374,7 +375,7 @@ class PhysicsWorldPlanck {
 
       // 1:1 斗鱼 pickLowerFruit (Canvas 坐标系 Y 越大代表在屏幕越靠下)
       const lower = (b1.y >= b2.y) ? b1 : b2;
-      const newItem = getItemByLevel(nextLevel);
+      const newItem = getItemByLevel(nextLevel, this.width);
       const newRadius = newItem ? newItem.radius : lower.radius;
 
       const spawnX = Math.max(newRadius, Math.min(this.width - newRadius, lower.x));
@@ -417,8 +418,8 @@ class PhysicsWorldPlanck {
     // 斗鱼官方: blastRadius = 240 + 42 * e + 0.45 * radius (自适应缩放至当前宽度)
     const stageScale = this.width / 690;
     const blastRadius = (240 + 42 * power + 0.45 * (radius / stageScale)) * stageScale;
-    // 斗鱼官方推力系数: o = 3 + 1 * e (非彩票模式)
-    const baseForce = (3.0 + 1.0 * power) * 20;
+    // 斗鱼官方推力系数: o = 3 + 1 * e (非彩票模式纯净对标，严禁额外放大)
+    const baseForce = 3.0 + 1.0 * power;
 
     for (const b of this.bodies) {
       if (b === sourceBody || b.isMerging || b.isStatic || !b._pBody) continue;

@@ -10,9 +10,9 @@ const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL } = require('./items');
 class WatermelonEngine {
   constructor(options = {}) {
     this.width = options.width || 360;
-    this.height = options.height || 600;
-    this.dropY = options.dropY || 40; // 顶部待下落果实的 Y 坐标
-    this.dangerY = options.dangerY || 80;
+    this.height = options.height || Math.round(this.width * (976 / 702)); // 严格 1:1 对标斗鱼官方 STAGE_LAYOUT (702:976)
+    this.dropY = options.dropY !== undefined ? options.dropY : Math.round(this.height * 0.055); // 待下落果实顶部挂载 Y
+    this.dangerY = options.dangerY !== undefined ? options.dangerY : Math.round(this.height * 0.125); // 顶部警戒线 Y (12.5% 高度)
 
     // 回调函数
     this.onStateChange = options.onStateChange || null;
@@ -81,6 +81,13 @@ class WatermelonEngine {
       this.currentLevel = 1;
       this.nextLevel = 1;
     }
+  }
+
+  /**
+   * 1:1 对标斗鱼 Cocos getStageFruitRadius：获取当前舞台宽度适配后的道具数据
+   */
+  _getItem(level) {
+    return getItemByLevel(level, this.width);
   }
 
   /**
@@ -324,8 +331,8 @@ class WatermelonEngine {
       this.onFruitSpawn({
         currentLevel: this.currentLevel,
         nextLevel: this.nextLevel,
-        currentItem: getItemByLevel(this.currentLevel),
-        nextItem: getItemByLevel(this.nextLevel)
+        currentItem: this._getItem(this.currentLevel),
+        nextItem: this._getItem(this.nextLevel)
       });
     }
   }
@@ -343,7 +350,7 @@ class WatermelonEngine {
    */
   moveDropper(x) {
     if (this.gameState !== 'playing' || this.isAimSliding) return;
-    const currentItem = getItemByLevel(this.currentLevel);
+    const currentItem = this._getItem(this.currentLevel);
     const radius = currentItem ? currentItem.radius : 18;
 
     // 水平位移严格夹紧在容器有效内部
@@ -366,7 +373,7 @@ class WatermelonEngine {
       return false;
     }
 
-    const currentItem = getItemByLevel(this.currentLevel);
+    const currentItem = this._getItem(this.currentLevel);
     const radius = currentItem ? currentItem.radius : 18;
 
     const x = targetX !== null ? targetX : this.currentFruitX;
@@ -437,8 +444,8 @@ class WatermelonEngine {
         this.onFruitSpawn({
           currentLevel: this.currentLevel,
           nextLevel: this.nextLevel,
-          currentItem: getItemByLevel(this.currentLevel),
-          nextItem: getItemByLevel(this.nextLevel)
+          currentItem: this._getItem(this.currentLevel),
+          nextItem: this._getItem(this.nextLevel)
         });
       }
     }, 200);
@@ -450,7 +457,7 @@ class WatermelonEngine {
    * 处理物理世界的合成事件
    */
   _handlePhysicsMerge(nextLevel, spawnX, spawnY, newBody) {
-    const item = getItemByLevel(nextLevel);
+    const item = this._getItem(nextLevel);
     if (!item) return;
 
     // 连击判定：1.2 秒内连续合成累加连击
@@ -518,7 +525,7 @@ class WatermelonEngine {
       if (p >= 1.0) {
         this.currentFruitX = this._aimTargetX;
         this.isAimSliding = false;
-        const currentItem = getItemByLevel(this.currentLevel);
+        const currentItem = this._getItem(this.currentLevel);
         const radius = currentItem ? currentItem.radius : 18;
         this._executeDrop(this._aimTargetX, radius);
       }
@@ -547,7 +554,7 @@ class WatermelonEngine {
     this.gameState = 'ended';
     this._triggerFeedback('gameover');
 
-    const highestItem = getItemByLevel(this.highestLevel);
+    const highestItem = this._getItem(this.highestLevel);
 
     const gameOverData = {
       score: this.score,
@@ -579,8 +586,8 @@ class WatermelonEngine {
    * 获取用于首屏合并渲染的初始数据
    */
   getInitialState() {
-    const currentItem = getItemByLevel(this.currentLevel);
-    const nextItem = getItemByLevel(this.nextLevel);
+    const currentItem = this._getItem(this.currentLevel);
+    const nextItem = this._getItem(this.nextLevel);
 
     return {
       gameState: this.gameState,

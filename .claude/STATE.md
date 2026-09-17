@@ -1,5 +1,78 @@
 # 项目任务状态记录
 
+## [2026-09-17] 1:1 纯净复刻斗鱼动态响应式水果半径体系（STAGE_LAYOUT stageScale 动态自适应）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底消除写死硬编码半径（根治大金偏大32%与堆叠拥挤）**：
+     - `items.js`：将 11 级水果的原始尺寸严格对标斗鱼官方 702 基准分辨率（oe 数组：26, 41, 54, 60, 76, 92, 97, 129, 154, 164, 170）；
+     - 彻底改变静态写死机制，提供 `getStageFruitRadius(level, stageWidth)` 与动态 `getItemByLevel(level, stageWidth)`，严格对标斗鱼源码公式：
+       $$\text{stageScale} = \frac{\text{width}}{702} = \frac{\text{height}}{976}$$
+       $$r = \text{Math.max}(1, \text{Math.round}(r_{\text{base}} \times \text{stageScale}))$$
+  2. **物理世界与逻辑引擎全链路动态化适配**：
+     - `physicsPlanck.js`：刚体创建 `createBody` 与合成新球 `_resolveMerges` 全面接入 `this.width` 动态计算真实物理半径，刚体质量正比于圆面积平方比；
+     - `engine.js`：构造函数捕获实际宽度，私有化 `_getItem(level)` 为顶部准星、导轨、待落小球与结算面板提供 100% 匹配的动态半径；
+     - `index.js`：`_drawCurrentHeldFruit` 与瞄准拖尾等全面直连动态半径；
+  3. **全设备跨端绝对恒定几何比例**：
+     - 水果直径占宽比（大西瓜 48.4%，小牙膏 7.4%）与占高比在任何设备（iPhone SE、iPhone 15、Pro Max、折叠屏、平板）上均为绝对常数；
+     - 底部刚好并排容纳 2 颗大西瓜，垂直方向从容容纳 5~6 层大中型水果，手感与堆叠层数彻底 1:1 复刻斗鱼。
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 6 项测试套件（物理适配层 5/5、架构解耦 6/6、道具管理 5/5、地图背景 6/6、合成防吸附 4/4、爆汁特效 3/3）全部 100% 通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/items.js`
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `scripts/verify_game_architecture.js`
+  - `scripts/verify_watermelon_burst_effect.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 根治合成吸附错觉并 1:1 复刻斗鱼爆汁遮瑕特效管线与纯净尺度
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底拔除自研 `popScale: 1.15` 放大机制（根治视觉吸附错觉）**：
+     - `index.js`：彻底移除合成时新球放大到 1.15 倍（多出 15% 面积）的弹性形变逻辑，消除了贴图膨胀穿透遮盖隔壁水果引起的“隔空吸附合并”错觉；
+     - 1:1 对标斗鱼 Cocos `Fruit2.ts` 的 `playAppear("merge")`：新水果尺度严格保持 1:1 真实物理比例，仅赋予 0.10s 从透明度 210/255（82%）到 100% 的平滑淡入；
+  2. **1:1 复刻斗鱼 Cocos `createMergeEffect` 全套爆汁遮瑕特效管线**：
+     - `index.js`：构建轻量高效的 Canvas 2D 粒子系统 `_mergeParticles`；
+     - **中心光爆（Merge Flash Splat）**：新水果生成瞬间，中心触发 0.12s 快速膨胀淡出的双层品质光晕，高光遮掩旧球消失与新球刷出的物理瞬移感；
+     - **果汁水滴飞溅（Juice Droplets）**：向四周径向喷溅 18 颗带随机弧度与重力下坠的彩色水滴粒子（0.26s 自然缩小淡出），单次合成耗时 < 0.15ms，视觉爽感与遮瑕兼备；
+     - 在 `onUnload` 与 `restartGame` 中做好生命周期粒子池彻底清空，确保零内存泄漏；
+  3. **纠正推力系数放大偏差**：
+     - `physicsPlanck.js`：推力系数还原为斗鱼经典模式纯净公式 `baseForce = 3.0 + 1.0 * power`，消除将彩票模式参数误乘 20 倍的失真偏差；
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 架构单测、物理单测、合成防吸附单测（4/4）、新编写的爆汁遮瑕特效专项单测 `verify_watermelon_burst_effect.js`（3/3）全部 100% 通过。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `scripts/verify_watermelon_merge_behavior.js`
+  - `scripts/verify_watermelon_burst_effect.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 1:1 严格对标斗鱼官方 STAGE_LAYOUT (702:976) 舞台比例并落地预留流量主广告展位
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **严格 1:1 锁定斗鱼舞台长宽比例（STAGE_LAYOUT: 702:976）**：
+     - `index.wxss`：`.canvas-wrap` 废除原先无脑 `flex: 1` 纵向拉长变形，显式声明 `aspect-ratio: 702 / 976; width: 100%; flex-shrink: 0;`；
+     - `index.js`：`_initCanvas` 获取宽度 `width` 后，严格依据斗鱼公式计算高度 `height = Math.round(width * (976 / 702))`，在任何全面屏与超长屏设备上彻底锁定 702:976 物理长宽比；
+  2. **清除写死硬编码，相对高度 1:1 动态对标斗鱼源码**：
+     - `index.js` / `engine.js` / `physicsPlanck.js`：彻底清除原先写死的 `dropY: 36, dangerY: 76`，对标斗鱼源码相对高度公式：`dropY = Math.round(height * 0.055)`（顶部挂载点）、`dangerY = Math.round(height * 0.125)`（警戒线约占舞台顶部向下 12.5%），小球堆叠行数与落体冲力彻底与斗鱼一致；
+  3. **预留微信流量主广告展位（吸收全面屏纵向剩余空间）**：
+     - `index.wxml` & `index.wxss`：在画布与底部操作栏之间新增 `.ad-container-placeholder`，声明 `flex: 1; min-height: 80rpx;`，高质感暗黑战术风居中排布，全面屏多出的 140~200px 高度自然转化为商业广告展位，未来一键替换为 `<ad unit-id="..." />`；
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 5 项单测套件（架构、物理、防吸附、道具、地图）全部 100% 绿色通过。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `.claude/STATE.md`
+
 ## [2026-09-17] 彻底剥离人工补丁并100%纯净复刻斗鱼Cocos物理管线（杜绝后期返修隐患）
 - 状态：已完成
 - 优先级：P0

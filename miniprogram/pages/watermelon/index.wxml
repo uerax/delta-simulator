@@ -43,6 +43,14 @@
     />
   </view>
 
+  <!-- 预留流量主广告展示位 (全面屏多出长度自适应承载，居中排布) -->
+  <view class="ad-container-placeholder">
+    <view class="ad-placeholder-box">
+      <view class="ad-placeholder-badge">广告赞助</view>
+      <text class="ad-placeholder-text">战术补给展位 (预留接入微信流量主广告)</text>
+    </view>
+  </view>
+
   <!-- 底部快捷操作栏 -->
   <view class="bottom-bar">
     <button class="action-btn secondary-btn" bindtap="goHome">返回大厅</button>

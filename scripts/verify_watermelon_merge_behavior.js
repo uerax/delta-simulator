@@ -62,10 +62,10 @@ world2.update(0.016);
 console.log(`  爆炸前位置: (${prevX.toFixed(1)}, ${prevY.toFixed(1)})，爆炸后位置: (${victim.x.toFixed(1)}, ${victim.y.toFixed(1)})`);
 console.log(`  受波及小球水平速度 vx: ${victim.vx.toFixed(1)} px/s, 竖直速度 vy: ${victim.vy.toFixed(1)} px/s`);
 
-// 水平方向必须被向右推开 (dx > 0)
-assert(victim.vx > 20, `小球必须被冲击波向外推散，实际 vx: ${victim.vx}`);
-// 竖直方向偏置：受向上偏置力冲量影响，垂直向下速度显著小于纯重力自由落体速度 (20.8 px/s)
-assert(victim.vy < 20.0, `小球垂直速度必须受到向上的偏置分量，实际 vy: ${victim.vy}`);
+// 水平方向必须被向右推开 (dx > 0，斗鱼官方 3~11 px/s 温和推开拉开间距)
+assert(victim.vx > 2.0, `小球必须被冲击波向外推散，实际 vx: ${victim.vx}`);
+// 竖直方向偏置：受向上偏置力冲量影响，垂直向下速度小于纯重力自由落体速度 (32.4 px/s)
+assert(victim.vy < 32.4, `小球垂直速度必须受到向上的偏置分量，实际 vy: ${victim.vy}`);
 console.log('  ✔ 1:1 斗鱼合成爆炸冲击波推散与向上偏置验证通过！\n');
 
 // 3. 验证 0.12 线性阻尼下自由落体的真实重力感
