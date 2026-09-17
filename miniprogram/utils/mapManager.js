@@ -106,7 +106,7 @@ class MapManagerService {
 
   /**
    * 开局选取一个独立的战术背景会话 (Session)
-   * 支持指定地图，或自动在 6 大地图的 96 张官方战术切片中随机抽选
+   * 按照原本方式主动从网络下载几张切片做背景，采用分辨率更高的 z=3 切片拼接，不做全图
    *
    * @param {Object} [options]
    * @param {string} [options.mapKey] 可选指定地图 key
@@ -115,22 +115,36 @@ class MapManagerService {
    * @returns {Object} 当前会话背景信息
    */
   pickSession(options = {}) {
-    const tileInfo = this.getRandomTile(options.mapKey);
-    if (!tileInfo) return null;
+    this.init();
+    let map = null;
+    if (options.mapKey) {
+      map = this.getMap(options.mapKey);
+    }
+    if (!map) {
+      map = this.getRandomMap();
+    }
+    if (!map) return null;
 
-    const { map, tileUrl, tileIndex } = tileInfo;
+    // 选取更高分辨率的 z=3 切片 (8x8 矩阵，x/y 为 0~7)
+    // 聚焦中心战术核心区 (x: 2~4, y: 2~4)，彻底防止拿到外围边缘黑边与空白死角
+    // 随机选取中心相邻的 2x2 (共 4 张) 高清切片做局部战区背景，每次只主动下载这几张
+    const startX = 2 + Math.floor(Math.random() * 3); // 2, 3, 4
+    const startY = 2 + Math.floor(Math.random() * 3); // 2, 3, 4
 
-    // 计算切片所在网格坐标 (4x4, z=2, x=0~3, y=0~3)
-    const gridX = Math.floor(tileIndex / 4);
-    const gridY = tileIndex % 4;
+    const tiles = [
+      { col: 0, row: 0, url: `https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${map.layer}/3_${startX}_${startY}.jpg` },
+      { col: 1, row: 0, url: `https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${map.layer}/3_${startX + 1}_${startY}.jpg` },
+      { col: 0, row: 1, url: `https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${map.layer}/3_${startX}_${startY + 1}.jpg` },
+      { col: 1, row: 1, url: `https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${map.layer}/3_${startX + 1}_${startY + 1}.jpg` }
+    ];
 
     this._currentSession = {
       map,
       mapKey: map.key,
       mapName: map.name,
-      tileUrl,
-      tileIndex,
-      gridCoord: { x: gridX, y: gridY },
+      tileUrl: tiles[0].url,
+      gridCoord: { x: startX, y: startY },
+      tiles,
       timestamp: Date.now()
     };
 
@@ -184,34 +198,44 @@ class MapManagerService {
       ctx.fillRect(0, 0, width, height);
       ctx.restore();
 
-      // 3. 异步获取/预加载当前切片图片实例
-      if (session && session.tileUrl && canvas && typeof canvas.createImage === 'function') {
-        const url = session.tileUrl;
-        let cacheItem = this._imageCache.get(url);
+      // 3. 异步获取/预加载当前切片图片实例并拼接 (不做拉伸只做切割)
+      if (session && session.tiles && canvas && typeof canvas.createImage === 'function') {
+        // 保持 1:1 绝对正方形，不拉伸：纵向 2 张刚好铺满高度 height
+        const tileSize = height / 2;
+        const totalW = tileSize * 2;
+        // 居中切割：由于舞台比例为 702:976，总宽 totalW > width，左右两侧自然被切割
+        const offsetX = (width - totalW) / 2;
 
-        if (!cacheItem) {
-          const img = canvas.createImage();
-          cacheItem = { img, loaded: false, error: false };
-          this._imageCache.set(url, cacheItem);
+        for (let i = 0; i < session.tiles.length; i++) {
+          const t = session.tiles[i];
+          const dx = offsetX + t.col * tileSize;
+          const dy = t.row * tileSize;
 
-          img.onload = () => {
-            cacheItem.loaded = true;
-          };
-          img.onerror = () => {
-            cacheItem.error = true;
-          };
-          img.src = url;
-        }
+          let cacheItem = this._imageCache.get(t.url);
+          if (!cacheItem) {
+            const img = canvas.createImage();
+            cacheItem = { img, loaded: false, error: false };
+            this._imageCache.set(t.url, cacheItem);
 
-        // 4. 若图片已就绪且具备真实尺寸，以等比适应拉伸绘制到整个背景层
-        if (cacheItem.loaded && !cacheItem.error && cacheItem.img && cacheItem.img.width > 0 && cacheItem.img.height > 0) {
-          try {
-            ctx.save();
-            ctx.globalAlpha = mapAlpha;
-            ctx.drawImage(cacheItem.img, 0, 0, width, height);
-            ctx.restore();
-          } catch (e) {
-            // 忽略偶发贴图跨域或未完成解码异常
+            img.onload = () => {
+              cacheItem.loaded = true;
+            };
+            img.onerror = () => {
+              cacheItem.error = true;
+            };
+            img.src = t.url;
+          }
+
+          // 若图片已就绪，严格以 tileSize x tileSize 正方形绘制，不做拉伸只做切割
+          if (cacheItem.loaded && !cacheItem.error && cacheItem.img && cacheItem.img.width > 0 && cacheItem.img.height > 0) {
+            try {
+              ctx.save();
+              ctx.globalAlpha = mapAlpha;
+              ctx.drawImage(cacheItem.img, dx, dy, tileSize, tileSize);
+              ctx.restore();
+            } catch (e) {
+              // 忽略偶发贴图跨域或未完成解码异常
+            }
           }
         }
       }

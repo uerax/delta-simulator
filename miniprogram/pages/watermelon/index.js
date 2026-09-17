@@ -39,7 +39,10 @@ Page({
     showResultModal: false,
     modalTitle: '搜刮撤离完成！',
     isNewRecord: false,
-    resultItems: []
+    resultItems: [],
+    // 付费特权状态 (留好后续支付开启的口子，默认未开启)
+    isGuideLineUnlocked: false, // 掉落虚线定位导轨特权 (默认隐藏)
+    isNextItemUnlocked: false   // 下一个道具透视特权 (默认打码加锁)
   },
 
   onLoad() {
@@ -57,6 +60,14 @@ Page({
     // 读取用户震动配置
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
+
+    // 读取用户付费特权状态 (默认 false)
+    this._privileges = Storage.getPrivileges ? Storage.getPrivileges() : { aimGuideLine: false, nextItemPreview: false };
+    this.setData({
+      isGuideLineUnlocked: !!this._privileges.aimGuideLine,
+      isNextItemUnlocked: !!this._privileges.nextItemPreview
+    });
+
     this._routeDoneTimer = null;
   },
 
@@ -409,19 +420,18 @@ Page({
         return;
       }
 
-      // 1. 绘制战术地图背景与科技网格 (MapManager 方案B，带原生网格优雅降级兜底)
+      // 1. 绘制战术地图背景 (直接展示清晰背景，移除重度遮挡与雾化)
       try {
         MapManager.drawBackground(this._canvas, ctx, width, height, {
-          maskColor: 'rgba(15, 18, 26, 0.80)',
-          mapAlpha: 0.38,
-          showGrid: true,
-          showCrosshair: true
+          maskColor: null,
+          mapAlpha: 1.0,
+          showGrid: false,
+          showCrosshair: false
         });
       } catch (err) {
         ctx.save();
         ctx.fillStyle = '#090d13';
         ctx.fillRect(0, 0, width, height);
-        this._drawTacticalGrid(ctx, width, height);
         ctx.restore();
       }
 
@@ -514,9 +524,14 @@ Page({
   },
 
   /**
-   * 绘制准星虚线导轨
+   * 绘制准星虚线导轨 (受付费特权门控，未解锁时默认隐藏)
    */
   _drawDropperGuide(ctx, height) {
+    // 若未解锁辅助瞄准导轨特权，完全隐藏不绘制
+    if (!this._privileges || !this._privileges.aimGuideLine) {
+      return;
+    }
+
     if (this._engine.gameState !== 'playing' || this._engine.isDropping) return;
 
     const x = this._engine.currentFruitX;
@@ -1059,5 +1074,65 @@ Page({
         wx.redirectTo({ url: '/pages/index/index' });
       }
     });
+  },
+
+  /**
+   * 点击下一个道具预览 (付费开启特权入口)
+   */
+  onNextItemTap() {
+    Feedback.impactLight();
+    if (this._privileges && this._privileges.nextItemPreview) {
+      wx.showToast({
+        title: '已激活道具预知特权',
+        icon: 'success',
+        duration: 1500
+      });
+      return;
+    }
+    wx.showToast({
+      title: '道具预知特权即将开放',
+      icon: 'none',
+      duration: 1800
+    });
+  },
+
+  /**
+   * 辅助瞄准导轨特权入口 (留好付费展开接口)
+   */
+  onGuideLinePrivilegeTap() {
+    Feedback.impactLight();
+    if (this._privileges && this._privileges.aimGuideLine) {
+      wx.showToast({
+        title: '已激活辅助瞄准特权',
+        icon: 'success',
+        duration: 1500
+      });
+      return;
+    }
+    wx.showToast({
+      title: '辅助瞄准特权即将开放',
+      icon: 'none',
+      duration: 1800
+    });
+  },
+
+  /**
+   * 解锁或切换付费特权 (留给后续支付回调或运营活动一键调用)
+   * @param {string} key 'aimGuideLine' | 'nextItemPreview'
+   * @param {boolean} [unlocked=true]
+   */
+  unlockPrivilege(key, unlocked = true) {
+    if (!this._privileges) {
+      this._privileges = {};
+    }
+    this._privileges[key] = unlocked;
+    if (Storage.savePrivileges) {
+      Storage.savePrivileges(this._privileges);
+    }
+    if (key === 'aimGuideLine') {
+      this.setData({ isGuideLineUnlocked: unlocked });
+    } else if (key === 'nextItemPreview') {
+      this.setData({ isNextItemUnlocked: unlocked });
+    }
   }
 });

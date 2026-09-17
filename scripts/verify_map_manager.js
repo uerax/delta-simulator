@@ -41,8 +41,8 @@ const session = MapManager.pickSession({ width: 375, height: 667 });
 assert.ok(session, '应成功生成会话');
 assert.ok(session.mapName, '会话应包含地图名称');
 assert.ok(session.gridCoord, '会话应包含切片网格坐标');
-assert.ok(session.gridCoord.x >= 0 && session.gridCoord.x <= 3);
-assert.ok(session.gridCoord.y >= 0 && session.gridCoord.y <= 3);
+assert.ok(session.gridCoord.x >= 0 && session.gridCoord.x <= 6);
+assert.ok(session.gridCoord.y >= 0 && session.gridCoord.y <= 6);
 assert.strictEqual(MapManager.getCurrentSession(), session, 'getCurrentSession 应返回当前活动会话');
 
 console.log(`  ✔ 当前会话抽取到: [${session.mapName}] 网格(${session.gridCoord.x}, ${session.gridCoord.y}) 切片=${session.tileUrl}`);
@@ -82,11 +82,11 @@ const mockCanvas = {
 // 首次调用（图片尚未加载）
 MapManager.drawBackground(mockCanvas, mockCtx, 375, 667, { showGrid: true, showCrosshair: true });
 assert.ok(drawCalls.some(c => c.type === 'fillRect'), '应绘制底色与遮罩');
-assert.strictEqual(imageCreatedCount, 1, '应为当前切片创建 1 个 Image 实例');
+assert.strictEqual(imageCreatedCount, 4, '应为主动的 2x2 高清切片矩阵创建 4 个 Image 实例');
 
 // 再次调用（同一会话，不应重复创建 Image）
 MapManager.drawBackground(mockCanvas, mockCtx, 375, 667);
-assert.strictEqual(imageCreatedCount, 1, '同一会话不应重复创建 Image 实例（缓存生效）');
+assert.strictEqual(imageCreatedCount, 4, '同一会话不应重复创建 Image 实例（缓存生效）');
 
 console.log('  ✔ Canvas 2D 绘制管线与图象内存缓存机制验证通过！');
 

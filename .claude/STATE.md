@@ -1,6 +1,98 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.7.3`（唯一权威事实源，每次改动必须在此递增并同步记录）
+> **当前全局版本号**：`v1.7.7`（唯一权威事实源，每次改动必须在此递增并同步记录）
+
+## [2026-09-18] 战术切片聚焦中心核心交战区（彻底排除边缘空白与黑边死角）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **数据实测验证（已验证）**：
+     - 通过脚本实测 6 大地图在 z=3 层级全量 64 张切片大小分布，边缘 0/1/6/7 行列为迷雾与黑边空地（大小仅 2KB~5KB）；
+     - 6 大地图核心建筑与高密度战术设施 100% 绝对集中在中心区：$x \in [2, 5], y \in [2, 5]$（大坝主桥、行政区、皇后酒店、雷达站、核心发射塔、博物馆等核心切片大小达 25KB~78KB）。
+  2. **锁定中心核心战区锚点**：
+     - `miniprogram/utils/mapManager.js`：将随机 2x2 切片起始点严格约束在中心核心战区 `startX = 2 + floor(rand * 3)`（2, 3, 4），`startY = 2 + floor(rand * 3)`（2, 3, 4）；
+     - 彻底消除外围虚空黑边与无建筑荒野，确保每一局游戏背景均为地标核心区。
+  3. **单测套件 100% 绿色回归**：
+     - `verify_map_manager.js` 等全量单测全部通过。
+- 涉及文件：
+  - `miniprogram/utils/mapManager.js`
+  - `.claude/STATE.md`
+
+## [2026-09-18] 遵循原本动态下载方式根除背景拉伸（2x2高清切片拼接+等比正方形只做切割）
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **严格遵循原本写法与纯网络动态下载机制**：
+     - 坚决不读取任何本地静态大图，清理所有本地临时生成的静态地图文件，小程序代码包完全不受任何图片体积影响，主包保持纯净轻盈；
+     - 严格保持原本的动态获取链路，绝不拿全图；每次开局仅主动从腾讯官方 CDN（`https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${layer}/3_${x}_${y}.jpg`）下载相邻的 2x2（共 4 张）高清切片做局部战区背景。
+  2. **选取更高分辨率的 z=3 战区切片**：
+     - 废除原先每次只拿 1 张 z=2 碎片放大拉伸的做法；在官方 z=3 高分辨率层级（8x8 矩阵）中随机选取 2x2 切片拼接，清晰度大幅提升，地表与建筑细节清晰。
+  3. **严格落实“不做拉伸只做切割”几何算法**：
+     - `miniprogram/utils/mapManager.js`：
+       以舞台高度为基准等分：`tileSize = height / 2`，纵向 2 张刚好铺满舞台高度；
+       绘制坐标：`dx = (width - tileSize * 2) / 2 + t.col * tileSize; dy = t.row * tileSize;`；
+       每个切片的目标绘制宽高严格相等：`ctx.drawImage(cacheItem.img, dx, dy, tileSize, tileSize)`（绝对 1:1 正方形，0 纵向拉伸）；
+       由于舞台为 702:976（宽度小于高度），左右两侧超出舞台视口的部分自然被画布边界切割隐藏（不做拉伸只做切割）。
+  4. **全量自动化测试回归 100% 绿色通过**：
+     - `verify_map_manager.js` 等 7 项单测套件 100% 验证通过。
+- 涉及文件：
+  - `miniprogram/utils/mapManager.js`
+  - `scripts/verify_map_manager.js`
+  - `.claude/STATE.md`
+
+## [2026-09-18] 隐藏掉落虚线定位导轨并统一接入付费特权系统（对齐下一个道具特权）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **辅助瞄准导轨（虚线定位）默认完全隐藏**：
+     - `pages/watermelon/index.js`：在 `_drawDropperGuide` 中接入特权门控校验 `if (!this._privileges || !this._privileges.aimGuideLine) return;`，默认情况下彻底隐藏竖向虚线导轨，不给非付费状态提供瞄准辅助。
+  2. **特权数据层统一持久化与管理封装（Storage）**：
+     - `utils/storage.js`：新增 `PRIVILEGES` 命名空间（`delta_privileges`），提供 `getPrivileges()`、`savePrivileges(privileges)`、`isPrivilegeUnlocked(key)`、`unlockPrivilege(key)` 完整特权管理链路；
+     - 统一两大商业化付费特权体系：
+       1) `aimGuideLine: false`（辅助瞄准虚线导轨，默认隐藏，付费解锁）；
+       2) `nextItemPreview: false`（下一个道具透视预知，默认打码加锁，付费解锁）。
+  3. **页面控制器与视图层特权联动（留好后续付费展开口子）**：
+     - `pages/watermelon/index.js`：在 `data` 与 `Page` 实例中声明并响应 `isGuideLineUnlocked` 与 `isNextItemUnlocked`；
+     - 提供 `unlockPrivilege(key, unlocked)` 统一特权解锁接口，便于未来微信支付成功、激励广告或活动一键调用；
+     - 新增 `onGuideLinePrivilegeTap()` 提示入口与 `onNextItemTap()` 联动，未解锁时统一提示特权开放计划；
+     - `pages/watermelon/index.wxml`：下一个道具的 `.mosaic` 滤镜与锁头遮罩动态绑定 `isNextItemUnlocked`，特权解锁后即时移除遮罩高清展示。
+  4. **全量自动化测试回归 100% 绿色通过**：
+     - `verify_game_architecture.js` 等全量测试套件 100% 验证通过（含特权默认加锁与解锁断言）。
+- 涉及文件：
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `scripts/verify_game_architecture.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-17] 状态栏标题绝对水平对齐、下一个马赛克加锁、广告位留白与背景图纯净直接呈现
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **顶部状态栏小标题绝对水平线对齐（已验证）**：
+     - 根因排查：`.status-bar` 过去声明 `align-items: center`，由于左侧身价（字号32rpx）、中间合成数（字号32rpx）与右侧下一个道具预览圆圈（高56rpx）高度不一致，导致三列各自垂直居中时顶部小标题高度产生参差错位。
+     - 措施落地：`.status-bar` 对齐模式调整为 `align-items: flex-start`，三个 item 顶部严格齐平；统一 `.label` 为单行高度 `height: 28rpx; line-height: 28rpx; margin-bottom: 8rpx; display: block;`，将“搜刮总身价”、“合成非洲之心数”、“下一个”三组小标题 100% 锁死在同一水平基准线上；同时将下层内容行高度统一定格在 48rpx，整体视觉极其整齐匀称。
+  2. **下一个道具马赛克遮罩与金色锁头标识（付费开启预留）**：
+     - `index.wxss`：为 `next-preview-img` 赋予 `.mosaic` 滤镜（`filter: blur(6rpx); transform: scale(1.15); opacity: 0.55;`），实现逼真的毛玻璃打码马赛克质感；
+     - `index.wxml` & `index.wxss`：在道具预览正中央覆盖 `.next-lock-overlay` 与高清金色矢量锁头图标（`lock-icon`，带立体投影），外边框与高光升级为暗金色调（`#f59e0b`）；
+     - `index.js`：为预览盒子挂载 `bindtap="onNextItemTap"`，点击提供轻量触感反馈与“道具预知特权即将开放”提示，完美衔接后续商业化付费解锁。
+  3. **下方广告赞助模块文案清空纯留白**：
+     - `index.wxml`：彻底清空 `.ad-placeholder-box` 内原有的“广告赞助”标签与“战术补给展位”说明文本；
+     - `index.wxss`：精简样式，保留轻量暗色半透明虚线占位框，自适应消化全面屏机型多出的高度空间，视觉纯粹干净。
+  4. **移除背景图重度遮挡与雾化，直接清晰展示背景**：
+     - `index.js`：`MapManager.drawBackground` 调用参数升级为纯净直显模式（`maskColor: null, mapAlpha: 1.0, showGrid: false, showCrosshair: false`）；
+     - `utils/mapManager.js`：优化 `drawBackground` 默认参数（`mapAlpha` 默认 1.0，`maskColor` 为空时不画遮罩，网格与十字刻度按需开启），允许纯净背景直接呈现；
+     - `index.wxss`：移除 `.canvas-wrap` 原有的 `inset 0 0 30rpx rgba(0, 0, 0, 0.8)` 内阴影暗角雾化遮挡，让官方高清战术地图无遮挡完整透出。
+  5. **全量自动化测试回归 100% 绿色通过**：
+     - 7 项单测（MapManager 背景、架构解耦、物理引擎、爆汁特效、防吸附、道具管理、运势算法）全部 100% 绿色通过。
+- 涉及文件：
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/utils/mapManager.js`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-17] 根除首页静态缓存锁死并声明期绑定最新战绩《合成非洲之心数》
 - 状态：已完成

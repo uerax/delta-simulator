@@ -394,6 +394,14 @@ const schulteRes = Storage.recordSchulteResult(12.3);
 assert(schulteRes.isNewRecord === true, '首次记录应为新纪录');
 assert.strictEqual(schulteRes.stats.schulteBestTime, 12.3, '全局 stats.schulteBestTime 应同步更新');
 
+// 测试付费特权系统 (辅助瞄准虚线导轨 & 下一个道具透视)
+assert.strictEqual(Storage.isPrivilegeUnlocked('aimGuideLine'), false, '初始状态下辅助瞄准导轨应默认锁定隐藏');
+assert.strictEqual(Storage.isPrivilegeUnlocked('nextItemPreview'), false, '初始状态下下一个道具透视应默认锁定');
+Storage.unlockPrivilege('aimGuideLine');
+assert.strictEqual(Storage.isPrivilegeUnlocked('aimGuideLine'), true, '解锁后辅助瞄准导轨特权状态应为 true');
+Storage.unlockPrivilege('nextItemPreview');
+assert.strictEqual(Storage.isPrivilegeUnlocked('nextItemPreview'), true, '解锁后下一个道具透视特权状态应为 true');
+
 console.log('  ✔ Storage 通用 gameId 隔离与合成大西瓜专属持久化测试通过！\n');
 
 // 6. 验证 Feedback 触感模块与开发者工具自适应

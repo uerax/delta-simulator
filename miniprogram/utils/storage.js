@@ -8,7 +8,8 @@ const STORAGE_KEYS = {
   GAME_STATS: 'delta_game_stats',
   GAME_RECORDS: 'delta_game_records', // [新增] 基于 gameId 的各游戏独立战绩命名空间
   DAILY_RECORDS: 'delta_daily_records',
-  SETTINGS: 'delta_settings'
+  SETTINGS: 'delta_settings',
+  PRIVILEGES: 'delta_privileges'       // [新增] 付费特权状态命名空间
 };
 
 // 获取今天的日期字符串 YYYY-MM-DD
@@ -418,6 +419,56 @@ const Storage = {
       console.error('保存设置失败:', e);
       return null;
     }
+  },
+
+  /**
+   * 获取付费特权配置 (辅助瞄准虚线、下一个道具透视等)
+   * @returns {object} { aimGuideLine: boolean, nextItemPreview: boolean }
+   */
+  getPrivileges() {
+    try {
+      const data = wx.getStorageSync(STORAGE_KEYS.PRIVILEGES);
+      return data || {
+        aimGuideLine: false,    // 辅助瞄准虚线导轨 (默认隐藏，需付费开启)
+        nextItemPreview: false  // 下一个道具透视预知 (默认打码加锁，需付费开启)
+      };
+    } catch (e) {
+      return { aimGuideLine: false, nextItemPreview: false };
+    }
+  },
+
+  /**
+   * 保存特权配置
+   * @param {object} privileges
+   */
+  savePrivileges(privileges) {
+    try {
+      const current = this.getPrivileges();
+      const updated = { ...current, ...privileges };
+      wx.setStorageSync(STORAGE_KEYS.PRIVILEGES, updated);
+      return updated;
+    } catch (e) {
+      console.error('保存特权配置失败:', e);
+      return null;
+    }
+  },
+
+  /**
+   * 检查指定特权是否已解锁
+   * @param {string} privilegeKey
+   * @returns {boolean}
+   */
+  isPrivilegeUnlocked(privilegeKey) {
+    const privs = this.getPrivileges();
+    return !!(privs && privs[privilegeKey]);
+  },
+
+  /**
+   * 解锁指定付费特权 (留给未来支付成功或特权购买回调)
+   * @param {string} privilegeKey 'aimGuideLine' | 'nextItemPreview' 等
+   */
+  unlockPrivilege(privilegeKey) {
+    return this.savePrivileges({ [privilegeKey]: true });
   },
 
   /**

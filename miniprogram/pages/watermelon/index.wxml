@@ -9,10 +9,13 @@
       <text class="label">合成非洲之心数</text>
       <text class="value score-value">{{watermelonCount}}</text>
     </view>
-    <view class="status-item next-item-box" wx:if="{{nextItem}}">
+    <view class="status-item next-item-box" wx:if="{{nextItem}}" bindtap="onNextItemTap">
       <text class="label">下一个</text>
-      <view class="next-preview-circle" style="border-color: {{nextItem.colorHex}};">
-        <image class="next-preview-img" src="{{nextItem.iconUrl}}" mode="aspectFit" />
+      <view class="next-preview-circle">
+        <image class="next-preview-img {{isNextItemUnlocked ? '' : 'mosaic'}}" src="{{nextItem.iconUrl}}" mode="aspectFit" />
+        <view class="next-lock-overlay" wx:if="{{!isNextItemUnlocked}}">
+          <view class="lock-icon"></view>
+        </view>
       </view>
     </view>
   </view>
@@ -43,12 +46,9 @@
     />
   </view>
 
-  <!-- 预留流量主广告展示位 (全面屏多出长度自适应承载，居中排布) -->
+  <!-- 预留流量主广告展示位 (全面屏多出长度自适应承载，留空展示) -->
   <view class="ad-container-placeholder">
-    <view class="ad-placeholder-box">
-      <view class="ad-placeholder-badge">广告赞助</view>
-      <text class="ad-placeholder-text">战术补给展位 (预留接入微信流量主广告)</text>
-    </view>
+    <view class="ad-placeholder-box"></view>
   </view>
 
   <!-- 底部快捷操作栏 -->
