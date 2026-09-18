@@ -15,12 +15,15 @@ Module._resolveFilename = function (request, parent, isMain, options) {
 const { calculateDailyFortune, murmurHash3, Mulberry32PRNG } = require('../miniprogram/games/fortune/fortuneAlgorithm');
 const mapManager = require('../miniprogram/utils/mapManager');
 const itemManager = require('../miniprogram/utils/itemManager');
+const supplyManager = require('../miniprogram/utils/supplyManager');
 
 console.log('=== [1] 初始化底层资源管理器 ===');
 mapManager.init();
 itemManager.init();
+supplyManager.init();
 console.log(`地图池数量: ${mapManager.getAllMaps().length}`);
 console.log(`全量道具池数量: ${itemManager.getAllItems().length}`);
+console.log(`全量物资点池数量: ${supplyManager.getAll().length}`);
 
 console.log('\n=== [2] 校验幂等性 (同一用户同一天连续调用 100 次) ===');
 const testDate = '2026-09-17';
@@ -30,7 +33,7 @@ const baseline = calculateDailyFortune({ dateStr: testDate, userId: testUser, re
 console.log('基准首次运行结果:');
 console.log(`  - 种子标识: ${baseline.seedKey}`);
 console.log(`  - 幸运地图: ${baseline.luckyMap.name} (${baseline.luckyMap.key}) · 核心地标: ${baseline.luckyMap.spot}`);
-console.log(`  - 暴富容器: ${baseline.luckyContainer.name} (${baseline.luckyContainer.key})`);
+console.log(`  - 暴富容器: ${baseline.luckyContainer.name} (${baseline.luckyContainer.fileName || baseline.luckyContainer.pic})`);
 console.log(`  - 道具等级: ${baseline.luckyLevel}级 [${baseline.levelName}] (${baseline.luckyItem.theme ? baseline.luckyItem.theme.name : ''})`);
 console.log(`  - 幸运道具: ${baseline.luckyItem.name} (价格: ¥${baseline.luckyItem.priceFormatted})`);
 console.log(`  - 运势评分: ${baseline.fortuneScore}分 | 安全撤离率: ${baseline.extractionRate}`);
@@ -46,7 +49,7 @@ for (let i = 0; i < 100; i++) {
     current.seed !== baseline.seed ||
     current.luckyMap.key !== baseline.luckyMap.key ||
     current.luckyMap.spot !== baseline.luckyMap.spot ||
-    current.luckyContainer.key !== baseline.luckyContainer.key ||
+    current.luckyContainer.name !== baseline.luckyContainer.name ||
     current.luckyLevel !== baseline.luckyLevel ||
     current.levelName !== baseline.levelName ||
     current.luckyItem.id !== baseline.luckyItem.id ||

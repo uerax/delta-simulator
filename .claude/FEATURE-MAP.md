@@ -64,15 +64,19 @@
   - 核心能力：`LEVEL_THEMES` 1~6 级主题与颜色枚举（底色/高光/渐变）、全局 `itemMap` 双键索引（按 ID 与名称 O(1) 检索）、1~6 级专属双键 Map（`level1Map` ~ `level6Map`）与身价降序列表、道具对象内置 `priceFormatted` 千分位金额与 `theme` 主题、按等级随机抽取 `getRandomByLevel`。
 - **战术地图背景管理器 (MapManager)**：`miniprogram/utils/mapManager.js`
   - 核心能力：6 大战术地图双键索引（按 Key 与名称 O(1) 检索）、开局独立战术背景会话（`pickSession` 随机抽取 96 张官方切片之一）、Canvas 2D 独立渲染适配（`drawBackground`，自带图象内存缓存、深色遮罩与军事经纬十字刻度）、DOM 样式生成器（`getRandomBackgroundStyle`，供非 Canvas 页面一键绑定）。
+- **战区物资点管理器 (SupplyManager)**：`miniprogram/utils/supplyManager.js`
+  - 核心能力：对标 ItemManager，从 `supply_manifest.js` 动态加载，在 `init()` 中动态写入 `supplyMap`，提供全量物资列表（`getAll`）与按名称 O(1) 检索（`getByName`），单例导出 `new SupplyManagerService()`。
 - **三角洲战术物资资源库**：
   - 地图运行时清单：`miniprogram/assets/maps/map_manifest.js`（CommonJS 标准导出）
   - 道具运行时清单：`miniprogram/assets/items/item_manifest.js`（CommonJS 标准导出）
+  - 物资点运行时清单：`miniprogram/assets/supplies/supply_manifest.js`（CommonJS 标准导出，参考道具源极简格式，47 件去重物资、无战区划分、零冗余字段）
   - 稀有度等级图标与样式：`miniprogram/assets/icons/levels/` (红/橙/紫/蓝/绿/白 6 级图标雪碧图与 `level_icons.wxss`)
   - 离线维护数据源：`scripts/data/`
     - 地图源数据：`scripts/data/maps/map_manifest.json`
     - 图标源数据：`scripts/data/icons/icon_manifest.json`
     - 道具源数据：`scripts/data/items/item_manifest.json`
-  - 数据爬取、价格同步与导出脚本：`scripts/verify_watermelon_merge_behavior.js`、`scripts/verify_game_architecture.js`、`scripts/verify_planck_watermelon.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
+    - 物资点源数据：`scripts/data/supplies/supply_manifest.json`
+  - 数据爬取、价格同步与导出脚本：`scripts/verify_supply_manager.js`、`scripts/generate_supply_manifest.js`、`scripts/verify_watermelon_merge_behavior.js`、`scripts/verify_game_architecture.js`、`scripts/verify_planck_watermelon.js`、`scripts/migrate_to_official_cdn.js`、`scripts/simplify_item_manifest.js`、`scripts/update_item_prices.js`、`scripts/lib/opencc.js`、`scripts/lib/zhou_pack_decoder.js`、`scripts/crawl_delta_items.js`、`scripts/generate_maps.ps1`、`scripts/download_icons.js`、`scripts/scan_df_data.js`
 
 ## 文档与 AI 技能
 - 官方框架精简指南与排错手册：`docs/miniprogram-framework.md`

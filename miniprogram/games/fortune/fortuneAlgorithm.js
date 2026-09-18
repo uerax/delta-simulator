@@ -21,13 +21,13 @@
 
 const mapManager = require('../../utils/mapManager');
 const itemManager = require('../../utils/itemManager');
+const supplyManager = require('../../utils/supplyManager');
 const {
   LEVEL_COPYWRITING,
   FORTUNE_ORACLES,
   FREE_LUCKY_LEVEL_WEIGHTS,
   PAID_LUCKY_LEVEL_WEIGHTS,
-  MAP_LANDMARKS,
-  CONTAINER_DEFINITIONS
+  MAP_LANDMARKS
 } = require('./fortuneConfig');
 
 /**
@@ -265,10 +265,11 @@ function calculateDailyFortune({ dateStr, userId, rerollCount = 0, isPaid = fals
 
   const luckySpot = luckySpotName;
 
-  // 4. 维度三：暴富容器抽取 (按 key 字母序保序强排序，含常规与辐射容器)
-  const safeContainers = CONTAINER_DEFINITIONS
+  // 4. 维度三：暴富容器/战区物资抽取 (从 supplyManager 47件全量物资中按名称强自然保序抽取)
+  const allSupplies = supplyManager.getAll();
+  const safeContainers = allSupplies
     .slice()
-    .sort((a, b) => (a.key || '').localeCompare(b.key || ''));
+    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   const luckyContainer = prng.pick(safeContainers) || safeContainers[0];
 
   // 5. 维度四：具体道具抽取 (按 id 数字升序强保序，消除同价格排序抖动)

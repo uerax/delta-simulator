@@ -1,6 +1,34 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.6`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+> **当前全局版本号**：`v1.8.7`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+
+## [2026-09-19] SupplyManager动态初始化与鼠鼠运势接入官方物资源
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **SupplyManager 动态加载与 Map 初始化落地（已验证）**：
+     - 彻底清除代码中写死的字典与硬编码内容；
+     - 参考 `ItemManager` 架构，通过 `init()` 动态读取 `supply_manifest.js` 数据源，写入 `this.supplyMap`；
+     - 单例导出 `module.exports = new SupplyManagerService()`，支持按名称 O(1) 检索，并提供完整 CDN 图片直连属性 `pic`。
+  2. **鼠鼠运势（Fortune）全面接入物资源（已验证）**：
+     - `fortuneAlgorithm.js`：从 `supplyManager.getAll()` 47 件全量物资中按名称强自然保序抽取今日暴富容器；
+     - `pages/fortune/index.wxml`：暴富容器卡片直接展示 `fortune.luckyContainer.pic` 对应官方图片与红/橙动态边框；
+     - `pages/fortune/index.js`：`_normalizeFortune` 加入自愈校准，自动从 `supplyManager` 补齐最新图片 URL，兼容并修复历史缓存；
+     - `app.js`：启动时与 `ItemManager` 同步执行 `SupplyManager.init()` 预热。
+  3. **全套自动化测试 100% 绿色通过**：
+     - `verify_supply_manager.js`、`verify_fortune_algorithm.js`、`verify_game_architecture.js` 全部测试通过。
+  4. **版本号维护**：
+     - 从 `v1.8.6` 递增至 `v1.8.7`。
+- 涉及文件：
+  - `miniprogram/utils/supplyManager.js`
+  - `miniprogram/games/fortune/fortuneAlgorithm.js`
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/app.js`
+  - `scripts/verify_supply_manager.js`
+  - `scripts/verify_fortune_algorithm.js`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-18] 战术地图官方原装物理坐标全量直录与旧缓存强制自愈校准
 - 状态：已完成

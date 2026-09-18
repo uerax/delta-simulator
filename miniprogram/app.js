@@ -1,11 +1,13 @@
 // app.js
 const Storage = require('./utils/storage');
 const ItemManager = require('./utils/itemManager');
+const SupplyManager = require('./utils/supplyManager');
 
 App({
   onLaunch: function () {
-    // 预热并初始化道具多维索引 Map
+    // 预热并初始化道具与物资多维索引 Map
     ItemManager.init();
+    SupplyManager.init();
 
     // 初始化本地存储数据
     this.globalData = {

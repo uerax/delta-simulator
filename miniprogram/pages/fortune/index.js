@@ -2,6 +2,7 @@
 const FortuneEngine = require('../../games/fortune/engine');
 const Feedback = require('../../utils/feedback');
 const itemManager = require('../../utils/itemManager');
+const supplyManager = require('../../utils/supplyManager');
 const Storage = require('../../utils/storage');
 const { calculateDailyFortune } = require('../../games/fortune/fortuneAlgorithm');
 const { MAP_LANDMARKS } = require('../../games/fortune/fortuneCopywriting');
@@ -288,12 +289,22 @@ Page({
     luckyMap.mapOffsetX = offset.x;
     luckyMap.mapOffsetY = offset.y;
 
+    // 强力自愈校准：无论历史缓存残留何种旧数据，一律使用 supplyManager 官方最新图片与描述
+    let luckyContainer = fortune.luckyContainer ? { ...fortune.luckyContainer } : null;
+    if (luckyContainer && luckyContainer.name) {
+      const freshContainer = supplyManager.getByName(luckyContainer.name);
+      if (freshContainer) {
+        luckyContainer = { ...freshContainer };
+      }
+    }
+
     const normalized = {
       ...fortune,
       colorHex,
       bgColorHex,
       luckyItem,
-      luckyMap
+      luckyMap,
+      luckyContainer: luckyContainer || fortune.luckyContainer
     };
 
     // 同步更新引擎内存与本地缓存

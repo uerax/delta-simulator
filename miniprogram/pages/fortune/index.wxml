@@ -107,7 +107,7 @@
     <view class="module-card tactics-map-module">
       <view class="module-header">
         <text class="module-title-icon">🗺️</text>
-        <text class="module-title">战术大红吉位</text>
+        <text class="module-title">今日幸运物资点位</text>
       </view>
 
       <view class="tactics-map-content-row">
@@ -115,7 +115,6 @@
         <view class="tactics-map-info-col">
           <view class="map-name-text">{{fortune.luckyMap.name}}</view>
           <view class="map-spot-pill">📍 {{fortune.luckyMap.spot}}</view>
-          <view class="movable-hint-tag">🖐️ 可滑动右图</view>
         </view>
 
         <!-- 右侧: 紧凑小地图视窗 (260rpx×220rpx，支持整张高清地图全景探索与视窗动态懒加载) -->
@@ -157,21 +156,22 @@
       </view>
 
       <view class="container-showcase">
-        <view class="container-icon-wrap">
-          <image class="container-icon-img" src="{{fortune.luckyContainer.iconUrl}}" mode="aspectFit"></image>
+        <view class="container-icon-wrap" style="{{fortune.luckyContainer.color === 'red' ? 'border-color: #E03A3E; box-shadow: 0 0 16rpx rgba(224,58,62,0.3);' : (fortune.luckyContainer.color === 'orange' ? 'border-color: #F59E0B; box-shadow: 0 0 16rpx rgba(245,158,11,0.3);' : '')}}">
+          <image class="container-icon-img" src="{{fortune.luckyContainer.pic}}" mode="aspectFit"></image>
         </view>
 
         <view class="container-info">
           <view class="container-name-row">
             <text class="container-name">{{fortune.luckyContainer.name}}</text>
-            <view class="container-type-pill">
-              <text wx:if="{{fortune.luckyContainer.type === 'radiation'}}">☢️ 辐射特种设施</text>
+            <view class="container-type-pill" style="{{fortune.luckyContainer.color === 'red' ? 'color: #E03A3E; border-color: rgba(224,58,62,0.4); background: rgba(224,58,62,0.12);' : (fortune.luckyContainer.color === 'orange' ? 'color: #F59E0B; border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.12);' : '')}}">
+              <text wx:if="{{fortune.luckyContainer.color === 'red'}}">🏆 绝密核心点</text>
+              <text wx:elif="{{fortune.luckyContainer.color === 'orange'}}">💎 高价值点位</text>
+              <text wx:elif="{{fortune.luckyContainer.type === 'radiation'}}">☢️ 辐射特种设施</text>
               <text wx:elif="{{fortune.luckyContainer.type === 'core'}}">🏆 高价值出金点</text>
-              <text wx:elif="{{fortune.luckyContainer.type === 'loot'}}">🎒 战利品遗留</text>
-              <text wx:else>🐭 鼠鼠漏网点位</text>
+              <text wx:else>📦 战术搜刮点</text>
             </view>
           </view>
-          <view class="container-desc-text">{{fortune.luckyContainer.desc}}</view>
+          <view class="container-desc-text" wx:if="{{fortune.luckyContainer.desc}}">{{fortune.luckyContainer.desc}}</view>
         </view>
       </view>
     </view>
@@ -186,7 +186,7 @@
     <view class="module-card almanac-module">
       <view class="module-header">
         <text class="module-title-icon">📜</text>
-        <text class="module-title">鼠鼠战术老黄历</text>
+        <text class="module-title">今日鼠鼠战术分析</text>
       </view>
 
       <view class="almanac-grid">
@@ -236,16 +236,12 @@
     <!-- 模块 5: 底部操作栏 -->
     <view class="action-module">
       <button class="primary-btn reroll-btn" bindtap="onReroll">
-        <text class="btn-icon">⚡</text> 逆天改命 (重新抽签)
+        重新抽签
       </button>
 
       <button class="secondary-btn" bindtap="goHome">
         返回鼠鼠大厅
       </button>
-
-      <view class="footer-tip">
-        每日 00:00 自动重置运势 · 纯离线单机数据安全保存
-      </view>
     </view>
 
   </view>
