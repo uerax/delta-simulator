@@ -389,24 +389,33 @@ page {
 }
 
 .tactics-map-movable-view {
-  width: 520rpx;
-  height: 520rpx;
+  width: 2048rpx;
+  height: 2048rpx;
   position: relative;
 }
 
-/* 2x2 高清切片拼合网格 */
-.map-tiles-matrix {
-  width: 520rpx;
-  height: 520rpx;
+/* 8x8 全图高清切片矩阵 (2048rpx × 2048rpx, 每个切片 256rpx × 256rpx) */
+.map-tiles-matrix-full {
+  width: 2048rpx;
+  height: 2048rpx;
   display: grid;
-  grid-template-columns: 260rpx 260rpx;
-  grid-template-rows: 260rpx 260rpx;
+  grid-template-columns: repeat(8, 256rpx);
+  grid-template-rows: repeat(8, 256rpx);
   gap: 0;
+  background: #11111b;
+}
+
+.full-tile-cell {
+  width: 256rpx;
+  height: 256rpx;
+  background-color: #11111b;
+  position: relative;
+  overflow: hidden;
 }
 
 .matrix-tile-img {
-  width: 260rpx;
-  height: 260rpx;
+  width: 256rpx;
+  height: 256rpx;
   display: block;
 }
 

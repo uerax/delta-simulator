@@ -118,7 +118,7 @@
           <view class="movable-hint-tag">🖐️ 可滑动右图</view>
         </view>
 
-        <!-- 右侧: 紧凑小地图视窗 (不要太大，尺寸约为 260rpx×220rpx，可拖拽探索) -->
+        <!-- 右侧: 紧凑小地图视窗 (260rpx×220rpx，支持整张高清地图全景探索与视窗动态懒加载) -->
         <movable-area class="tactics-map-movable-area">
           <movable-view
             class="tactics-map-movable-view"
@@ -126,17 +126,19 @@
             inertia="true"
             out-of-bounds="false"
             x="{{fortune.luckyMap.mapOffsetX}}"
-            y="{{fortune.luckyMap.mapOffsetY}}">
-            <!-- 2x2 高清战术切片无缝拼合矩阵 (520rpx×520rpx) -->
-            <view class="map-tiles-matrix">
-              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[0]}}" mode="aspectFill"></image>
-              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[1]}}" mode="aspectFill"></image>
-              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[2]}}" mode="aspectFill"></image>
-              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[3]}}" mode="aspectFill"></image>
+            y="{{fortune.luckyMap.mapOffsetY}}"
+            bindchange="onMapMove">
+            <!-- 8x8 全图高清切片矩阵 (2048rpx×2048rpx，视窗按需懒加载) -->
+            <view class="map-tiles-matrix-full">
+              <block wx:for="{{mapTiles}}" wx:key="id">
+                <view class="full-tile-cell">
+                  <image wx:if="{{item.src}}" class="matrix-tile-img" src="{{item.src}}" mode="aspectFill"></image>
+                </view>
+              </block>
             </view>
             <view class="matrix-grid-overlay"></view>
 
-            <!-- 战术雷达标点 -->
+            <!-- 战术雷达标点 (全地图绝对百分比定位) -->
             <view class="radar-ping-anchor" style="left: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.x : 50}}%; top: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.y : 50}}%;">
               <view class="radar-pulse-ring"></view>
               <view class="radar-center-dot"></view>

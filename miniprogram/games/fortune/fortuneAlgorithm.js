@@ -232,8 +232,8 @@ function calculateDailyFortune({ dateStr, userId, rerollCount = 0, isPaid = fals
     .sort((a, b) => (a.key || '').localeCompare(b.key || ''));
   const rawLuckyMap = prng.pick(safeMaps) || safeMaps[0];
 
-  // 3.1 核心出金地标抽取 (从 MAP_LANDMARKS 字典中保序抽取，动态获取以该标点为中心的高清周边分片矩阵)
-  const landmarkConfig = MAP_LANDMARKS[rawLuckyMap.key] || { landmarks: [{ name: '核心战区', startTile: { x: 3, y: 3 }, coord: { x: 50, y: 50 } }] };
+  // 3.1 核心出金地标抽取 (从 MAP_LANDMARKS 字典中保序抽取，官方全地图百分比坐标与 8x8 切片矩阵元数据)
+  const landmarkConfig = MAP_LANDMARKS[rawLuckyMap.key] || { landmarks: [{ name: '核心战区', coord: { x: 50, y: 50 }, tile: { col: 4, row: 4 } }] };
   const safeLandmarks = landmarkConfig.landmarks.slice().sort((a, b) => {
     const nameA = typeof a === 'string' ? a : a.name;
     const nameB = typeof b === 'string' ? b : b.name;
@@ -242,29 +242,24 @@ function calculateDailyFortune({ dateStr, userId, rerollCount = 0, isPaid = fals
   const rawSpot = prng.pick(safeLandmarks) || safeLandmarks[0];
   const luckySpotName = typeof rawSpot === 'string' ? rawSpot : rawSpot.name;
   const spotCoord = (rawSpot && rawSpot.coord) ? rawSpot.coord : { x: 50, y: 50 };
-  const startTile = (rawSpot && rawSpot.startTile) ? rawSpot.startTile : { x: 3, y: 3 };
+  const centerTile = (rawSpot && rawSpot.tile)
+    ? rawSpot.tile
+    : { col: Math.min(7, Math.max(0, Math.floor(spotCoord.x / 12.5))), row: Math.min(7, Math.max(0, Math.floor(spotCoord.y / 12.5))) };
 
-  // 动态截取包含该标点及其周边的 4 张 z=3 高清瓦片矩阵 (1:1 高清建筑细节，不模糊不缩小)
   const mapLayer = rawLuckyMap.layer || `map_${rawLuckyMap.key}`;
   const cdnTileBase = `https://game.gtimg.cn/images/dfm/cp/a20240729directory/img/${mapLayer}/`;
-  const sx = startTile.x;
-  const sy = startTile.y;
-  const tiles = [
-    `${cdnTileBase}3_${sx}_${sy}.jpg`,
-    `${cdnTileBase}3_${sx + 1}_${sy}.jpg`,
-    `${cdnTileBase}3_${sx}_${sy + 1}.jpg`,
-    `${cdnTileBase}3_${sx + 1}_${sy + 1}.jpg`
-  ];
+  const tileUrlTemplate = `${cdnTileBase}3_{col}_{row}.jpg`;
 
   const luckyMap = {
     key: rawLuckyMap.key,
     name: rawLuckyMap.name,
+    layer: mapLayer,
     desc: rawLuckyMap.desc,
     spot: luckySpotName,
     spotCoord: spotCoord,
-    startTile: startTile,
-    tiles: tiles,
-    tileUrl: tiles[0],
+    centerTile: centerTile,
+    tileUrlTemplate: tileUrlTemplate,
+    tileUrl: `${cdnTileBase}3_${centerTile.col}_${centerTile.row}.jpg`,
     previewTileUrl: rawLuckyMap.previewTileUrl
   };
 

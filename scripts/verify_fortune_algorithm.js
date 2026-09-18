@@ -146,4 +146,25 @@ for (let lvl = 1; lvl <= 6; lvl++) {
   itemManager.levelLists[lvl].sort((a, b) => b.price - a.price);
 }
 
+console.log('\n=== [7] 校验 6 大地图全图绝对坐标与 8x8 切片矩阵元数据 ===');
+const { MAP_LANDMARKS } = require('../miniprogram/games/fortune/fortuneCopywriting');
+Object.entries(MAP_LANDMARKS).forEach(([mapKey, mapData]) => {
+  console.log(`  核验地图: ${mapData.name} (${mapKey}) 共 ${mapData.landmarks.length} 个官方地标:`);
+  mapData.landmarks.forEach(lm => {
+    if (!lm.coord || typeof lm.coord.x !== 'number' || typeof lm.coord.y !== 'number') {
+      console.error(`❌ 地标 ${lm.name} 缺少合法 coord 坐标！`, lm);
+      process.exit(1);
+    }
+    if (lm.coord.x < 0 || lm.coord.x > 100 || lm.coord.y < 0 || lm.coord.y > 100) {
+      console.error(`❌ 地标 ${lm.name} coord 坐标超出 [0, 100]% 范围:`, lm.coord);
+      process.exit(1);
+    }
+    if (!lm.tile || lm.tile.col < 0 || lm.tile.col > 7 || lm.tile.row < 0 || lm.tile.row > 7) {
+      console.error(`❌ 地标 ${lm.name} tile 切片超出 8x8 范围:`, lm.tile);
+      process.exit(1);
+    }
+  });
+  console.log(`    ✅ 全部 ${mapData.landmarks.length} 个地标坐标与 8x8 切片索引合法且位于全图内！`);
+});
+
 console.log('\n🎉 所有算法核心场景与防御性校验全部通过！');
