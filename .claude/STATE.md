@@ -1,6 +1,41 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.8`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+> **当前全局版本号**：`v1.8.9`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+
+## [2026-09-19] 微信用户登录接入、独立用户模块 (UserManager) 与首页登录态交互重构
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **独立用户管理服务模块落地 (UserManager)（已验证）**：
+     - 新建 `miniprogram/utils/userManager.js`，采用单例模式与观察者模式（`on`/`off`/`_notify`）；
+     - 封装完整登录状态机（`unlogin`, `logging_in`, `logged_in`, `login_failed`）；
+     - 包装原生 `wx.login` 获取临时登录凭证 `code`，支持并发防重锁与单机离线自动降级；
+     - 包装 `wx.checkSession` 维持会话有效性；
+     - 提供 `updateProfile` 统一更新微信头像（`chooseAvatar`）与微信昵称（`type="nickname"`）并持久化至 Storage；
+     - 默认昵称由原“无名勇士”更替为用户指定的“野生鼠鼠”。
+  2. **Storage 存储层支持登录态模型（已验证）**：
+     - 扩展 `delta_user_profile` 模型，补充 `isLoggedIn`、`loginTime`、`userId`、`loginType` 字段，读写健壮性防护；
+     - 默认资料规范化为 `{ nickName: '野生鼠鼠', avatarUrl: '/images/avatar.png', isLoggedIn: false }`。
+  3. **首页 (大厅) 登录态交互与资料编辑重构（已验证）**：
+     - `miniprogram/pages/index/index.wxml`：未登录态展示游客身份与醒目的“微信一键登录”引导胶囊；已登录态展示微信头像（带编辑小铅笔标）、微信昵称编辑框、`🛡️ 已连接`认证徽章及今日局数；
+     - `miniprogram/pages/index/index.wxss`：补充游客态虚线框、状态指示灯、登录微型胶囊与绿色已连接认证标签；
+     - `miniprogram/pages/index/index.js`：由直接操作 Storage 改为由 `UserManager` 订阅驱动，页面加载注册监听，页面销毁注销，切回前台静默校验会话。
+  4. **全套自动化测试 100% 绿色通过**：
+     - 新建 `scripts/verify_user_manager.js`，6 项核心用例（默认野生鼠鼠、登录状态流转、资料持久化、会话校验、登出、防泄漏）全部通过；
+     - 全套 9 项单测（用户管理、物资管理、运势算法、解耦架构、道具管理、地图背景、Planck 物理、爆汁特效、防吸附）全部 100% 绿色通过。
+  5. **版本号维护**：
+     - 从 `v1.8.8` 递增至 `v1.8.9`。
+- 涉及文件：
+  - `miniprogram/utils/userManager.js`
+  - `scripts/verify_user_manager.js`
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/app.js`
+  - `miniprogram/pages/index/index.wxml`
+  - `miniprogram/pages/index/index.wxss`
+  - `miniprogram/pages/index/index.js`
+  - `package.json`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-19] 运势搜刮目标双列并排重构、每日重抽分级控制与模板语法报红修复
 - 状态：已完成

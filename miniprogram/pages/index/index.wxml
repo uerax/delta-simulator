@@ -1,9 +1,11 @@
 <view class="portal-container">
   <!-- 顶部精简玩家栏 -->
   <view class="top-bar">
-    <view class="player-profile">
+    <!-- 已登录态：展示头像/编辑、昵称/修改、已连接标签 -->
+    <view wx:if="{{userProfile.isLoggedIn}}" class="player-profile">
       <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
         <image class="avatar-img" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
+        <view class="avatar-edit-badge">✎</view>
       </button>
       <view class="player-texts">
         <view class="nickname-box">
@@ -15,9 +17,30 @@
             bindblur="onNicknameBlur"
           />
         </view>
-        <text class="daily-badge">📅 今日已玩 {{todayRecord.plays}} 局</text>
+        <view class="profile-sub-row">
+          <text class="auth-tag">🛡️ 已连接</text>
+          <text class="daily-badge">今日已玩 {{todayRecord.plays}} 局</text>
+        </view>
       </view>
     </view>
+
+    <!-- 未登录态：一键微信登录入口 -->
+    <view wx:else class="player-profile guest-profile" bindtap="onWechatLogin">
+      <view class="avatar-box-guest">
+        <image class="avatar-img" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
+        <view class="guest-dot"></view>
+      </view>
+      <view class="player-texts">
+        <view class="guest-header">
+          <text class="guest-name">{{userProfile.nickName || '野生鼠鼠'}}</text>
+          <text class="guest-tag">游客</text>
+        </view>
+        <view class="login-prompt-pill">
+          <text class="login-prompt-text">微信一键登录 ›</text>
+        </view>
+      </view>
+    </view>
+
     <view class="coin-badge">
       <text class="coin-icon">🪙</text>
       <text class="coin-num">{{gameStats.coins}}</text>

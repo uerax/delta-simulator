@@ -51,6 +51,8 @@
   - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
 
 ## 工具库与数据层
+- **用户管理与微信登录服务 (UserManager)**：`miniprogram/utils/userManager.js`
+  - 核心能力：独立用户模块单例，封装 `wx.login` 临时凭证与微信登录状态机（未登录、登录中、已登录、登录失败），提供 `checkSession` 会话检测、`updateProfile` 资料同步（头像/昵称）、`logout` 登出与全局观察者（`on`/`off`/`_notify`）事件总线。
 - **触感与交互反馈 (Feedback)**：`miniprogram/utils/feedback.js`
   - 核心能力：自动识别开发者工具环境（`devtools` 跳过马达调用消除卡顿）、真机硬件震动适配、读取 `settings.vibrationEnabled` 用户配置。
 - **本地存储管理 (Storage)**：`miniprogram/utils/storage.js`

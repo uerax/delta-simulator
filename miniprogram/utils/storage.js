@@ -51,15 +51,22 @@ const Storage = {
    * 获取玩家信息
    */
   getUserProfile() {
+    const defaults = {
+      userId: '',
+      nickName: '野生鼠鼠',
+      avatarUrl: '/images/avatar.png',
+      isLoggedIn: false,
+      loginTime: null
+    };
     try {
       const data = wx.getStorageSync(STORAGE_KEYS.USER_PROFILE);
-      return data || {
-        nickName: '无名勇士',
-        avatarUrl: '/images/avatar.png'
-      };
+      if (!data || typeof data !== 'object') {
+        return { ...defaults };
+      }
+      return { ...defaults, ...data };
     } catch (e) {
       console.error('读取用户配置失败:', e);
-      return { nickName: '玩家', avatarUrl: '/images/avatar.png' };
+      return { ...defaults };
     }
   },
 
