@@ -1,6 +1,130 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.7`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+> **当前全局版本号**：`v1.8.8`（唯一权威事实源，用户明确指示未授权前不递增版本号）
+
+## [2026-09-19] 运势搜刮目标双列并排重构、每日重抽分级控制与模板语法报红修复
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **搜刮目标紧凑双列并排与老黄历标题居中（已验证）**：
+     - 将今日爆率与今日暴富容器重构为顶部紧凑双列卡片行（`duo-cards-row`），自上而下居中对齐，字号收敛至 26rpx，消灭右侧大面积发黑空白；
+     - 老黄历【宜】与【忌】徽章设置 `text-align: center;` 实现水平居中。
+  2. **每日1次免费重抽与特权交互轻量化（已验证）**：
+     - 当日首次点击免费重抽，消耗后按钮直显“今日重抽次数已用完”暗态样式，点击轻量 Toast 提示，隐藏无实际意义的 ActionSheet 弹窗；
+     - 合成非洲之心特权交互同步轻量化，底层广告（`@AdHook`）与支付（`@PayHook`）接口规范预留。
+  3. **大厅重置战绩按钮移除与 WXML 语法报红修复（已验证）**：
+     - 移除大厅底部重置战绩废弃按钮及事件；
+     - 修复 `fortune/index.wxml` 164 行雷达标点行内多层三元运算报红问题，下沉至 JS 端生成标准化 `spotStyle`；
+     - 修正合成非洲之心描述文本对齐 6 级红品定义。
+  4. **版本号维护**：
+     - 从 `v1.8.7` 递增至 `v1.8.8`。
+- 涉及文件：
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.wxss`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/games/fortune/fortuneAlgorithm.js`
+  - `miniprogram/games/watermelon/manifest.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/index/index.wxml`
+  - `miniprogram/pages/index/index.wxss`
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/utils/storage.js`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 移除大厅底部重置战绩按钮
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **大厅设置栏精简与重置入口移除（已验证）**：
+     - `pages/index/index.wxml`：移除底部 `.clear-data-text` 重置战绩按钮，仅保留震动反馈与游戏音效两大核心快捷开关；
+     - `pages/index/index.wxss`：清理 `.clear-data-text` 废弃样式类；
+     - `pages/index/index.js`：移除 `confirmResetData` 废弃事件处理函数。
+  2. **版本号维护**：
+     - 保持 `v1.8.7` 不变。
+- 涉及文件：
+  - `miniprogram/pages/index/index.wxml`
+  - `miniprogram/pages/index/index.wxss`
+  - `miniprogram/pages/index/index.js`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 运势与大西瓜特权交互简化（隐藏无效弹窗、按钮直显没次数）
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **运势按钮直显次数耗尽与隐藏无效 ActionSheet（已验证）**：
+     - 当日已消耗完 1 次免费重抽（`rerollCount >= 1`）时，按钮文案直接显示“今日重抽次数已用完”，并呈现暗态样式（`.btn-exhausted`），下方提示“明日 0 点自动刷新免费次数”；
+     - 点击已耗尽按钮时直接 Toast 提示“今日重抽次数已用完”，不再弹出无实际功能的 ActionSheet 选择弹窗；
+     - 底层广告（`handleWatchAdForReroll`）与支付（`handlePurchaseVipForReroll`）接口依然在代码中规范预留。
+  2. **合成非洲之心特权交互同步简化（已验证）**：
+     - 点击未解锁的道具预知与辅助瞄准时，隐藏 ActionSheet 弹窗，直接轻量提示“特权功能即将上线”；
+     - 底层方法（`handleWatchAdForPrivilege` / `handlePurchaseVipMember`）保持预留。
+  3. **自动化测试 100% 绿色通过**：
+     - 全套算法与小游戏回归无异常。
+  4. **版本号维护**：
+     - 保持 `v1.8.7` 不变。
+- 涉及文件：
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.wxss`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 运势每日1次免费重抽与广告/付费会员特权口子预留
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **运势重新抽签资格分级控制（已验证）**：
+     - 当日首次点击“重新抽签”（`rerollCount === 0`）时，享受每日 1 次免费重抽机会，扣除后 `rerollCount` 递增至 1，Toast 提示“已使用今日免费重抽机会”；
+     - 当日后续若需再次重抽（`rerollCount >= 1`），检查用户是否具备 VIP 会员身份或额外广告次数；若未具备，弹出选择弹窗预留获取次数入口。
+  2. **广告与付费会员特权全系统留口子对齐（已验证）**：
+     - `Storage`：扩展 `PRIVILEGES` 统一支持 `isVipMember` 会员标识、`extraRerollChances` 额外重抽次数充值与消耗、`isPrivilegeUnlocked` 会员继承穿透；
+     - `pages/fortune/index.js`：留好 `handleWatchAdForReroll`（激励视频广告实例 `@AdHook`）与 `handlePurchaseVipForReroll`（微信支付 `@PayHook`）预留函数与弹窗说明；
+     - `pages/fortune/index.wxml` & `wxss`：底部操作栏动态展现免费/特权徽章及次数提示；
+     - `pages/watermelon/index.js`：同步规范化 `onNextItemTap` 与 `onGuideLinePrivilegeTap`，为道具预知与辅助瞄准特权对齐提供观看广告体验与开通会员永久解锁的标准 ActionSheet 及代码口子。
+  3. **测试验证全部通过**：
+     - 特权充值/扣除/VIP 校验单测 100% 绿色通过，算法与小游戏全套回归无异常。
+  4. **版本号维护**：
+     - 保持 `v1.8.7` 不变。
+- 涉及文件：
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.wxss`
+  - `miniprogram/pages/watermelon/index.js`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 鼠鼠运势今日爆率/容器双列并排与老黄历宜忌标题居中
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **老黄历【宜】与【忌】标题居中调整（已验证）**：
+     - `pages/fortune/index.wxss`：`.almanac-badge` 样式添加 `text-align: center;`，使两列分栏顶部的【宜】和【忌】徽章水平严格居中，排版更对称整齐。
+  2. **版本号维护**：
+     - 保持 `v1.8.7` 不变。
+- 涉及文件：
+  - `miniprogram/pages/fortune/index.wxss`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 鼠鼠运势今日爆率与今日暴富容器双列并排布局重构
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **彻底解决空间浪费与右侧大面积空白（已验证）**：
+     - 重构前：模块 2（今日爆率）和 模块 4（今日暴富容器）各自独占一行通栏大卡片，图片偏左、右侧大面积发黑空白，且字体过大（38rpx/34rpx）导致排版笨重；
+     - 重构后：将两个搜刮目标整合为紧凑双列并排卡片行（`duo-cards-row`），左栏【💎 今日爆率】、右栏【📦 今日暴富容器】；
+     - 采用自上而下的对称居中流（小标题 -> 正方形图元 -> 紧凑名称 -> 属性胶囊），彻底消除了偏左和右侧空白。
+  2. **字体与视觉比例精致化调整（已验证）**：
+     - 标题缩小至 26rpx，物资与道具名称收敛至 26rpx（加粗、居中、单行省略防溢出）；
+     - 图标尺寸缩减至 104rpx，配以品质光晕与圆角；
+     - 整体高度缩减 50% 以上，屏幕空间利用率极大提升，一屏尽览核心战术目标。
+  3. **自动化测试与样式平衡性验证 100% 通过**：
+     - 样式大括号完全闭合平衡，7 项运势测试全部通过。
+  4. **版本号维护**：
+     - 保持 `v1.8.7` 不变。
+- 涉及文件：
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.wxss`
+  - `.claude/STATE.md`
 
 ## [2026-09-19] SupplyManager动态初始化与鼠鼠运势接入官方物资源
 - 状态：已完成

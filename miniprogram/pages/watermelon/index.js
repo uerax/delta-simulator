@@ -1089,11 +1089,11 @@ Page({
   },
 
   /**
-   * 点击下一个道具预览 (付费开启特权入口)
+   * 点击下一个道具预览 (付费开启特权入口，留好广告/付费会员口子)
    */
   onNextItemTap() {
     Feedback.impactLight();
-    if (this._privileges && this._privileges.nextItemPreview) {
+    if (this._privileges && (this._privileges.nextItemPreview || this._privileges.isVipMember)) {
       wx.showToast({
         title: '已激活道具预知特权',
         icon: 'success',
@@ -1101,19 +1101,20 @@ Page({
       });
       return;
     }
+    // 功能未上线前不弹无意义的 ActionSheet 弹窗，直接轻量提示
     wx.showToast({
-      title: '道具预知特权即将开放',
+      title: '道具预知特权即将上线',
       icon: 'none',
       duration: 1800
     });
   },
 
   /**
-   * 辅助瞄准导轨特权入口 (留好付费展开接口)
+   * 辅助瞄准导轨特权入口 (留好广告/付费会员口子)
    */
   onGuideLinePrivilegeTap() {
     Feedback.impactLight();
-    if (this._privileges && this._privileges.aimGuideLine) {
+    if (this._privileges && (this._privileges.aimGuideLine || this._privileges.isVipMember)) {
       wx.showToast({
         title: '已激活辅助瞄准特权',
         icon: 'success',
@@ -1121,10 +1122,76 @@ Page({
       });
       return;
     }
+    // 功能未上线前不弹无意义的 ActionSheet 弹窗，直接轻量提示
     wx.showToast({
-      title: '辅助瞄准特权即将开放',
+      title: '辅助瞄准特权即将上线',
       icon: 'none',
       duration: 1800
+    });
+  },
+
+  /**
+   * 弹出特权开通选择弹窗 (留好广告/会员购买口子)
+   */
+  _showWatermelonPrivilegeActionSheet(privilegeKey, privilegeName) {
+    wx.showActionSheet({
+      itemList: [
+        `📺 观看广告本局体验【${privilegeName}】(预留)`,
+        '👑 开通特权会员永久解锁全特权 (预留)'
+      ],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.handleWatchAdForPrivilege(privilegeKey, privilegeName);
+        } else if (res.tapIndex === 1) {
+          this.handlePurchaseVipMember();
+        }
+      },
+      fail: () => {}
+    });
+  },
+
+  /**
+   * 观看广告临时解锁本局特权 (留好口子)
+   * @todo 后续接入微信广告组件 wx.createRewardedVideoAd
+   */
+  handleWatchAdForPrivilege(privilegeKey, privilegeName) {
+    Feedback.impactLight();
+    // @AdHook: 预留微信激励视频广告实例接口
+    /*
+    if (typeof wx !== 'undefined' && wx.createRewardedVideoAd) {
+      const rewardedVideoAd = wx.createRewardedVideoAd({ adUnitId: 'YOUR_AD_UNIT_ID' });
+      rewardedVideoAd.show().catch(() => rewardedVideoAd.load().then(() => rewardedVideoAd.show()));
+      rewardedVideoAd.onClose((res) => {
+        if (res && res.isEnded) {
+          this._activateTempPrivilege(privilegeKey);
+        }
+      });
+      return;
+    }
+    */
+    wx.showModal({
+      title: `解锁【${privilegeName}】`,
+      content: '激励视频广告接口联调中，即将上线观看广告免费体验本局特权功能！',
+      showCancel: false,
+      confirmText: '我知道了'
+    });
+  },
+
+  /**
+   * 开通特权会员永久解锁 (留好口子)
+   * @todo 后续接入微信支付 (wx.requestPayment)
+   */
+  handlePurchaseVipMember() {
+    Feedback.impactLight();
+    // @PayHook: 预留微信支付开通特权会员接口
+    /*
+    wx.requestPayment({ ... });
+    */
+    wx.showModal({
+      title: '特权会员中心',
+      content: '特权会员包含合成非洲之心辅助瞄准、道具透视、运势无限重抽等全家桶特权，支付接口联调中，即将上线！',
+      showCancel: false,
+      confirmText: '敬请期待'
     });
   },
 

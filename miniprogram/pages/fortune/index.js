@@ -289,6 +289,10 @@ Page({
     luckyMap.mapOffsetX = offset.x;
     luckyMap.mapOffsetY = offset.y;
 
+    const spotCoordX = (luckyMap.spotCoord && luckyMap.spotCoord.x !== undefined) ? luckyMap.spotCoord.x : 50;
+    const spotCoordY = (luckyMap.spotCoord && luckyMap.spotCoord.y !== undefined) ? luckyMap.spotCoord.y : 50;
+    luckyMap.spotStyle = `left: ${spotCoordX}%; top: ${spotCoordY}%;`;
+
     // 强力自愈校准：无论历史缓存残留何种旧数据，一律使用 supplyManager 官方最新图片与描述
     let luckyContainer = fortune.luckyContainer ? { ...fortune.luckyContainer } : null;
     if (luckyContainer && luckyContainer.name) {
@@ -393,7 +397,7 @@ Page({
   },
 
   /**
-   * 点击逆天改命 (付费/激励 Reroll，打破旧随机)
+   * 点击重新抽签 (每日首次免费，后续走付费/广告特权次数)
    */
   onReroll() {
     try {
@@ -408,28 +412,138 @@ Page({
     if (this.data.fortune && this.data.fortune.luckyLevel === 6) {
       wx.showModal({
         title: '欧气预警',
-        content: '今日已是 6级【大红】天命绝密运势！确定还要逆天改命重新抽签吗？',
-        confirmText: '坚持改运',
+        content: '今日已是 6级【大红】天命绝密运势！确定还要重新抽签吗？',
+        confirmText: '坚持重抽',
         cancelText: '保留大红',
         confirmColor: '#E03A3E',
         success: (res) => {
           if (res.confirm) {
-            this._executeReroll();
+            this._checkRerollEligibilityAndRun();
           }
         }
       });
       return;
     }
 
-    this._executeReroll();
+    this._checkRerollEligibilityAndRun();
+  },
+
+  /**
+   * 检查重新抽签资格并执行 (每日首次免费，后续需通过广告或会员获取次数，留好口子)
+   */
+  _checkRerollEligibilityAndRun() {
+    const currentReroll = this.engine.rerollCount || 0;
+
+    // 1. 每日享受 1 次免费重新抽签
+    if (currentReroll === 0) {
+      this._executeReroll({ isFreeDaily: true, isPaid: false });
+      return;
+    }
+
+    // 2. 后续重抽：检查会员特权或额外次数
+    const isVip = Storage.isVipMember ? Storage.isVipMember() : false;
+    const privs = Storage.getPrivileges ? Storage.getPrivileges() : {};
+    const extraChances = privs.extraRerollChances || 0;
+
+    if (isVip) {
+      // VIP 会员享有无限重抽特权
+      this._executeReroll({ isFreeDaily: false, isPaid: true, reason: 'vip' });
+      return;
+    }
+
+    if (extraChances > 0) {
+      // 消耗通过广告/付费获得的额外次数
+      Storage.consumeExtraRerollChance();
+      this._executeReroll({ isFreeDaily: false, isPaid: true, reason: 'extra' });
+      return;
+    }
+
+    // 3. 免费机会已用完：功能未上线前直接提示没次数，不弹无效的 ActionSheet 弹窗
+    wx.showToast({
+      title: '今日重抽次数已用完',
+      icon: 'none',
+      duration: 1800
+    });
+  },
+
+  /**
+   * 弹出获取重抽次数选择弹窗 (预留接口：待广告/支付上线后开启)
+   */
+  _showRerollPrivilegeModal() {
+    wx.showActionSheet({
+      itemList: ['📺 观看广告获得 1 次重抽 (预留)', '👑 开通特权会员无限重抽 (预留)'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.handleWatchAdForReroll();
+        } else if (res.tapIndex === 1) {
+          this.handlePurchaseVipForReroll();
+        }
+      },
+      fail: () => {}
+    });
+  },
+
+  /**
+   * 观看激励视频广告获取重新抽签次数 (留好口子)
+   * @todo 后续接入微信广告组件 wx.createRewardedVideoAd
+   */
+  handleWatchAdForReroll() {
+    try {
+      Feedback.light();
+    } catch (e) {}
+
+    // @AdHook: 预留微信激励视频广告实例接口
+    /*
+    if (typeof wx !== 'undefined' && wx.createRewardedVideoAd) {
+      const rewardedVideoAd = wx.createRewardedVideoAd({ adUnitId: 'YOUR_AD_UNIT_ID' });
+      rewardedVideoAd.show().catch(() => rewardedVideoAd.load().then(() => rewardedVideoAd.show()));
+      rewardedVideoAd.onClose((res) => {
+        if (res && res.isEnded) {
+          Storage.addExtraRerollChances(1);
+          this._checkRerollEligibilityAndRun();
+        }
+      });
+      return;
+    }
+    */
+
+    wx.showModal({
+      title: '获取重抽次数',
+      content: '今日 1 次免费重新抽签机会已用完。激励广告接口联调中，即将开放观看广告获取次数功能！',
+      showCancel: false,
+      confirmText: '我知道了'
+    });
+  },
+
+  /**
+   * 会员特权购买入口 (留好口子)
+   * @todo 后续接入微信支付 (wx.requestPayment) 或云开发支付
+   */
+  handlePurchaseVipForReroll() {
+    try {
+      Feedback.light();
+    } catch (e) {}
+
+    // @PayHook: 预留微信支付接口
+    /*
+    wx.requestPayment({ ... });
+    */
+
+    wx.showModal({
+      title: '特权会员专享',
+      content: '特权会员可享每日无限重新抽签、合成非洲之心辅助瞄准、下一个道具透视等专属特权，支付接口联调中，即将上线！',
+      showCancel: false,
+      confirmText: '敬请期待'
+    });
   },
 
   /**
    * 执行改运算法与数据刷新
    */
-  _executeReroll() {
+  _executeReroll(options = {}) {
+    const { isFreeDaily = false, isPaid = false, reason = '' } = options;
     try {
-      const rerollRes = this.engine.reroll({ isPaid: true });
+      const rerollRes = this.engine.reroll({ isPaid });
       const normalized = this._normalizeFortune(rerollRes.fortune);
       const mapTiles = this._setupMapTiles(normalized.luckyMap);
       this.setData({
@@ -441,8 +555,18 @@ Page({
       try {
         Feedback.heavy();
       } catch (e) {}
+
+      let toastTitle = '重新抽签成功！';
+      if (isFreeDaily) {
+        toastTitle = '已使用今日免费重抽机会';
+      } else if (reason === 'vip') {
+        toastTitle = '特权会员：保底已生效';
+      } else {
+        toastTitle = '改运成功！保底已激活';
+      }
+
       wx.showToast({
-        title: '改运成功！保底已激活',
+        title: toastTitle,
         icon: 'success',
         duration: 1500
       });

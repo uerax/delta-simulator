@@ -135,24 +135,5 @@ Page({
     const soundEnabled = e.detail.value;
     const updated = Storage.saveSettings({ soundEnabled });
     this.setData({ settings: updated });
-  },
-
-  // 重置数据
-  confirmResetData() {
-    wx.showModal({
-      title: '提示',
-      content: '确定要清空所有本地战绩吗？',
-      confirmColor: '#f38ba8',
-      success: (res) => {
-        if (res.confirm) {
-          Storage.clearAll();
-          this.refreshAllData();
-          wx.showToast({
-            title: '已重置本地数据',
-            icon: 'success'
-          });
-        }
-      }
-    });
   }
 });

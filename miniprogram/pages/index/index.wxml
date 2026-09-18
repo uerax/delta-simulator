@@ -67,7 +67,7 @@
     </block>
   </view>
 
-  <!-- 底部快捷设置与重置 -->
+  <!-- 底部快捷设置 -->
   <view class="footer-settings">
     <view class="setting-item">
       <text class="setting-text">震动反馈</text>
@@ -76,9 +76,6 @@
     <view class="setting-item">
       <text class="setting-text">游戏音效</text>
       <switch checked="{{settings.soundEnabled}}" bindchange="onToggleSound" color="#89b4fa" />
-    </view>
-    <view class="clear-data-text" bindtap="confirmResetData">
-      <text>重置战绩</text>
     </view>
   </view>
 </view>

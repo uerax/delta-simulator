@@ -285,43 +285,120 @@ page {
 }
 
 /* ------------------------------------------ */
-/* 模块 2: 鼠鼠今日爆率 (Item Module)         */
+/* 模块 2: 双列核心搜刮目标 (爆率道具 + 暴富容器) */
 /* ------------------------------------------ */
-.item-showcase {
+.duo-cards-row {
   display: flex;
-  align-items: center;
-  padding: 10rpx 0;
+  gap: 20rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.item-img-wrap {
-  width: 140rpx;
-  height: 140rpx;
-  border-radius: 24rpx;
-  border: 3rpx solid #45475a;
+.duo-target-card {
+  flex: 1;
+  padding: 24rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.duo-card-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 32rpx;
+  margin-bottom: 16rpx;
+  width: 100%;
+}
+
+.duo-header-icon {
+  font-size: 26rpx;
+  margin-right: 8rpx;
+}
+
+.duo-header-title {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #cdd6f4;
+  letter-spacing: 0.5rpx;
+}
+
+.duo-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.duo-img-wrap {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 20rpx;
+  background: #1e1e2e;
+  border: 2rpx solid #45475a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  box-sizing: border-box;
   flex-shrink: 0;
 }
 
-.item-img {
-  width: 110rpx;
-  height: 110rpx;
+.duo-img-wrap.red {
+  border-color: #E03A3E;
+  box-shadow: 0 0 16rpx rgba(224, 58, 62, 0.35);
 }
 
-.item-info {
-  flex: 1;
-  display: flex;
-  align-items: center;
+.duo-img-wrap.orange {
+  border-color: #F59E0B;
+  box-shadow: 0 0 16rpx rgba(245, 158, 11, 0.35);
 }
 
-.item-name {
-  font-size: 38rpx;
+.duo-img {
+  width: 82rpx;
+  height: 82rpx;
+}
+
+.duo-name-text {
+  font-size: 26rpx;
   font-weight: bold;
   color: #cdd6f4;
-  letter-spacing: 1rpx;
+  margin-bottom: 8rpx;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
   line-height: 1.3;
+}
+
+.duo-pill-tag {
+  font-size: 20rpx;
+  padding: 3rpx 12rpx;
+  border-radius: 10rpx;
+  border: 1rpx solid transparent;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duo-pill-tag.red {
+  color: #E03A3E;
+  border-color: rgba(224, 58, 62, 0.4);
+  background: rgba(224, 58, 62, 0.15);
+}
+
+.duo-pill-tag.orange {
+  color: #F59E0B;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.duo-pill-tag.default {
+  color: #9CA3AF;
+  border-color: #45475a;
+  background: rgba(156, 163, 175, 0.12);
 }
 
 /* ------------------------------------------ */
@@ -487,73 +564,6 @@ page {
 }
 
 /* ------------------------------------------ */
-/* 模块 4: 今日暴富容器 (独立模块)            */
-/* ------------------------------------------ */
-.tactics-container-module {
-  display: flex;
-  flex-direction: column;
-}
-
-.container-showcase {
-  display: flex;
-  align-items: center;
-  padding: 8rpx 0;
-}
-
-.container-icon-wrap {
-  width: 130rpx;
-  height: 130rpx;
-  border-radius: 20rpx;
-  background: #1e1e2e;
-  border: 2rpx solid #45475a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 28rpx;
-  flex-shrink: 0;
-  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.3);
-}
-
-.container-icon-img {
-  width: 96rpx;
-  height: 96rpx;
-}
-
-.container-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.container-name-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10rpx;
-}
-
-.container-name {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #cdd6f4;
-}
-
-.container-type-pill {
-  font-size: 22rpx;
-  color: #fab387;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1rpx solid rgba(245, 158, 11, 0.35);
-  padding: 4rpx 14rpx;
-  border-radius: 12rpx;
-}
-
-.container-desc-text {
-  font-size: 24rpx;
-  color: #a6adc8;
-  line-height: 1.5;
-}
-
-/* ------------------------------------------ */
 /* 模块 4: 战术老黄历与锦囊 (Almanac)         */
 /* ------------------------------------------ */
 .almanac-grid {
@@ -583,6 +593,7 @@ page {
   font-size: 26rpx;
   font-weight: 900;
   margin-bottom: 16rpx;
+  text-align: center;
 }
 
 .yi-badge {
@@ -710,6 +721,52 @@ page {
   background: linear-gradient(135deg, #f9e2af 0%, #fab387 50%, #f38ba8 100%);
   color: #11111b;
   box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.35);
+}
+
+.reroll-btn.btn-exhausted {
+  background: #25263a;
+  color: #6c7086;
+  border: 1rpx solid #45475a;
+  box-shadow: none;
+}
+
+.reroll-btn.btn-exhausted:active {
+  transform: none;
+  opacity: 1;
+}
+
+.btn-main-text {
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+.btn-status-pill {
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  line-height: 1.2;
+  margin-left: 10rpx;
+  font-weight: bold;
+}
+
+.btn-status-pill.pill-free {
+  background: rgba(16, 185, 129, 0.25);
+  color: #064e3b;
+  border: 1rpx solid rgba(16, 185, 129, 0.4);
+}
+
+.btn-status-pill.pill-vip {
+  background: rgba(17, 17, 27, 0.35);
+  color: #11111b;
+  border: 1rpx solid rgba(17, 17, 27, 0.3);
+}
+
+.reroll-hint-text {
+  font-size: 22rpx;
+  color: #a6adc8;
+  text-align: center;
+  margin-top: 4rpx;
+  margin-bottom: 4rpx;
 }
 
 .btn-icon {

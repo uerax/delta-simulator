@@ -279,9 +279,3 @@ page {
   font-size: 26rpx;
   color: #a6adc8;
 }
-
-.clear-data-text {
-  font-size: 24rpx;
-  color: #f38ba8;
-  padding: 8rpx 16rpx;
-}

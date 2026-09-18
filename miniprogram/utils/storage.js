@@ -422,18 +422,20 @@ const Storage = {
   },
 
   /**
-   * 获取付费特权配置 (辅助瞄准虚线、下一个道具透视等)
-   * @returns {object} { aimGuideLine: boolean, nextItemPreview: boolean }
+   * 获取付费特权配置 (辅助瞄准虚线、下一个道具透视、会员身份、额外重抽次数等)
+   * @returns {object} { aimGuideLine: boolean, nextItemPreview: boolean, isVipMember: boolean, extraRerollChances: number }
    */
   getPrivileges() {
     try {
       const data = wx.getStorageSync(STORAGE_KEYS.PRIVILEGES);
       return data || {
-        aimGuideLine: false,    // 辅助瞄准虚线导轨 (默认隐藏，需付费开启)
-        nextItemPreview: false  // 下一个道具透视预知 (默认打码加锁，需付费开启)
+        aimGuideLine: false,       // 辅助瞄准虚线导轨 (默认隐藏，需付费/会员开启)
+        nextItemPreview: false,    // 下一个道具透视预知 (默认打码加锁，需付费/会员开启)
+        isVipMember: false,        // 会员身份 (全特权解锁 + 运势无限重抽)
+        extraRerollChances: 0      // 运势额外改运次数 (看广告或单独购买获得)
       };
     } catch (e) {
-      return { aimGuideLine: false, nextItemPreview: false };
+      return { aimGuideLine: false, nextItemPreview: false, isVipMember: false, extraRerollChances: 0 };
     }
   },
 
@@ -454,18 +456,53 @@ const Storage = {
   },
 
   /**
-   * 检查指定特权是否已解锁
+   * 检查指定特权是否已解锁 (若是 VIP 会员直接返回 true)
    * @param {string} privilegeKey
    * @returns {boolean}
    */
   isPrivilegeUnlocked(privilegeKey) {
     const privs = this.getPrivileges();
+    if (privs && privs.isVipMember) return true;
     return !!(privs && privs[privilegeKey]);
   },
 
   /**
+   * 检查是否为会员
+   * @returns {boolean}
+   */
+  isVipMember() {
+    const privs = this.getPrivileges();
+    return !!(privs && privs.isVipMember);
+  },
+
+  /**
+   * 增加运势额外重抽次数 (看广告或单独购买后调用)
+   * @param {number} count 增加次数，默认 1
+   */
+  addExtraRerollChances(count = 1) {
+    const privs = this.getPrivileges();
+    const current = privs.extraRerollChances || 0;
+    return this.savePrivileges({ extraRerollChances: current + count });
+  },
+
+  /**
+   * 消耗一次运势额外重抽次数
+   * @returns {boolean} 是否消耗成功
+   */
+  consumeExtraRerollChance() {
+    const privs = this.getPrivileges();
+    if (privs.isVipMember) return true; // 会员免消耗
+    const current = privs.extraRerollChances || 0;
+    if (current > 0) {
+      this.savePrivileges({ extraRerollChances: current - 1 });
+      return true;
+    }
+    return false;
+  },
+
+  /**
    * 解锁指定付费特权 (留给未来支付成功或特权购买回调)
-   * @param {string} privilegeKey 'aimGuideLine' | 'nextItemPreview' 等
+   * @param {string} privilegeKey 'aimGuideLine' | 'nextItemPreview' | 'isVipMember' 等
    */
   unlockPrivilege(privilegeKey) {
     return this.savePrivileges({ [privilegeKey]: true });

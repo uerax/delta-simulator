@@ -85,20 +85,43 @@
       <view class="ad-placeholder">战术赞助广告位 (预留)</view>
     </view>
 
-    <!-- 模块 2: 鼠鼠今日爆率卡片 -->
-    <view class="module-card item-module">
-      <view class="module-header">
-        <text class="module-title-icon">💎</text>
-        <text class="module-title">鼠鼠今日爆率</text>
+    <!-- 模块 2: 双列核心搜刮目标 (今日爆率 + 今日暴富容器 并排呈现) -->
+    <view class="duo-cards-row">
+      <!-- 左卡片: 今日爆率道具 -->
+      <view class="module-card duo-target-card">
+        <view class="duo-card-header">
+          <text class="duo-header-icon">💎</text>
+          <text class="duo-header-title">今日爆率</text>
+        </view>
+        <view class="duo-card-body">
+          <view class="duo-img-wrap" style="background: {{fortune.luckyItem.theme ? fortune.luckyItem.theme.bgGradient : fortune.bgColorHex}}; border-color: {{fortune.colorHex}}; box-shadow: 0 0 16rpx {{fortune.colorHex}}35;">
+            <image class="duo-img" src="{{fortune.luckyItem.pic}}" mode="aspectFit"></image>
+          </view>
+          <view class="duo-name-text">{{fortune.luckyItem.name}}</view>
+          <view class="duo-pill-tag" style="background: {{fortune.colorHex}}1a; color: {{fortune.colorHex}}; border-color: {{fortune.colorHex}}40;">
+            {{fortune.luckyLevel}}级·{{fortune.levelName}}
+          </view>
+        </view>
       </view>
 
-      <view class="item-showcase">
-        <view class="item-img-wrap" style="background: {{fortune.luckyItem.theme ? fortune.luckyItem.theme.bgGradient : fortune.bgColorHex}}; border-color: {{fortune.colorHex}}; box-shadow: 0 0 24rpx {{fortune.colorHex}}40;">
-          <image class="item-img" src="{{fortune.luckyItem.pic}}" mode="aspectFit"></image>
+      <!-- 右卡片: 今日暴富容器 -->
+      <view class="module-card duo-target-card">
+        <view class="duo-card-header">
+          <text class="duo-header-icon">📦</text>
+          <text class="duo-header-title">今日暴富容器</text>
         </view>
-
-        <view class="item-info">
-          <text class="item-name">{{fortune.luckyItem.name}}</text>
+        <view class="duo-card-body">
+          <view class="duo-img-wrap {{fortune.luckyContainer.color}}">
+            <image class="duo-img" src="{{fortune.luckyContainer.pic}}" mode="aspectFit"></image>
+          </view>
+          <view class="duo-name-text">{{fortune.luckyContainer.name}}</view>
+          <view class="duo-pill-tag {{fortune.luckyContainer.color}}">
+            <text wx:if="{{fortune.luckyContainer.color === 'red'}}">🏆 绝密核心</text>
+            <text wx:elif="{{fortune.luckyContainer.color === 'orange'}}">💎 高价值点</text>
+            <text wx:elif="{{fortune.luckyContainer.type === 'radiation'}}">☢️ 辐射设施</text>
+            <text wx:elif="{{fortune.luckyContainer.type === 'core'}}">🏆 高出金点</text>
+            <text wx:else>📦 战术搜刮</text>
+          </view>
         </view>
       </view>
     </view>
@@ -137,42 +160,14 @@
             </view>
             <view class="matrix-grid-overlay"></view>
 
-            <!-- 战术雷达标点 (全地图绝对百分比定位) -->
-            <view class="radar-ping-anchor" style="left: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.x : 50}}%; top: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.y : 50}}%;">
+            <!-- 战术雷达标点 (全地图绝对百分比定位，绑定标准化 spotStyle) -->
+            <view class="radar-ping-anchor" style="{{fortune.luckyMap.spotStyle}}">
               <view class="radar-pulse-ring"></view>
               <view class="radar-center-dot"></view>
               <view class="radar-spot-tag">{{fortune.luckyMap.spot}}</view>
             </view>
           </movable-view>
         </movable-area>
-      </view>
-    </view>
-
-    <!-- 模块 4: 今日暴富容器卡片 (独立模块，带容器官方图元与定位) -->
-    <view class="module-card tactics-container-module">
-      <view class="module-header">
-        <text class="module-title-icon">📦</text>
-        <text class="module-title">今日暴富容器</text>
-      </view>
-
-      <view class="container-showcase">
-        <view class="container-icon-wrap" style="{{fortune.luckyContainer.color === 'red' ? 'border-color: #E03A3E; box-shadow: 0 0 16rpx rgba(224,58,62,0.3);' : (fortune.luckyContainer.color === 'orange' ? 'border-color: #F59E0B; box-shadow: 0 0 16rpx rgba(245,158,11,0.3);' : '')}}">
-          <image class="container-icon-img" src="{{fortune.luckyContainer.pic}}" mode="aspectFit"></image>
-        </view>
-
-        <view class="container-info">
-          <view class="container-name-row">
-            <text class="container-name">{{fortune.luckyContainer.name}}</text>
-            <view class="container-type-pill" style="{{fortune.luckyContainer.color === 'red' ? 'color: #E03A3E; border-color: rgba(224,58,62,0.4); background: rgba(224,58,62,0.12);' : (fortune.luckyContainer.color === 'orange' ? 'color: #F59E0B; border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.12);' : '')}}">
-              <text wx:if="{{fortune.luckyContainer.color === 'red'}}">🏆 绝密核心点</text>
-              <text wx:elif="{{fortune.luckyContainer.color === 'orange'}}">💎 高价值点位</text>
-              <text wx:elif="{{fortune.luckyContainer.type === 'radiation'}}">☢️ 辐射特种设施</text>
-              <text wx:elif="{{fortune.luckyContainer.type === 'core'}}">🏆 高价值出金点</text>
-              <text wx:else>📦 战术搜刮点</text>
-            </view>
-          </view>
-          <view class="container-desc-text" wx:if="{{fortune.luckyContainer.desc}}">{{fortune.luckyContainer.desc}}</view>
-        </view>
       </view>
     </view>
 
@@ -235,9 +230,15 @@
 
     <!-- 模块 5: 底部操作栏 -->
     <view class="action-module">
-      <button class="primary-btn reroll-btn" bindtap="onReroll">
-        重新抽签
+      <button class="primary-btn reroll-btn {{rerollCount > 0 ? 'btn-exhausted' : ''}}" bindtap="onReroll">
+        <text class="btn-main-text" wx:if="{{rerollCount === 0}}">重新抽签</text>
+        <text class="btn-status-pill pill-free" wx:if="{{rerollCount === 0}}">今日免费</text>
+        <text class="btn-main-text" wx:else>今日重抽次数已用完</text>
       </button>
+      <view class="reroll-hint-text">
+        <text wx:if="{{rerollCount === 0}}">⚡ 每日享受 1 次免费重新抽签机会</text>
+        <text wx:else>明日 0 点自动刷新免费次数</text>
+      </view>
 
       <button class="secondary-btn" bindtap="goHome">
         返回鼠鼠大厅

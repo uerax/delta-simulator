@@ -257,6 +257,7 @@ function calculateDailyFortune({ dateStr, userId, rerollCount = 0, isPaid = fals
     desc: rawLuckyMap.desc,
     spot: luckySpotName,
     spotCoord: spotCoord,
+    spotStyle: `left: ${spotCoord.x}%; top: ${spotCoord.y}%;`,
     centerTile: centerTile,
     tileUrlTemplate: tileUrlTemplate,
     tileUrl: `${cdnTileBase}3_${centerTile.col}_${centerTile.row}.jpg`,

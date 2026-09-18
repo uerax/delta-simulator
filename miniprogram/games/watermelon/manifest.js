@@ -10,7 +10,7 @@ module.exports = {
   // 官方已备案国内 CDN 非洲之心透明背景图
   iconUrl: 'https://playerhub.df.qq.com/playerhub/60004/object/15080050006.png',
   tag: '物理消除 / 绝密红品',
-  desc: '三角洲摸金版《合成非洲之心》！从含氟牙膏一路碰撞合成，冲击终极绝密大金非洲之心！',
+  desc: '三角洲摸金版《合成非洲之心》！从含氟牙膏一路碰撞合成，冲击终极绝密大红非洲之心！',
   // 6级红品专属暗红底色与高光渐变 (严格对齐 LEVEL_THEMES[6])
   bgGradient: 'linear-gradient(135deg, rgba(224, 58, 62, 0.45) 0%, #361a1c 100%)',
   boxStyle: 'border: 2rpx solid #E03A3E; box-shadow: 0 4rpx 16rpx rgba(224, 58, 62, 0.4);',
