@@ -35,11 +35,12 @@ function checkIsDevTools() {
 const Feedback = {
   /**
    * 触发短触感震动
-   * @param {boolean} enabled 是否开启了震动配置
-   * @param {'light' | 'medium' | 'heavy'} type 触感轻重
+   * @param {boolean} [enabled=true] 是否开启了震动配置 (未传则自动读取 storage)
+   * @param {'light' | 'medium' | 'heavy'} [type='light'] 触感轻重
    */
-  vibrateShort(enabled = true, type = 'light') {
-    if (!enabled || checkIsDevTools()) return;
+  vibrateShort(enabled, type = 'light') {
+    const isEnabled = this._resolveEnabled(enabled);
+    if (!isEnabled || checkIsDevTools()) return;
     try {
       wx.vibrateShort({ type });
     } catch (e) {
@@ -49,15 +50,78 @@ const Feedback = {
 
   /**
    * 触发长震动
-   * @param {boolean} enabled 是否开启了震动配置
+   * @param {boolean} [enabled=true] 是否开启了震动配置 (未传则自动读取 storage)
    */
-  vibrateLong(enabled = true) {
-    if (!enabled || checkIsDevTools()) return;
+  vibrateLong(enabled) {
+    const isEnabled = this._resolveEnabled(enabled);
+    if (!isEnabled || checkIsDevTools()) return;
     try {
       wx.vibrateLong();
     } catch (e) {
       // 容错兜底
     }
+  },
+
+  /**
+   * 便捷轻触感震动
+   * @param {boolean} [enabled] 可选
+   */
+  light(enabled) {
+    this.vibrateShort(enabled, 'light');
+  },
+
+  /**
+   * 便捷中度触感震动
+   * @param {boolean} [enabled] 可选
+   */
+  medium(enabled) {
+    this.vibrateShort(enabled, 'medium');
+  },
+
+  /**
+   * 便捷重度触感震动
+   * @param {boolean} [enabled] 可选
+   */
+  heavy(enabled) {
+    this.vibrateShort(enabled, 'heavy');
+  },
+
+  /**
+   * 冲击轻震动别名 (与部分页面调用兼容)
+   */
+  impactLight(enabled) {
+    this.vibrateShort(enabled, 'light');
+  },
+
+  /**
+   * 冲击中震动别名
+   */
+  impactMedium(enabled) {
+    this.vibrateShort(enabled, 'medium');
+  },
+
+  /**
+   * 冲击重震动别名
+   */
+  impactHeavy(enabled) {
+    this.vibrateShort(enabled, 'heavy');
+  },
+
+  /**
+   * 内部解析是否开启震动
+   * @private
+   */
+  _resolveEnabled(enabled) {
+    if (typeof enabled === 'boolean') return enabled;
+    try {
+      if (typeof wx !== 'undefined' && typeof wx.getStorageSync === 'function') {
+        const settings = wx.getStorageSync('delta_settings') || {};
+        return settings.vibrationEnabled !== false;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return true;
   },
 
   /**

@@ -10,8 +10,9 @@
 - **游戏注册中心 (Game Registry)**：`miniprogram/games/registry.js`
   - 核心能力：聚合所有小游戏 manifest，提供 `getAllGames`, `getGame`, `getLobbyList`。
 - **游戏 1：今日鼠鼠运势 (Fortune)**：`miniprogram/games/fortune/`
-  - 核心伪随机与抽样算法：`fortuneAlgorithm.js`（MurmurHash3 雪崩散列 + Mulberry32 PRNG 步进抽样，地图/道具唯一键升序防乱序）
-  - 吉凶与战术箴言文案库：`fortuneConfig.js`（1~6 级品质映射大吉~大凶，海量建议池预留口子，支持 `{map}` 与 `{item}` 占位符）
+  - 核心伪随机与抽样算法：`fortuneAlgorithm.js`（MurmurHash3 雪崩散列 + Mulberry32 PRNG 步进抽样，地图/道具/容器/地标全自然升序保序）
+  - 独立文案与词库字典：`fortuneCopywriting.js`（1~6 级黑话与吉凶映射、老黄历宜忌、战术建议池、地标词库、战术容器字典，纯文案维护）
+  - 规则参数与权重配置：`fortuneConfig.js`（正态钟形免费加权池、付费改运保底加权池，引入 copywriting 解耦）
   - 纯 JS 逻辑与持久化驱动引擎：`engine.js`（`FortuneEngine`，自动管理跨天重置、幂等运势读取、付费改运/逆天改命 Reroll 接口）
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
 - **游戏 2：合成非洲之心 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`

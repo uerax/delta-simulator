@@ -351,9 +351,9 @@ const Storage = {
   saveFortuneRecord(fortuneResult, rerollCount = 0) {
     try {
       const today = getTodayString();
-      const sign = (fortuneResult && fortuneResult.fortune && fortuneResult.fortune.sign) || '吉';
+      const levelTitle = (fortuneResult && fortuneResult.levelName) || (fortuneResult && fortuneResult.fortune && fortuneResult.fortune.sign) || '小金';
       const itemName = (fortuneResult && fortuneResult.luckyItem && fortuneResult.luckyItem.name) || '未知物资';
-      const todayFortuneLabel = `${sign} · ${itemName}`;
+      const todayFortuneLabel = `${levelTitle} · ${itemName}`;
 
       return this.saveGameRecord('fortune', {
         todayDate: today,

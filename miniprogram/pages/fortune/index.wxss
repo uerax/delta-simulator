@@ -1,4 +1,5 @@
 /* pages/fortune/index.wxss */
+
 page {
   background-color: #1e1e2e;
   color: #cdd6f4;
@@ -6,17 +7,24 @@ page {
   box-sizing: border-box;
 }
 
-.fortune-container {
+.fortune-page {
+  padding: 24rpx 28rpx 60rpx;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60rpx 40rpx;
-  min-height: 90vh;
-  box-sizing: border-box;
 }
 
-.placeholder-card {
+/* ========================================== */
+/* 状态 A: 封印启封卡片 (Ready View)          */
+/* ========================================== */
+.ready-view {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seal-card {
   width: 100%;
   background: #313244;
   border: 2rpx solid #45475a;
@@ -25,79 +33,714 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
-  text-align: center;
 }
 
-.icon-bubble {
+.seal-bubble {
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(224, 58, 62, 0.45) 0%, #361a1c 100%);
-  border: 3rpx solid #E03A3E;
+  border: 4rpx solid #E03A3E;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 32rpx;
+  margin-bottom: 28rpx;
   box-shadow: 0 0 35rpx rgba(224, 58, 62, 0.4);
 }
 
-.fortune-icon-img {
-  width: 120rpx;
-  height: 120rpx;
-  display: block;
+.seal-icon {
+  width: 110rpx;
+  height: 110rpx;
 }
 
-.title {
+.seal-title {
   font-size: 44rpx;
   font-weight: bold;
   color: #cdd6f4;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
 }
 
-.badge {
-  display: inline-block;
-  background: rgba(224, 58, 62, 0.15);
-  color: #fab387;
-  border: 1rpx solid rgba(224, 58, 62, 0.4);
-  padding: 8rpx 24rpx;
-  border-radius: 30rpx;
-  font-size: 24rpx;
-  margin-bottom: 32rpx;
-}
-
-.desc {
-  font-size: 28rpx;
-  color: #bac2de;
-  line-height: 1.6;
-  margin-bottom: 24rpx;
-}
-
-.tips {
-  font-size: 24rpx;
+.seal-subtitle {
+  font-size: 26rpx;
   color: #a6adc8;
-  background: #1e1e2e;
-  padding: 24rpx;
-  border-radius: 20rpx;
-  width: 100%;
-  margin-bottom: 48rpx;
-  box-sizing: border-box;
+  margin-bottom: 40rpx;
   line-height: 1.5;
 }
 
-.back-btn {
-  background: linear-gradient(135deg, #E03A3E, #fab387);
-  color: #11111b;
-  font-weight: bold;
-  font-size: 32rpx;
-  border-radius: 40rpx;
-  padding: 20rpx 60rpx;
-  border: none;
+.seal-features {
   width: 100%;
-  box-shadow: 0 8rpx 24rpx rgba(224, 58, 62, 0.35);
+  background: #1e1e2e;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 48rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
 }
 
-.back-btn::after {
+.feature-item {
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+
+.feature-dot {
+  font-size: 28rpx;
+  margin-right: 14rpx;
+}
+
+.feature-text {
+  font-size: 24rpx;
+  color: #bac2de;
+}
+
+/* ========================================== */
+/* 状态 B: 揭晓后分模块展示 (Revealed View)    */
+/* ========================================== */
+.revealed-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* 通用模块卡片基础 */
+.module-card {
+  background: #313244;
+  border: 2rpx solid #45475a;
+  border-radius: 28rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 24rpx;
+}
+
+.module-title-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.module-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #cdd6f4;
+}
+
+.module-sub {
+  font-size: 22rpx;
+  color: #a6adc8;
+  margin-left: 8rpx;
+}
+
+/* ------------------------------------------ */
+/* 模块 1: 战况与吉凶总览 (Header Module)     */
+/* ------------------------------------------ */
+.header-module {
+  background: linear-gradient(135deg, var(--theme-bg, #313244) 0%, #1e1e2e 100%);
+  border-color: var(--theme-color, #45475a);
+}
+
+.card-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.meta-date {
+  font-size: 24rpx;
+  color: #a6adc8;
+}
+
+.meta-reroll-tag {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fab387;
+  border: 1rpx solid rgba(245, 158, 11, 0.4);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  display: flex;
+  align-items: center;
+}
+
+.meta-reroll-tag.initial {
+  background: rgba(137, 180, 250, 0.15);
+  color: #89b4fa;
+  border-color: rgba(137, 180, 250, 0.4);
+}
+
+.reroll-tag-icon {
+  margin-right: 6rpx;
+}
+
+.oracle-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28rpx;
+}
+
+.sign-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sign-title {
+  font-size: 64rpx;
+  font-weight: 900;
+  color: #f5e0dc;
+  letter-spacing: 2rpx;
+  line-height: 1.1;
+  margin-bottom: 12rpx;
+}
+
+.grade-badge {
+  color: #11111b;
+  font-weight: 900;
+  font-size: 24rpx;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  display: inline-block;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+}
+
+.score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.subtitle-text {
+  font-size: 26rpx;
+  color: #bac2de;
+  margin-bottom: 8rpx;
+  font-weight: 500;
+}
+
+.score-number-box {
+  display: flex;
+  align-items: baseline;
+}
+
+.score-num {
+  font-size: 56rpx;
+  font-weight: 900;
+  color: #fab387;
+  line-height: 1;
+}
+
+.score-unit {
+  font-size: 24rpx;
+  color: #a6adc8;
+  margin-left: 4rpx;
+}
+
+/* 撤离率标尺 */
+.extraction-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 18rpx;
+  padding: 18rpx 24rpx;
+}
+
+.extraction-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.extraction-title {
+  font-size: 24rpx;
+  color: #a6adc8;
+}
+
+.extraction-val {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.progress-track {
+  width: 100%;
+  height: 14rpx;
+  background: #181825;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 8rpx;
+  transition: width 0.6s ease;
+}
+
+/* ------------------------------------------ */
+/* 模块 2: 鼠鼠今日爆率 (Item Module)         */
+/* ------------------------------------------ */
+.item-showcase {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 0;
+}
+
+.item-img-wrap {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 24rpx;
+  border: 3rpx solid #45475a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 32rpx;
+  flex-shrink: 0;
+}
+
+.item-img {
+  width: 110rpx;
+  height: 110rpx;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.item-name {
+  font-size: 38rpx;
+  font-weight: bold;
+  color: #cdd6f4;
+  letter-spacing: 1rpx;
+  line-height: 1.3;
+}
+
+/* ------------------------------------------ */
+/* 模块 3: 战术大红吉位 (独立模块)            */
+/* ------------------------------------------ */
+.tactics-map-module {
+  display: flex;
+  flex-direction: column;
+}
+
+.tactics-map-content-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tactics-map-info-col {
+  flex: 1;
+  margin-right: 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.map-name-text {
+  font-size: 42rpx;
+  font-weight: 900;
+  color: #cdd6f4;
+  margin-bottom: 12rpx;
+  letter-spacing: 1rpx;
+}
+
+.map-spot-pill {
+  background: rgba(224, 58, 62, 0.18);
+  color: #f38ba8;
+  border: 1rpx solid rgba(224, 58, 62, 0.4);
+  font-size: 24rpx;
+  font-weight: bold;
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.movable-hint-tag {
+  font-size: 20rpx;
+  color: #89b4fa;
+  background: rgba(137, 180, 250, 0.12);
+  border: 1rpx solid rgba(137, 180, 250, 0.35);
+  padding: 4rpx 14rpx;
+  border-radius: 10rpx;
+}
+
+/* 右侧紧凑小地图视窗 (可自由拖拽探索，尺寸适中) */
+.tactics-map-movable-area {
+  width: 260rpx;
+  height: 220rpx;
+  border-radius: 20rpx;
+  position: relative;
+  overflow: hidden;
+  background: #181825;
+  border: 2rpx solid #45475a;
+  box-shadow: inset 0 0 25rpx rgba(0, 0, 0, 0.7);
+  flex-shrink: 0;
+}
+
+.tactics-map-movable-view {
+  width: 520rpx;
+  height: 520rpx;
+  position: relative;
+}
+
+/* 2x2 高清切片拼合网格 */
+.map-tiles-matrix {
+  width: 520rpx;
+  height: 520rpx;
+  display: grid;
+  grid-template-columns: 260rpx 260rpx;
+  grid-template-rows: 260rpx 260rpx;
+  gap: 0;
+}
+
+.matrix-tile-img {
+  width: 260rpx;
+  height: 260rpx;
+  display: block;
+}
+
+.matrix-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(17, 17, 27, 0.1) 0%, rgba(17, 17, 27, 0.3) 100%),
+              repeating-linear-gradient(0deg, transparent, transparent 38rpx, rgba(255, 255, 255, 0.03) 40rpx);
+  pointer-events: none;
+}
+
+/* 战术雷达标点 (紧凑比例) */
+.radar-ping-anchor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.radar-pulse-ring {
+  position: absolute;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  border: 2rpx solid #E03A3E;
+  background: rgba(224, 58, 62, 0.25);
+  animation: radarPulse 1.8s ease-out infinite;
+}
+
+.radar-center-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #E03A3E;
+  border: 2rpx solid #fff;
+  box-shadow: 0 0 14rpx #E03A3E;
+  z-index: 2;
+}
+
+.radar-spot-tag {
+  margin-top: 8rpx;
+  background: rgba(17, 17, 27, 0.9);
+  border: 1rpx solid rgba(224, 58, 62, 0.7);
+  color: #fff;
+  font-size: 18rpx;
+  font-weight: bold;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+  white-space: nowrap;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------ */
+/* 模块 4: 今日暴富容器 (独立模块)            */
+/* ------------------------------------------ */
+.tactics-container-module {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-showcase {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.container-icon-wrap {
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 20rpx;
+  background: #1e1e2e;
+  border: 2rpx solid #45475a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 28rpx;
+  flex-shrink: 0;
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.3);
+}
+
+.container-icon-img {
+  width: 96rpx;
+  height: 96rpx;
+}
+
+.container-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.container-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #cdd6f4;
+}
+
+.container-type-pill {
+  font-size: 22rpx;
+  color: #fab387;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1rpx solid rgba(245, 158, 11, 0.35);
+  padding: 4rpx 14rpx;
+  border-radius: 12rpx;
+}
+
+.container-desc-text {
+  font-size: 24rpx;
+  color: #a6adc8;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------ */
+/* 模块 4: 战术老黄历与锦囊 (Almanac)         */
+/* ------------------------------------------ */
+.almanac-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.almanac-col {
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.yi-col {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1rpx solid rgba(16, 185, 129, 0.35);
+}
+
+.ji-col {
+  background: rgba(224, 58, 62, 0.08);
+  border: 1rpx solid rgba(224, 58, 62, 0.35);
+}
+
+.almanac-badge {
+  font-size: 26rpx;
+  font-weight: 900;
+  margin-bottom: 16rpx;
+}
+
+.yi-badge {
+  color: #10B981;
+}
+
+.ji-badge {
+  color: #E03A3E;
+}
+
+.almanac-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.almanac-item {
+  display: flex;
+  align-items: flex-start;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.item-bullet {
+  font-weight: 900;
+  margin-right: 8rpx;
+  flex-shrink: 0;
+}
+
+.yi-item .item-bullet {
+  color: #10B981;
+}
+
+.ji-item .item-bullet {
+  color: #E03A3E;
+}
+
+.item-text {
+  color: #bac2de;
+}
+
+/* 锦囊建议气泡 */
+.advice-bubble {
+  background: #181825;
+  border-radius: 20rpx;
+  padding: 22rpx;
+  border-left: 6rpx solid #fab387;
+}
+
+.advice-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.advice-icon {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.advice-title {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #fab387;
+}
+
+.advice-body {
+  font-size: 24rpx;
+  color: #cdd6f4;
+  line-height: 1.6;
+}
+
+/* ========================================== */
+/* 预留广告插槽 (Ad Slot Placeholders)        */
+/* ========================================== */
+.ad-slot-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ad-placeholder {
+  width: 100%;
+  background: #25263a;
+  border: 2rpx dashed #45475a;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #6c7086;
+  box-sizing: border-box;
+}
+
+/* ========================================== */
+/* 模块 5: 底部操作栏 (Actions)               */
+/* ========================================== */
+.action-module {
+  margin-top: 12rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #fab387 0%, #E03A3E 100%);
+  color: #11111b;
+  font-weight: 900;
+  font-size: 32rpx;
+  border-radius: 40rpx;
+  padding: 24rpx 0;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(224, 58, 62, 0.35);
   border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+.reroll-btn {
+  background: linear-gradient(135deg, #f9e2af 0%, #fab387 50%, #f38ba8 100%);
+  color: #11111b;
+  box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.35);
+}
+
+.btn-icon {
+  margin-right: 10rpx;
+  font-size: 32rpx;
+}
+
+.secondary-btn {
+  background: #313244;
+  color: #cdd6f4;
+  font-size: 28rpx;
+  font-weight: bold;
+  border-radius: 40rpx;
+  padding: 20rpx 0;
+  text-align: center;
+  border: 2rpx solid #45475a;
+  width: 100%;
+}
+
+.secondary-btn:active {
+  background: #45475a;
+}
+
+.footer-tip {
+  text-align: center;
+  font-size: 22rpx;
+  color: #6c7086;
+  margin-top: 8rpx;
+}
+
+/* 动效 */
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }

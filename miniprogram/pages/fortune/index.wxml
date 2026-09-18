@@ -1,17 +1,250 @@
-<view class="fortune-container">
-  <view class="placeholder-card">
-    <view class="icon-bubble">
-      <image class="fortune-icon-img" src="https://playerhub.df.qq.com/playerhub/60004/object/15080050142.png" mode="aspectFit"></image>
+<view class="fortune-page">
+  <!-- ========================================== -->
+  <!-- 状态 A: 尚未生成运势时的启封仪式卡片       -->
+  <!-- ========================================== -->
+  <view class="ready-view" wx:if="{{gameState === 'ready'}}">
+    <view class="seal-card">
+      <view class="seal-bubble animate-pulse">
+        <image class="seal-icon" src="https://playerhub.df.qq.com/playerhub/60004/object/15080050142.png" mode="aspectFit"></image>
+      </view>
+      <view class="seal-title">今日鼠鼠运势</view>
+      <view class="seal-subtitle">测一测你的今日摸金大金运与安全撤离指数</view>
+
+      <view class="seal-features">
+        <view class="feature-item">
+          <text class="feature-dot">🎯</text>
+          <text class="feature-text">锁定今日大红吉位战区与核心地标</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-dot">📦</text>
+          <text class="feature-text">排查今日最易爆出大金的高产容器</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-dot">📜</text>
+          <text class="feature-text">查阅鼠鼠战术老黄历，指引今日宜忌</text>
+        </view>
+      </view>
+
+      <button class="primary-btn pulse-btn" bindtap="onRevealFortune">
+        <text class="btn-icon">🔮</text> 开启今日鼠鼠运势
+      </button>
+
+      <button class="secondary-btn" bindtap="goHome">返回大厅</button>
     </view>
-    <view class="title">今日鼠鼠运势</view>
-    <view class="badge">💎 绝密红品 · 方案对齐中</view>
-    <view class="desc">
-      每日测一测你的“摸金大金运”、今日安全撤离指数与避战吉位！
-    </view>
-    <view class="tips">
-      ✨ 模块框架已接入统一架构，待具体玩法交互与卡池对齐后即可开启。
+  </view>
+
+  <!-- ========================================== -->
+  <!-- 状态 B: 运势已揭晓 (五大模块分块呈现)     -->
+  <!-- ========================================== -->
+  <view class="revealed-view" wx:if="{{gameState === 'revealed' && fortune}}">
+
+    <!-- 模块 1: 战况与吉凶总览卡片 -->
+    <view class="module-card header-module" style="--theme-color: {{fortune.colorHex}}; --theme-bg: {{fortune.bgColorHex}};">
+      <view class="card-meta-bar">
+        <text class="meta-date">📅 {{todayDate}}</text>
+        <view class="meta-reroll-tag" wx:if="{{rerollCount > 0}}">
+          <text class="reroll-tag-icon">⚡</text> 已改运 {{rerollCount}} 次
+        </view>
+        <view class="meta-reroll-tag initial" wx:else>
+          <text class="reroll-tag-icon">✨</text> 今日首测
+        </view>
+      </view>
+
+      <view class="oracle-main-row">
+        <view class="sign-block">
+          <view class="sign-title">{{fortune.levelName || fortune.fortune.sign}}</view>
+          <view class="grade-badge" style="background: {{fortune.colorHex}};">
+            {{fortune.luckyLevel}}级品质
+          </view>
+        </view>
+
+        <view class="score-block">
+          <view class="subtitle-text">「{{fortune.fortune.subTitle}}」</view>
+          <view class="score-number-box">
+            <text class="score-num">{{fortune.fortuneScore}}</text>
+            <text class="score-unit">分</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 撤离率标尺 -->
+      <view class="extraction-box">
+        <view class="extraction-label-row">
+          <text class="extraction-title">安全撤离指数</text>
+          <text class="extraction-val" style="color: {{fortune.colorHex}};">{{fortune.extractionRate}}</text>
+        </view>
+        <view class="progress-track">
+          <view class="progress-bar" style="width: {{fortune.extractionRate}}; background: {{fortune.colorHex}};"></view>
+        </view>
+      </view>
     </view>
 
-    <button class="back-btn" bindtap="goHome">返回鼠鼠菜单</button>
+    <!-- 预留广告插槽 1: 顶部 Banner / 赞助展示位 -->
+    <view class="ad-slot-wrapper slot-header" wx:if="{{adConfig.enableSlotHeader}}">
+      <!-- @AdSlot: 顶部广告位，启用后可直接嵌入 wx:if="{{adConfig.enableSlotHeader}}" 的 <ad> 标签 -->
+      <view class="ad-placeholder">战术赞助广告位 (预留)</view>
+    </view>
+
+    <!-- 模块 2: 鼠鼠今日爆率卡片 -->
+    <view class="module-card item-module">
+      <view class="module-header">
+        <text class="module-title-icon">💎</text>
+        <text class="module-title">鼠鼠今日爆率</text>
+      </view>
+
+      <view class="item-showcase">
+        <view class="item-img-wrap" style="background: {{fortune.luckyItem.theme ? fortune.luckyItem.theme.bgGradient : fortune.bgColorHex}}; border-color: {{fortune.colorHex}}; box-shadow: 0 0 24rpx {{fortune.colorHex}}40;">
+          <image class="item-img" src="{{fortune.luckyItem.pic}}" mode="aspectFit"></image>
+        </view>
+
+        <view class="item-info">
+          <text class="item-name">{{fortune.luckyItem.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 模块 3: 战术大红吉位卡片 (独立模块，左右分栏，右侧小地图视窗) -->
+    <view class="module-card tactics-map-module">
+      <view class="module-header">
+        <text class="module-title-icon">🗺️</text>
+        <text class="module-title">战术大红吉位</text>
+      </view>
+
+      <view class="tactics-map-content-row">
+        <!-- 左侧: 地图名称与地标信息 (已移除描述) -->
+        <view class="tactics-map-info-col">
+          <view class="map-name-text">{{fortune.luckyMap.name}}</view>
+          <view class="map-spot-pill">📍 {{fortune.luckyMap.spot}}</view>
+          <view class="movable-hint-tag">🖐️ 可滑动右图</view>
+        </view>
+
+        <!-- 右侧: 紧凑小地图视窗 (不要太大，尺寸约为 260rpx×220rpx，可拖拽探索) -->
+        <movable-area class="tactics-map-movable-area">
+          <movable-view
+            class="tactics-map-movable-view"
+            direction="all"
+            inertia="true"
+            out-of-bounds="false"
+            x="{{fortune.luckyMap.mapOffsetX}}"
+            y="{{fortune.luckyMap.mapOffsetY}}">
+            <!-- 2x2 高清战术切片无缝拼合矩阵 (520rpx×520rpx) -->
+            <view class="map-tiles-matrix">
+              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[0]}}" mode="aspectFill"></image>
+              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[1]}}" mode="aspectFill"></image>
+              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[2]}}" mode="aspectFill"></image>
+              <image class="matrix-tile-img" src="{{fortune.luckyMap.tiles[3]}}" mode="aspectFill"></image>
+            </view>
+            <view class="matrix-grid-overlay"></view>
+
+            <!-- 战术雷达标点 -->
+            <view class="radar-ping-anchor" style="left: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.x : 50}}%; top: {{fortune.luckyMap.spotCoord ? fortune.luckyMap.spotCoord.y : 50}}%;">
+              <view class="radar-pulse-ring"></view>
+              <view class="radar-center-dot"></view>
+              <view class="radar-spot-tag">{{fortune.luckyMap.spot}}</view>
+            </view>
+          </movable-view>
+        </movable-area>
+      </view>
+    </view>
+
+    <!-- 模块 4: 今日暴富容器卡片 (独立模块，带容器官方图元与定位) -->
+    <view class="module-card tactics-container-module">
+      <view class="module-header">
+        <text class="module-title-icon">📦</text>
+        <text class="module-title">今日暴富容器</text>
+      </view>
+
+      <view class="container-showcase">
+        <view class="container-icon-wrap">
+          <image class="container-icon-img" src="{{fortune.luckyContainer.iconUrl}}" mode="aspectFit"></image>
+        </view>
+
+        <view class="container-info">
+          <view class="container-name-row">
+            <text class="container-name">{{fortune.luckyContainer.name}}</text>
+            <view class="container-type-pill">
+              <text wx:if="{{fortune.luckyContainer.type === 'radiation'}}">☢️ 辐射特种设施</text>
+              <text wx:elif="{{fortune.luckyContainer.type === 'core'}}">🏆 高价值出金点</text>
+              <text wx:elif="{{fortune.luckyContainer.type === 'loot'}}">🎒 战利品遗留</text>
+              <text wx:else>🐭 鼠鼠漏网点位</text>
+            </view>
+          </view>
+          <view class="container-desc-text">{{fortune.luckyContainer.desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 预留广告插槽 2: 中场原生卡片 / 战术赞助插槽 -->
+    <view class="ad-slot-wrapper slot-mid" wx:if="{{adConfig.enableSlotMid}}">
+      <!-- @AdSlot: 中场广告位 -->
+      <view class="ad-placeholder">中场战术物资赞助位 (预留)</view>
+    </view>
+
+    <!-- 模块 4: 战术老黄历与锦囊建议卡片 -->
+    <view class="module-card almanac-module">
+      <view class="module-header">
+        <text class="module-title-icon">📜</text>
+        <text class="module-title">鼠鼠战术老黄历</text>
+      </view>
+
+      <view class="almanac-grid">
+        <!-- 宜 -->
+        <view class="almanac-col yi-col">
+          <view class="almanac-badge yi-badge">【宜】</view>
+          <view class="almanac-list">
+            <block wx:for="{{fortune.almanac.yi}}" wx:key="index">
+              <view class="almanac-item yi-item">
+                <text class="item-bullet">✔</text>
+                <text class="item-text">{{item}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+
+        <!-- 忌 -->
+        <view class="almanac-col ji-col">
+          <view class="almanac-badge ji-badge">【忌】</view>
+          <view class="almanac-list">
+            <block wx:for="{{fortune.almanac.ji}}" wx:key="index">
+              <view class="almanac-item ji-item">
+                <text class="item-bullet">✖</text>
+                <text class="item-text">{{item}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+
+      <!-- 鼠鼠战术锦囊 -->
+      <view class="advice-bubble">
+        <view class="advice-header">
+          <text class="advice-icon">💡</text>
+          <text class="advice-title">今日鼠鼠生存锦囊：</text>
+        </view>
+        <view class="advice-body">{{fortune.fortune.advice}}</view>
+      </view>
+    </view>
+
+    <!-- 预留广告插槽 3: 底部操作前置激励广告插槽 -->
+    <view class="ad-slot-wrapper slot-footer" wx:if="{{adConfig.enableSlotFooter}}">
+      <!-- @AdSlot: 底部激励广告位 -->
+      <view class="ad-placeholder">底部激励广告位 (预留)</view>
+    </view>
+
+    <!-- 模块 5: 底部操作栏 -->
+    <view class="action-module">
+      <button class="primary-btn reroll-btn" bindtap="onReroll">
+        <text class="btn-icon">⚡</text> 逆天改命 (重新抽签)
+      </button>
+
+      <button class="secondary-btn" bindtap="goHome">
+        返回鼠鼠大厅
+      </button>
+
+      <view class="footer-tip">
+        每日 00:00 自动重置运势 · 纯离线单机数据安全保存
+      </view>
+    </view>
+
   </view>
 </view>

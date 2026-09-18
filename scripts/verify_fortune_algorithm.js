@@ -29,12 +29,15 @@ const testUser = 'usr_wesker_8888';
 const baseline = calculateDailyFortune({ dateStr: testDate, userId: testUser, rerollCount: 0 });
 console.log('基准首次运行结果:');
 console.log(`  - 种子标识: ${baseline.seedKey}`);
-console.log(`  - 幸运地图: ${baseline.luckyMap.name} (${baseline.luckyMap.key})`);
-console.log(`  - 道具等级: ${baseline.luckyLevel}级 (${baseline.luckyItem.theme.name})`);
+console.log(`  - 幸运地图: ${baseline.luckyMap.name} (${baseline.luckyMap.key}) · 核心地标: ${baseline.luckyMap.spot}`);
+console.log(`  - 暴富容器: ${baseline.luckyContainer.name} (${baseline.luckyContainer.key})`);
+console.log(`  - 道具等级: ${baseline.luckyLevel}级 [${baseline.levelName}] (${baseline.luckyItem.theme ? baseline.luckyItem.theme.name : ''})`);
 console.log(`  - 幸运道具: ${baseline.luckyItem.name} (价格: ¥${baseline.luckyItem.priceFormatted})`);
-console.log(`  - 运势评分: ${baseline.fortuneScore}分`);
+console.log(`  - 运势评分: ${baseline.fortuneScore}分 | 安全撤离率: ${baseline.extractionRate}`);
 console.log(`  - 战况吉凶: ${baseline.fortune.sign} · ${baseline.fortune.subTitle}`);
 console.log(`  - 战术建议: ${baseline.fortune.advice}`);
+console.log(`  - 老黄历宜: ${baseline.almanac.yi.join(' / ')}`);
+console.log(`  - 老黄历忌: ${baseline.almanac.ji.join(' / ')}`);
 
 let isConsistent = true;
 for (let i = 0; i < 100; i++) {
@@ -42,11 +45,15 @@ for (let i = 0; i < 100; i++) {
   if (
     current.seed !== baseline.seed ||
     current.luckyMap.key !== baseline.luckyMap.key ||
+    current.luckyMap.spot !== baseline.luckyMap.spot ||
+    current.luckyContainer.key !== baseline.luckyContainer.key ||
     current.luckyLevel !== baseline.luckyLevel ||
+    current.levelName !== baseline.levelName ||
     current.luckyItem.id !== baseline.luckyItem.id ||
     current.fortune.sign !== baseline.fortune.sign ||
     current.fortune.advice !== baseline.fortune.advice ||
-    current.fortuneScore !== baseline.fortuneScore
+    current.fortuneScore !== baseline.fortuneScore ||
+    current.extractionRate !== baseline.extractionRate
   ) {
     isConsistent = false;
     console.error(`第 ${i} 次调用出现不一致！`, current);
@@ -65,27 +72,45 @@ const rerolls = [];
 for (let r = 0; r <= 3; r++) {
   const res = calculateDailyFortune({ dateStr: testDate, userId: testUser, rerollCount: r, isPaid: r > 0 });
   rerolls.push(res);
-  console.log(`  [改运次数 ${r}${r > 0 ? ' (付费加权)' : ' (免费首次)'}]: 地图=${res.luckyMap.name} | 等级=${res.luckyLevel}级 | 道具=${res.luckyItem.name} | 评价=${res.fortune.sign}`);
+  console.log(`  [改运次数 ${r}${r > 0 ? ' (付费加权)' : ' (免费首次)'}]: 地图=${res.luckyMap.name}·${res.luckyMap.spot} | 等级=${res.luckyLevel}级[${res.levelName}] | 容器=${res.luckyContainer.name} | 道具=${res.luckyItem.name} | 评价=${res.fortune.sign}`);
+
+  // 验证付费保底不含答辩与小绿
+  if (r > 0 && res.luckyLevel < 3) {
+    console.error(`❌ 付费改运未能保底3级以上！当前等级: ${res.luckyLevel}`);
+    process.exit(1);
+  }
 }
 
 // 验证改运后种子不同
 const distinctSeeds = new Set(rerolls.map(r => r.seed));
 if (distinctSeeds.size === rerolls.length) {
-  console.log('✅ 付费改运各轮次种子 100% 离散且互不相同！');
+  console.log('✅ 付费改运各轮次种子 100% 离散且互不相同，高阶保底校验通过！');
 } else {
   console.error('❌ 改运后种子出现碰撞！');
   process.exit(1);
 }
 
-console.log('\n=== [4] 校验动态占位符插值 ===');
+console.log('\n=== [4] 校验动态占位符插值与敏感词过滤 ===');
+const forbiddenWords = ['死人包', '死人', '{map}', '{spot}', '{container}', '{item}', '{levelName}', '{price}'];
 rerolls.forEach((r, idx) => {
-  const advice = r.fortune.advice;
-  if (advice.includes('{map}') || advice.includes('{item}')) {
-    console.error(`❌ 发现未替换的占位符: ${advice}`);
-    process.exit(1);
-  }
+  const checkTexts = [
+    r.fortune.advice,
+    ...(r.almanac ? r.almanac.yi : []),
+    ...(r.almanac ? r.almanac.ji : []),
+    r.luckyContainer.name,
+    r.luckyContainer.desc
+  ];
+
+  checkTexts.forEach(text => {
+    forbiddenWords.forEach(bad => {
+      if (text && text.includes(bad)) {
+        console.error(`❌ 发现未替换占位符或违规敏感词: [${bad}] 在文案: "${text}"`);
+        process.exit(1);
+      }
+    });
+  });
 });
-console.log('✅ 所有建议文案中的 {map} 与 {item} 均已成功替换为对应战术实体。');
+console.log('✅ 所有建议与宜忌中的 {map}/{spot}/{container}/{item}/{levelName} 均已成功插值，且 100% 无敏感词！');
 
 console.log('\n=== [5] 验证多用户与多日期雪崩效应 ===');
 const users = ['usr_alice', 'usr_bob', 'usr_charlie', 'usr_david', 'usr_eva'];
