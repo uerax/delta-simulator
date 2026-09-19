@@ -59,7 +59,8 @@ const GameRegistry = {
         boxStyle: game.boxStyle || '',
         path: game.path,
         recordLabel: record.label,
-        recordVal: record.val
+        recordVal: record.val,
+        recordColor: record.color || ''
       };
     });
   }

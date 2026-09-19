@@ -1,6 +1,77 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.12`（唯一权威事实源）
+> **当前全局版本号**：`v1.8.15`（唯一权威事实源）
+
+## [2026-09-19] 修复大厅卡片底部超长物资名挤爆换行并实现单行省略号截断
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **排查并根治底部战绩行挤压换行（已验证）**：
+     - 根因定位：`.card-footer` 下的 `.enter-btn-pill`（进入游玩按钮）与 `.record-label`（“今日运势：”）未设置防压缩约束，且 `.record-val`（物资名称）缺少单行文本截断与 Flex 宽度限制；当抽中长名称道具（如“三角洲特种部队： 黑鹰坠落-战队之刃”）时，直接撑爆换行并导致两侧组件被压成两行变形；
+     - 落地方案：
+       * 为右侧进入按钮 `.enter-btn-pill` 设置 `flex-shrink: 0; white-space: nowrap;`，绝对维持完整形态不被挤压；
+       * 为左侧标签 `.record-label` 设置 `flex-shrink: 0; white-space: nowrap;`，禁止“今日运势：”换行；
+       * 为战绩容器 `.game-record` 与物资名 `.record-val` 设置 `flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;`，确保超长名称自动截断并优雅展示 `...`；
+       * `.card-footer` 增加 `gap: 16rpx`，维持安全呼吸间隙。
+  2. **全套自动化测试 100% 绿色通过**：
+     - 解耦架构、运势算法、用户管理等测试全部通过。
+  3. **版本号维护**：
+     - 从 `v1.8.14` 递增至 `v1.8.15`。
+- 涉及文件：
+  - `miniprogram/pages/index/index.wxss`
+  - `package.json`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 大厅卡片今日运势提纯纯物资名并复用现有道具品质主题色
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **运势战绩文本彻底去重提纯（已验证）**：
+     - 去除原本多余的“小紫 · ”等级前缀与间隔符，仅保留纯净物资名称（如“中心贵宾室”、“非洲之心”）；
+     - 自动向下兼容历史旧格式缓存（如 `小紫 · 中心贵宾室`），在无需清除 Storage 缓存的前提下即时自动提取纯物资名。
+  2. **直接复用现有的权威数据源映射品质字体颜色（已验证）**：
+     - 用户提示：完全无须在业务层另外硬编码独立的颜色字典，直接从现有的权威数据源检索：
+       * 优先读取已存的 `fortuneResult.colorHex` / `fortuneColor`；
+       * 次选通过现有的权威单例 `itemManager.getByName(itemName).theme.colorHex` 获取真实物资对应的品质主题色；
+       * 再次通过 `itemManager.getLevelTheme(level).colorHex` 兜底；
+       * 针对旧文本通过 `LEVEL_COPYWRITING` 匹配等级色。
+  3. **大厅卡片模板与注册中心联动（已验证）**：
+     - `GameRegistry.getLobbyList` 接收并在卡片数据项中传递 `recordColor`；
+     - `pages/index/index.wxml` 为 `.record-val` 绑定 `style="{{item.recordColor ? 'color: ' + item.recordColor : ''}}"`，当无自定义颜色时自然回退至默认样式类颜色。
+  4. **全套自动化测试 100% 绿色通过**：
+     - 解耦架构、运势算法、用户管理等测试全部通过。
+  5. **版本号维护**：
+     - 从 `v1.8.13` 递增至 `v1.8.14`。
+- 涉及文件：
+  - `miniprogram/games/fortune/manifest.js`
+  - `miniprogram/games/registry.js`
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/pages/index/index.wxml`
+  - `package.json`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 今日好运地点信息居中对齐与战术速去搜刮引导提示
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **左侧地图信息中轴对称居中对齐（已验证）**：
+     - 根因分析：左侧信息栏此前采用左对齐，但在与右侧 220rpx 高度的小地图视窗并排呈现时，左侧文字偏踞左上角，导致下半截产生不均衡的视觉空档；
+     - 落地方案：将 `.tactics-map-info-col` 布局升级为 `align-items: center; text-align: center;`，地图名称、地标定位胶囊沿中轴线完美居中。
+  2. **底部空隙补充战术出击引导描述（已验证）**：
+     - 新增 `.map-action-tip`（“⚡ 战术吉位，速去搜刮！”）；
+     - 高度形成了“地图大标题 → 点位高亮胶囊 → 战术出击微文案”三层清晰纵向韵律，与右侧小地图画框形成均衡稳定的左右对称构图，彻底消除底部空隙。
+  3. **自动化测试 100% 绿色通过**：
+     - 运势算法等全套测试通过。
+  4. **版本号维护**：
+     - 从 `v1.8.12` 递增至 `v1.8.13`。
+- 涉及文件：
+  - `miniprogram/pages/fortune/index.wxml`
+  - `miniprogram/pages/fortune/index.wxss`
+  - `package.json`
+  - `.claude/BUGS.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-19] 扩充今日幸运物资点位小地图视窗宽度并优化左右间隙
 - 状态：已完成

@@ -139,10 +139,13 @@
       </view>
 
       <view class="tactics-map-content-row">
-        <!-- 左侧: 地图名称与地标信息 (已移除描述) -->
+        <!-- 左侧: 地图名称、地标定位与速去搜刮引导 -->
         <view class="tactics-map-info-col">
           <view class="map-name-text">{{fortune.luckyMap.name}}</view>
           <view class="map-spot-pill">📍 {{fortune.luckyMap.spot}}</view>
+          <view class="map-action-tip">
+            <text class="action-tip-icon">⚡</text> 只要能到达那个地方!
+          </view>
         </view>
 
         <!-- 右侧: 宽屏小地图视窗 (360rpx×220rpx，支持整张高清地图全景探索与视窗动态懒加载) -->

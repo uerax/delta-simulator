@@ -73,7 +73,7 @@
         <view class="card-footer">
           <view class="game-record">
             <text class="record-label">{{item.recordLabel}}：</text>
-            <text class="record-val">{{item.recordVal}}</text>
+            <text class="record-val" style="{{item.recordColor ? 'color: ' + item.recordColor : ''}}">{{item.recordVal}}</text>
           </view>
           <view class="enter-btn-pill">
             <text class="btn-text">进入游玩</text>

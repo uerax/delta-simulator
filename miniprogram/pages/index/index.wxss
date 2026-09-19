@@ -299,9 +299,12 @@ page {
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  gap: 16rpx;
 }
 
 .game-record {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   font-size: 24rpx;
@@ -309,14 +312,25 @@ page {
 
 .record-label {
   color: #a6adc8;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .record-val {
+  flex: 1;
+  min-width: 0;
   color: #a6e3a1;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .enter-btn-pill {
+  flex-shrink: 0;
+  white-space: nowrap;
   background: linear-gradient(135deg, #89b4fa, #b4befe);
   color: #11111b;
   font-size: 26rpx;

@@ -373,12 +373,16 @@ const Storage = {
       const today = getTodayString();
       const levelTitle = (fortuneResult && fortuneResult.levelName) || (fortuneResult && fortuneResult.fortune && fortuneResult.fortune.sign) || '小金';
       const itemName = (fortuneResult && fortuneResult.luckyItem && fortuneResult.luckyItem.name) || '未知物资';
-      const todayFortuneLabel = `${levelTitle} · ${itemName}`;
+      const luckyLevel = (fortuneResult && fortuneResult.luckyLevel) || (fortuneResult && fortuneResult.luckyItem && fortuneResult.luckyItem.level) || 4;
+      const colorHex = (fortuneResult && fortuneResult.colorHex) || '#c084fc';
 
       return this.saveGameRecord('fortune', {
         todayDate: today,
         rerollCount: rerollCount,
-        todayFortune: todayFortuneLabel,
+        todayFortune: itemName,
+        fortuneLevel: luckyLevel,
+        fortuneLevelName: levelTitle,
+        fortuneColor: colorHex,
         fortuneResult: fortuneResult
       });
     } catch (e) {
