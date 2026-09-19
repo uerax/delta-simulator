@@ -50,7 +50,7 @@ const LEVEL_COPYWRITING = Object.freeze({
     bgColorHex: '#37281b',
     subTitles: ['满载而归', '财运亨通', '金光护体', '盆满钵满'],
     yi: [
-      '协同推进稳搜二线',
+      '协同推进稳搜野区',
       '见好就收提前规划路线',
       '多开【{container}】搜寻小金'
     ],
@@ -75,7 +75,7 @@ const LEVEL_COPYWRITING = Object.freeze({
     bgColorHex: '#1e1c2c',
     subTitles: ['稳中求进', '小富即安', '波澜不惊', '保本即胜'],
     yi: [
-      '搜刮二线资源点',
+      '搜刮野区资源点',
       '起半改四套猛攻',
       '带出【{item}】保本经营'
     ],
@@ -87,7 +87,7 @@ const LEVEL_COPYWRITING = Object.freeze({
     advices: [
       '今日战况平稳，建议在【{map}·{spot}】打扫二线点位，遇到【{container}】顺手开一下，拿到【{item}】概率提高。',
       '心态放平，今天适合练枪或熟图，不亏就是赚，活着走出去最重要。',
-      '正面火拼风险偏高，遇到硬茬建议迂回拉扯，背包里的【{item}】安全变现才是硬道理。',
+      '正面对枪风险偏高，遇到猛攻队建议迂回拉扯，找出今日幸运道具【{item}】撤离才是硬道理。',
       '在【{map}】多搜工具柜与【{container}】，虽无惊天暴富，但小富即安亦是生存智慧。'
     ]
   }),

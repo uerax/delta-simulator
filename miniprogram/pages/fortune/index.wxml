@@ -13,23 +13,28 @@
       <view class="seal-features">
         <view class="feature-item">
           <text class="feature-dot">🎯</text>
-          <text class="feature-text">锁定今日大红吉位战区与核心地标</text>
+          <text class="feature-text">锁定今日大红与幸运核心区</text>
         </view>
         <view class="feature-item">
           <text class="feature-dot">📦</text>
-          <text class="feature-text">排查今日最易爆出大金的高产容器</text>
+          <text class="feature-text">排查今日最易爆出大红的高产容器</text>
         </view>
         <view class="feature-item">
           <text class="feature-dot">📜</text>
-          <text class="feature-text">查阅鼠鼠战术老黄历，指引今日宜忌</text>
+          <text class="feature-text">查阅鼠鼠战术运势，指引今日宜忌</text>
         </view>
       </view>
 
-      <button class="primary-btn pulse-btn" bindtap="onRevealFortune">
-        <text class="btn-icon">🔮</text> 开启今日鼠鼠运势
-      </button>
+      <view class="seal-btn-group">
+        <button class="primary-btn pulse-btn" bindtap="onRevealFortune">
+          <text class="btn-icon">🔮</text>
+          <text class="btn-text">开启今日鼠鼠运势</text>
+        </button>
 
-      <button class="secondary-btn" bindtap="goHome">返回大厅</button>
+        <button class="secondary-btn" bindtap="goHome">
+          <text class="btn-back-arrow">‹</text> 返回大厅
+        </button>
+      </view>
     </view>
   </view>
 
@@ -130,7 +135,7 @@
     <view class="module-card tactics-map-module">
       <view class="module-header">
         <text class="module-title-icon">🗺️</text>
-        <text class="module-title">今日幸运物资点位</text>
+        <text class="module-title">今日好运地点</text>
       </view>
 
       <view class="tactics-map-content-row">
@@ -140,7 +145,7 @@
           <view class="map-spot-pill">📍 {{fortune.luckyMap.spot}}</view>
         </view>
 
-        <!-- 右侧: 紧凑小地图视窗 (260rpx×220rpx，支持整张高清地图全景探索与视窗动态懒加载) -->
+        <!-- 右侧: 宽屏小地图视窗 (360rpx×220rpx，支持整张高清地图全景探索与视窗动态懒加载) -->
         <movable-area class="tactics-map-movable-area">
           <movable-view
             class="tactics-map-movable-view"
@@ -241,7 +246,7 @@
       </view>
 
       <button class="secondary-btn" bindtap="goHome">
-        返回鼠鼠大厅
+        <text class="btn-back-arrow">‹</text> 返回鼠鼠大厅
       </button>
     </view>
 

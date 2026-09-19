@@ -61,8 +61,8 @@ Page({
     }
 
     const rpxRatio = windowWidth / 750;
-    const areaW = 260 * rpxRatio;        // 右侧紧凑视窗宽 (260rpx)
-    const areaH = 220 * rpxRatio;        // 右侧紧凑视窗高 (220rpx)
+    const areaW = 360 * rpxRatio;        // 右侧宽屏视窗宽 (360rpx)
+    const areaH = 220 * rpxRatio;        // 右侧宽屏视窗高 (220rpx)
     const viewW = 2048 * rpxRatio;       // 8x8 全图总宽 (2048rpx)
     const viewH = 2048 * rpxRatio;       // 8x8 全图总高 (2048rpx)
     const tilePx = viewW / 8;            // 每个切片物理像素大小 (256rpx)

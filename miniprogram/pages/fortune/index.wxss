@@ -75,11 +75,20 @@ page {
   background: #1e1e2e;
   border-radius: 20rpx;
   padding: 24rpx;
-  margin-bottom: 48rpx;
+  margin-bottom: 40rpx;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 16rpx;
+}
+
+.seal-btn-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22rpx;
+  box-sizing: border-box;
 }
 
 .feature-item {
@@ -413,11 +422,12 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24rpx;
 }
 
 .tactics-map-info-col {
   flex: 1;
-  margin-right: 24rpx;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -430,6 +440,7 @@ page {
   color: #cdd6f4;
   margin-bottom: 12rpx;
   letter-spacing: 1rpx;
+  white-space: nowrap;
 }
 
 .map-spot-pill {
@@ -440,7 +451,7 @@ page {
   font-weight: bold;
   padding: 6rpx 20rpx;
   border-radius: 20rpx;
-  margin-bottom: 16rpx;
+  white-space: nowrap;
 }
 
 .movable-hint-tag {
@@ -452,9 +463,9 @@ page {
   border-radius: 10rpx;
 }
 
-/* 右侧紧凑小地图视窗 (可自由拖拽探索，尺寸适中) */
+/* 右侧宽屏小地图视窗 (可自由拖拽探索，拓宽视野) */
 .tactics-map-movable-area {
-  width: 260rpx;
+  width: 360rpx;
   height: 220rpx;
   border-radius: 20rpx;
   position: relative;
@@ -697,30 +708,52 @@ page {
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #fab387 0%, #E03A3E 100%);
-  color: #11111b;
-  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b4a 0%, #e03a3e 55%, #c02227 100%);
+  color: #ffffff;
+  font-weight: 700;
   font-size: 32rpx;
-  border-radius: 40rpx;
-  padding: 24rpx 0;
+  letter-spacing: 2rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.35);
+  border-radius: 44rpx;
+  height: 88rpx;
+  box-sizing: border-box;
   text-align: center;
-  box-shadow: 0 8rpx 24rpx rgba(224, 58, 62, 0.35);
+  box-shadow: 0 8rpx 24rpx rgba(224, 58, 62, 0.4), inset 0 1.5rpx 1.5rpx rgba(255, 255, 255, 0.45);
   border: none;
-  width: 100%;
+  width: 100% !important;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .primary-btn:active {
-  transform: scale(0.98);
-  opacity: 0.92;
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+.pulse-btn {
+  animation: btnGlowPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes btnGlowPulse {
+  0%, 100% {
+    box-shadow: 0 8rpx 24rpx rgba(224, 58, 62, 0.4), inset 0 1.5rpx 1.5rpx rgba(255, 255, 255, 0.45);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12rpx 32rpx rgba(224, 58, 62, 0.6), inset 0 1.5rpx 1.5rpx rgba(255, 255, 255, 0.65);
+    transform: scale(1.02);
+  }
 }
 
 .reroll-btn {
   background: linear-gradient(135deg, #f9e2af 0%, #fab387 50%, #f38ba8 100%);
   color: #11111b;
-  box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.35);
+  text-shadow: none;
+  box-shadow: 0 8rpx 24rpx rgba(245, 158, 11, 0.35), inset 0 1.5rpx 1.5rpx rgba(255, 255, 255, 0.45);
 }
 
 .reroll-btn.btn-exhausted {
@@ -770,24 +803,42 @@ page {
 }
 
 .btn-icon {
-  margin-right: 10rpx;
-  font-size: 32rpx;
+  margin-right: 12rpx;
+  font-size: 34rpx;
 }
 
 .secondary-btn {
-  background: #313244;
-  color: #cdd6f4;
-  font-size: 28rpx;
-  font-weight: bold;
+  background: rgba(255, 255, 255, 0.05);
+  color: #a6adc8;
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
   border-radius: 40rpx;
-  padding: 20rpx 0;
+  height: 74rpx;
+  box-sizing: border-box;
   text-align: center;
-  border: 2rpx solid #45475a;
-  width: 100%;
+  border: 1.5rpx solid rgba(255, 255, 255, 0.12);
+  width: 100% !important;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: all 0.15s ease;
 }
 
 .secondary-btn:active {
-  background: #45475a;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #cdd6f4;
+  transform: scale(0.98);
+}
+
+.btn-back-arrow {
+  font-size: 28rpx;
+  line-height: 1;
+  opacity: 0.8;
 }
 
 .footer-tip {
