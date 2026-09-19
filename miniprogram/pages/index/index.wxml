@@ -1,31 +1,23 @@
 <view class="portal-container">
   <!-- 顶部精简玩家栏 -->
   <view class="top-bar">
-    <!-- 已登录态：展示头像/编辑、昵称/修改、已连接标签 -->
+    <!-- 已登录态：展示头像、昵称与今日战绩 -->
     <view wx:if="{{userProfile.isLoggedIn}}" class="player-profile">
-      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <view class="avatar-box">
         <image class="avatar-img" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
-        <view class="avatar-edit-badge">✎</view>
-      </button>
+      </view>
       <view class="player-texts">
         <view class="nickname-box">
-          <input
-            type="nickname"
-            class="nickname-input"
-            value="{{userProfile.nickName}}"
-            placeholder="点击设置昵称"
-            bindblur="onNicknameBlur"
-          />
+          <text class="player-name">{{userProfile.nickName || '野生鼠鼠'}}</text>
         </view>
         <view class="profile-sub-row">
-          <text class="auth-tag">🛡️ 已连接</text>
           <text class="daily-badge">今日已玩 {{todayRecord.plays}} 局</text>
         </view>
       </view>
     </view>
 
-    <!-- 未登录态：一键微信登录入口 -->
-    <view wx:else class="player-profile guest-profile" bindtap="onWechatLogin">
+    <!-- 未登录态：点击呼出特勤身份登录提醒弹窗 -->
+    <view wx:else class="player-profile guest-profile" bindtap="onOpenLoginModal">
       <view class="avatar-box-guest">
         <image class="avatar-img" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
         <view class="guest-dot"></view>
@@ -35,8 +27,10 @@
           <text class="guest-name">{{userProfile.nickName || '野生鼠鼠'}}</text>
           <text class="guest-tag">游客</text>
         </view>
-        <view class="login-prompt-pill">
-          <text class="login-prompt-text">微信一键登录 ›</text>
+        <view class="guest-sub-row">
+          <view class="login-prompt-pill">
+            <text class="login-prompt-text">微信一键登录 ›</text>
+          </view>
         </view>
       </view>
     </view>
@@ -99,6 +93,43 @@
     <view class="setting-item">
       <text class="setting-text">游戏音效</text>
       <switch checked="{{settings.soundEnabled}}" bindchange="onToggleSound" color="#89b4fa" />
+    </view>
+  </view>
+
+  <!-- 特勤登录提醒弹窗 (首次进入未登录自动提醒，亦可点击顶部游客栏呼出) -->
+  <view wx:if="{{showLoginModal}}" class="login-modal-mask" catchtouchmove="preventTouchMove">
+    <view class="login-modal-card">
+      <view class="login-modal-header">
+        <view class="modal-badge">
+          <text class="modal-badge-icon">🛡️</text>
+          <text class="modal-badge-title">战区特勤通行证</text>
+        </view>
+        <view class="modal-close-btn" bindtap="onCloseLoginModal">✕</view>
+      </view>
+
+      <view class="login-modal-body">
+        <view class="modal-tip-box">
+          <text class="modal-tip-title">欢迎来到特勤大厅！</text>
+          <text class="modal-tip-desc">检测到您当前处于离线游客状态。连接微信登录可同步全盘游戏战绩与特权配置。</text>
+        </view>
+        <view class="modal-profile-preview-card">
+          <image class="modal-preview-avatar" src="{{userProfile.avatarUrl}}" mode="aspectFill"></image>
+          <view class="modal-preview-info">
+            <text class="modal-preview-name">{{userProfile.nickName || '野生鼠鼠'}}</text>
+            <text class="modal-preview-status">特勤通行证待连接</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="login-modal-footer">
+        <button class="modal-login-btn" bindtap="onConfirmModalLogin" loading="{{isLoggingIn}}">
+          <text class="modal-login-btn-icon">⚡</text>
+          <text class="modal-login-btn-text">微信一键登录</text>
+        </button>
+        <view class="modal-guest-btn" bindtap="onCloseLoginModal">
+          <text class="guest-btn-text">暂不登录，以游客身份继续体验 ›</text>
+        </view>
+      </view>
     </view>
   </view>
 </view>

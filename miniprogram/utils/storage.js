@@ -29,7 +29,7 @@ const Storage = {
   /**
    * 获取或生成持久化用户 ID
    * 纯离线单机环境下为每台设备生成唯一且不可变的 userId
-   * @returns {string} 如 'usr_k9x2m4p1'
+   * @returns {string} 如 'usr_892104'
    */
   getOrCreateUserId() {
     try {
@@ -37,8 +37,9 @@ const Storage = {
       if (profile && profile.userId) {
         return profile.userId;
       }
-      // 生成格式: usr_<时间戳36进制><随机数36进制>
-      const newUserId = 'usr_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+      // 生成格式: usr_<6位随机数字>，简短规整，符合战区特勤UID格式
+      const randNum = Math.floor(100000 + Math.random() * 900000);
+      const newUserId = 'usr_' + randNum;
       this.setUserProfile({ userId: newUserId });
       return newUserId;
     } catch (e) {
@@ -63,7 +64,15 @@ const Storage = {
       if (!data || typeof data !== 'object') {
         return { ...defaults };
       }
-      return { ...defaults, ...data };
+      const profile = { ...defaults, ...data };
+      // 历史脏数据强制自愈：若为旧版本默认昵称“无名勇士”或空值，强制重置为“野生鼠鼠”并回写落盘
+      if (profile.nickName === '无名勇士' || !profile.nickName) {
+        profile.nickName = '野生鼠鼠';
+        try {
+          wx.setStorageSync(STORAGE_KEYS.USER_PROFILE, profile);
+        } catch (err) {}
+      }
+      return profile;
     } catch (e) {
       console.error('读取用户配置失败:', e);
       return { ...defaults };
@@ -77,6 +86,10 @@ const Storage = {
     try {
       const current = this.getUserProfile();
       const updated = { ...current, ...profile };
+      // 防御旧默认值“无名勇士”写回
+      if (updated.nickName === '无名勇士' || !updated.nickName) {
+        updated.nickName = '野生鼠鼠';
+      }
       wx.setStorageSync(STORAGE_KEYS.USER_PROFILE, updated);
       return updated;
     } catch (e) {

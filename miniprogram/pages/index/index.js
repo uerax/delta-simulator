@@ -38,11 +38,14 @@ Page({
       soundEnabled: true,
       vibrationEnabled: true
     },
-    gameList: getInitialGameList()
+    gameList: getInitialGameList(),
+    showLoginModal: false,
+    isLoggingIn: false
   },
 
   _isNavigating: false,
   _onUserChange: null,
+  _hasPromptedLogin: false,
 
   onLoad() {
     // 监听全局用户状态与资料更新
@@ -69,6 +72,19 @@ Page({
     // 静默校验微信会话
     UserManager.checkSession();
     this.refreshAllData();
+
+    // 首屏冷启动检测：若未登录则主动弹出登录提醒弹窗 (单次 session 仅主动提醒一次，不骚扰用户)
+    if (!this._hasPromptedLogin) {
+      this._hasPromptedLogin = true;
+      const userProfile = UserManager.getUserInfo();
+      if (!userProfile || !userProfile.isLoggedIn) {
+        setTimeout(() => {
+          if (!this.data.userProfile.isLoggedIn) {
+            this.setData({ showLoginModal: true });
+          }
+        }, 350);
+      }
+    }
   },
 
   refreshAllData() {
@@ -101,29 +117,61 @@ Page({
     }
   },
 
-  // 微信一键登录
-  onWechatLogin() {
+  // 阻止蒙层触摸穿透
+  preventTouchMove() {
+    return false;
+  },
+
+  // 唤起特勤身份登录认证弹窗
+  onOpenLoginModal() {
+    if (this.data.settings && this.data.settings.vibrationEnabled) {
+      Feedback.vibrateShort(true, 'light');
+    }
+    this.setData({ showLoginModal: true });
+  },
+
+  // 关闭特勤登录认证弹窗
+  onCloseLoginModal() {
+    if (this.data.settings && this.data.settings.vibrationEnabled) {
+      Feedback.vibrateShort(true, 'light');
+    }
+    this.setData({ showLoginModal: false });
+  },
+
+  // 弹窗中确认微信一键登录并激活通行证
+  onConfirmModalLogin() {
+    if (this.data.isLoggingIn) return;
+
     if (this.data.settings && this.data.settings.vibrationEnabled) {
       Feedback.vibrateShort(true, 'light');
     }
 
-    if (typeof wx !== 'undefined' && typeof wx.showLoading === 'function') {
-      wx.showLoading({ title: '正在连接微信...' });
-    }
+    this.setData({ isLoggingIn: true });
 
     UserManager.login()
       .then((userInfo) => {
-        if (typeof wx !== 'undefined' && typeof wx.hideLoading === 'function') {
-          wx.hideLoading();
+        this.setData({
+          userProfile: userInfo,
+          showLoginModal: false,
+          isLoggingIn: false
+        });
+        if (typeof wx !== 'undefined' && typeof wx.showToast === 'function') {
+          wx.showToast({
+            title: '特勤身份已激活',
+            icon: 'success',
+            duration: 1500
+          });
         }
-        this.setData({ userProfile: userInfo });
       })
       .catch((err) => {
-        if (typeof wx !== 'undefined' && typeof wx.hideLoading === 'function') {
-          wx.hideLoading();
-        }
-        console.error('登录失败:', err);
+        this.setData({ isLoggingIn: false });
+        console.error('登录激活失败:', err);
       });
+  },
+
+  // 微信一键登录 (兼容保留)
+  onWechatLogin() {
+    this.onOpenLoginModal();
   },
 
   // 选择游戏进入（编程式跳转兜底）
@@ -157,10 +205,26 @@ Page({
     if (avatarUrl) {
       const updated = UserManager.updateProfile({ avatarUrl });
       this.setData({ userProfile: updated });
+      if (typeof wx !== 'undefined' && typeof wx.showToast === 'function') {
+        wx.showToast({
+          title: '头像已更新',
+          icon: 'success',
+          duration: 1200
+        });
+      }
     }
   },
 
-  // 昵称修改
+  // 昵称输入捕获 (支持微信键盘一键快捷填充)
+  onNicknameInput(e) {
+    const nickName = (e.detail && e.detail.value) ? e.detail.value.trim() : '';
+    if (nickName) {
+      const updated = UserManager.updateProfile({ nickName });
+      this.setData({ userProfile: updated });
+    }
+  },
+
+  // 昵称修改失焦确认
   onNicknameBlur(e) {
     const nickName = (e.detail && e.detail.value) ? e.detail.value.trim() : '';
     if (nickName) {

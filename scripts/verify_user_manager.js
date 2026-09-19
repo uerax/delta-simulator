@@ -122,7 +122,23 @@ async function runTests() {
   assert.strictEqual(UserManager._listeners.size, 0, '所有监听器注销后 Set 大小必须为 0');
   console.log('  ✅ 通过: off 成功释放所有监听句柄\n');
 
-  console.log('🎉 UserManager 用户模块全部 6 项单元测试 100% 绿色通过！');
+  // 测试用例 7: 历史缓存脏数据“无名勇士”自愈为“野生鼠鼠”
+  console.log('▶ 测试用例 7: 历史脏数据“无名勇士”自动自愈校准为“野生鼠鼠”');
+  // 注入旧版脏数据
+  mockStorage[Storage.STORAGE_KEYS.USER_PROFILE] = {
+    userId: 'usr_old_123456',
+    nickName: '无名勇士',
+    avatarUrl: '/images/avatar.png',
+    isLoggedIn: false
+  };
+  const healedProfile = Storage.getUserProfile();
+  assert.strictEqual(healedProfile.nickName, '野生鼠鼠', '读取旧版“无名勇士”缓存时必须强制自愈为“野生鼠鼠”');
+  // 验证是否回写落盘
+  const storedAfterHeal = mockStorage[Storage.STORAGE_KEYS.USER_PROFILE];
+  assert.strictEqual(storedAfterHeal.nickName, '野生鼠鼠', '自愈后的昵称必须回写更新至本地缓存');
+  console.log('  ✅ 通过: 历史脏数据已 100% 自动自愈纠正并持久化\n');
+
+  console.log('🎉 UserManager 用户模块全部 7 项单元测试 100% 绿色通过！');
 }
 
 runTests().catch(err => {

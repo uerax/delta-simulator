@@ -35,9 +35,13 @@ class UserManagerService {
 
     try {
       const profile = Storage.getUserProfile();
+      let nickName = profile.nickName;
+      if (!nickName || nickName === '无名勇士') {
+        nickName = '野生鼠鼠';
+      }
       this._userInfo = {
         userId: profile.userId || Storage.getOrCreateUserId(),
-        nickName: profile.nickName || '野生鼠鼠',
+        nickName: nickName,
         avatarUrl: profile.avatarUrl || '/images/avatar.png',
         isLoggedIn: Boolean(profile.isLoggedIn),
         loginTime: profile.loginTime || null,
