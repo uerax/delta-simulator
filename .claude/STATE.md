@@ -1,6 +1,74 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.21`（唯一权威事实源）
+> **当前全局版本号**：`v1.8.23`（唯一权威事实源）
+
+## [2026-09-19] 落地道具池价格半区分档(方案A)，彻底根除合成大西瓜同品质内部身价倒挂
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **道具管理器分档能力增强 (ItemManager)**：
+     - 升级 `getRandomByLevel(level, excludeSet, tier, filterZeroPrice)` 接口；
+     - 支持 `'high'`（高价半区 `slice(0, mid)`）、`'low'`（平价半区 `slice(mid)`）与 `'all'`（全池）身价阶梯分段；
+     - 默认开启 `filterZeroPrice: true`，自动过滤 11 个未挂牌 0 元非交易材料，确保入池道具均具备真实身价。
+  2. **合成大西瓜局内道具池平滑阶梯生成 (Watermelon Items)**：
+     - 在 `refreshWatermelonItems()` 中，对西瓜 11 阶道具应用 `TIER_MAP` 身价半区分档规则：
+       - Lv.2 (平价绿) vs Lv.3 (高价绿)
+       - Lv.4 (平价蓝) vs Lv.5 (高价蓝)
+       - Lv.6 (平价紫) vs Lv.7 (高价紫)
+       - Lv.8 (平价橙) vs Lv.9 (高价橙)
+     - 彻底根除此前同品质内较小球比合并后较大球更贵的身价倒挂现象，保证各阶身价平滑单调递增。
+  3. **自动化单元测试 100% 绿色通过**：
+     - 新建 `scripts/verify_tiered_watermelon_items.js`，运行 100 轮蒙特卡洛随机模拟，同品质双阶道具身价递增率与非 0 元率均达到 100%。
+  4. **版本号维护**：
+     - 版本号由 `v1.8.22` 递增至 `v1.8.23`。
+- 涉及文件：
+  - `miniprogram/utils/itemManager.js`
+  - `miniprogram/games/watermelon/items.js`
+  - `scripts/verify_tiered_watermelon_items.js`
+  - `package.json`
+  - `.claude/STATE.md`
+  - `.claude/FEATURE-MAP.md`
+
+## [2026-09-19] 合成非洲之心接入水果消除锤(Hammer)道具、物理精准拾取与三段敲击动效闭环
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **物理层精准拾取与重力沉降唤醒 (PhysicsWorldPlanck)**：
+     - 新增 `findBodyAt(x, y)`：遍历小球刚体列表，采用欧氏距离与半径判定最近命中目标，排除 `isMerging` 状态；
+     - 新增 `wakeBodiesInRadius(cx, cy, radius)`：目标刚体移除后唤醒其周围小球刚体，在重力作用下自然沉降并产生连锁碰撞；
+     - 复用现有的 `removeBody(body)` 安全注销物理世界 Fixture 与 Body。
+  2. **存储层纯离线每日补给 (Storage - 方案 A)**：
+     - 严格复用 `STORAGE_KEYS.DAILY_RECORDS` 每日战报体系，每日首次进入游戏自动补给赠送 2 把消除锤；
+     - 新增 `getTodayHammerCount()` 与 `consumeTodayHammer()`，支持本地单机持久化与跨天自愈刷新。
+  3. **核心逻辑引擎状态机 (WatermelonEngine)**：
+     - 扩展 `toolMode`（`'none' | 'hammer'`）与 `isToolInProgress` 互斥锁；
+     - 增加 `activateHammer()`（防空场误触拦截）、`cancelHammer()` 与 `useHammerAt(x, y)`；
+     - 敲击判定通过后派发 `onHammerHit` 回调，并在 `executeHammerClear(target)` 真正移除刚体与唤醒沉降，在游戏结束和重启时自动重置。
+  4. **页面控制器与触控拦截修复 (Watermelon Page)**：
+     - **修复审核遗漏点 1**：`onTouchStart` 和 `onTouchMove` 增加 `toolMode === 'hammer'` 分支拦截，锤子激活态下手指触屏禁止移动顶部预览球；
+     - **修复审核遗漏点 2**：`onTouchEnd` 严格同时获取并保留 `touch.x` 和 `touch.y`，用于精确欧氏距离判定；未命中给予轻量 Toast 提示与震动；
+     - **1:1 对标斗鱼 Cocos 三段敲击动效**：Canvas 2D 零 setData 绘制战术重工消除锤（0.34s，28° → -22° → 18° → -22°），触底命中瞬间调用真实物理消除；
+     - 命中复用现有的 `_createMergeBurstEffects(x, y, radius, colorHex)`（18 颗彩色爆汁水滴与中心强光），触发重度马达震动 `Feedback.vibrateShort('heavy')` 与身价浮动文字。
+  5. **界面与交互样式 (WXML / WXSS)**：
+     - 消除锤规范归位到游戏顶部状态栏（与“下一个”并列对称），圆形图标内展示 🔨，**右下角悬挂剩余数量徽章**；
+     - 接入与“下一个”相同的特权口子：当消除锤数量为 0 时，点击触发 `onHammerReplenishTap` 提示“看广告/付费补充消除锤即将上线”，先轻量保留接口等待后续商业化接入；
+     - 顶部提示条无缝切换展示“🔨 请点击场内任意水果敲碎 / 取消”；
+     - 底部操作栏恢复为纯净双按钮。
+  6. **全套自动化单测 100% 绿色通过**：
+     - 新增 `verify_watermelon_hammer.js`，覆盖物理拾取、引擎状态机、存储方案 A 跨天持久化；全量回归测试全部通过。
+  7. **版本号维护**：
+     - 版本号由 `v1.8.21` 递增至 `v1.8.22`。
+- 涉及文件：
+  - `miniprogram/games/watermelon/physicsPlanck.js`
+  - `miniprogram/games/watermelon/engine.js`
+  - `miniprogram/utils/storage.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/watermelon/index.wxml`
+  - `miniprogram/pages/watermelon/index.wxss`
+  - `scripts/verify_watermelon_hammer.js`
+  - `package.json`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-19] BGM源文件物理级烘焙1秒半正弦淡入，彻底消除开头突发性大音量与炸耳感
 - 状态：已完成

@@ -41,6 +41,9 @@ Page({
     modalTitle: '搜刮撤离完成！',
     isNewRecord: false,
     resultItems: [],
+    // 消除锤道具状态
+    isHammerActive: false,      // 是否处于消除锤激活状态
+    hammerCount: 2,             // 今日消除锤剩余可用次数 (每日赠送 2 次补给)
     // 付费特权状态 (留好后续支付开启的口子，默认未开启)
     isGuideLineUnlocked: false, // 掉落虚线定位导轨特权 (默认隐藏)
     isNextItemUnlocked: false   // 下一个道具透视特权 (默认打码加锁)
@@ -58,6 +61,7 @@ Page({
     this._mergeParticles = []; // 1:1 对标斗鱼 Cocos 合成爆汁飞溅遮瑕粒子 (中心光爆 + 果汁水滴)
     this._floatingTexts = []; // 连击与加分漂浮字
     this._readyFruitTrails = []; // 1:1 对标斗鱼 Cocos 瞄准平移残影拖尾
+    this._hammerAnim = null; // 消除锤敲击补间动效对象
     this._isDragging = false;
     this._canvasInited = false;
 
@@ -65,12 +69,17 @@ Page({
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
 
+    // 读取今日消除锤剩余数量 (每日 2 次补给)
+    const hammerCount = Storage.getTodayHammerCount ? Storage.getTodayHammerCount() : 2;
+
     // 读取用户付费特权状态 (默认 false)
     this._privileges = Storage.getPrivileges ? Storage.getPrivileges() : { aimGuideLine: false, nextItemPreview: false };
     this.setData({
       nextItem: getItemByLevel(1),
       isGuideLineUnlocked: !!this._privileges.aimGuideLine,
-      isNextItemUnlocked: !!this._privileges.nextItemPreview
+      isNextItemUnlocked: !!this._privileges.nextItemPreview,
+      hammerCount: hammerCount,
+      isHammerActive: false
     });
 
     this._routeDoneTimer = null;
@@ -106,6 +115,12 @@ Page({
     this._isNavigating = false;
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
+
+    // 每次进入或切回前台时，重新校准今日消除锤剩余次数 (跨天自动自愈恢复 2 次)
+    const hammerCount = Storage.getTodayHammerCount ? Storage.getTodayHammerCount() : 2;
+    if (this.data.hammerCount !== hammerCount) {
+      this.setData({ hammerCount });
+    }
 
     // 进入游戏播放背景音乐 (含 1 秒渐入)
     BgmManager.play();
@@ -325,6 +340,14 @@ Page({
       onAimTrail: ({ startX, targetX, radius, level, dist }) => {
         this._createReadyFruitTrails(startX, targetX, radius, level, dist);
       },
+      onToolModeChange: ({ toolMode }) => {
+        this.setData({
+          isHammerActive: toolMode === 'hammer'
+        });
+      },
+      onHammerHit: ({ target, item, x, y }) => {
+        this._startHammerAnimation(target, item, x, y);
+      },
       onFeedback: (fb) => {
         if (fb.type === 'drop') {
           Feedback.vibrateShort(this._vibrationEnabled, 'light');
@@ -471,6 +494,11 @@ Page({
 
       // 7. 绘制连击与身价浮动文字
       this._drawFloatingTexts(ctx, dt);
+
+      // 8. 绘制消除锤敲击补间动效
+      if (this._hammerAnim) {
+        this._updateAndDrawHammer(ctx, dt);
+      }
     } catch (err) {
       console.warn('_renderFrame safe caught:', err);
     }
@@ -976,6 +1004,12 @@ Page({
   onTouchStart(e) {
     if (this.data.showResultModal) return;
     if (!this._engine || this._engine.gameState !== 'playing') return;
+
+    // [关键拦截] 消除锤激活模式下，手指触碰屏幕禁止移动顶部待投掷果实
+    if (this._engine.toolMode === 'hammer') {
+      return;
+    }
+
     const touch = e.touches[0];
     if (!touch) return;
 
@@ -985,7 +1019,14 @@ Page({
 
   onTouchMove(e) {
     if (this.data.showResultModal) return;
-    if (!this._isDragging || !this._engine) return;
+    if (!this._engine || this._engine.gameState !== 'playing') return;
+
+    // [关键拦截] 消除锤激活模式下禁止拖拽预览球
+    if (this._engine.toolMode === 'hammer') {
+      return;
+    }
+
+    if (!this._isDragging) return;
     const touch = e.touches[0];
     if (!touch) return;
 
@@ -995,13 +1036,213 @@ Page({
   onTouchEnd(e) {
     if (this.data.showResultModal) return;
     if (!this._engine) return;
-    this._isDragging = false;
 
-    // 获取手指松开位置，快速释放
-    const touch = e.changedTouches ? e.changedTouches[0] : null;
+    // [关键修复] 严格同时保留 touch.x 与 touch.y，供消除锤精确欧氏距离判定
+    const touch = e.changedTouches ? e.changedTouches[0] : (e.touches ? e.touches[0] : null);
     const releaseX = touch ? touch.x : null;
+    const releaseY = touch ? touch.y : null;
 
+    // 若当前处于消除锤激活模式，执行道具点选与敲击逻辑
+    if (this._engine.toolMode === 'hammer') {
+      if (releaseX === null || releaseY === null) return;
+      const result = this._engine.useHammerAt(releaseX, releaseY);
+      if (!result.success) {
+        if (result.reason === 'miss') {
+          wx.showToast({
+            title: '未选中水果，请点击场内小球～',
+            icon: 'none',
+            duration: 1000
+          });
+          Feedback.vibrateShort(this._vibrationEnabled, 'light');
+        }
+      }
+      return;
+    }
+
+    this._isDragging = false;
     this._engine.dropCurrentFruit(releaseX);
+  },
+
+  /**
+   * 切换消除锤激活状态
+   */
+  toggleHammer() {
+    Feedback.impactLight();
+
+    // 当数量为 0 时，触发看广告或付费补给特权入口 (等待后续加入开发，先保留)
+    if (this.data.hammerCount <= 0) {
+      this.onHammerReplenishTap();
+      return;
+    }
+
+    if (!this._engine || this._engine.gameState !== 'playing') return;
+
+    // 若已激活，点击则取消
+    if (this.data.isHammerActive) {
+      this._engine.cancelHammer();
+      return;
+    }
+
+    // 检查场内是否有水果
+    if (!this._engine.hasUsableTargets()) {
+      wx.showToast({
+        title: '场内暂无可消除的水果～',
+        icon: 'none',
+        duration: 1200
+      });
+      Feedback.vibrateShort(this._vibrationEnabled, 'light');
+      return;
+    }
+
+    const activated = this._engine.activateHammer();
+    if (activated) {
+      Feedback.vibrateShort(this._vibrationEnabled, 'medium');
+    }
+  },
+
+  /**
+   * 点击消除锤补给 (付费开启/看广告特权入口，留好后续商业化/广告能力，先轻量保留)
+   */
+  onHammerReplenishTap() {
+    Feedback.impactLight();
+    if (this._privileges && this._privileges.isVipMember) {
+      wx.showToast({
+        title: '特权会员每日补给已达上限',
+        icon: 'none',
+        duration: 1500
+      });
+      return;
+    }
+    // 明确提示：每日免费 2 次，明日自动恢复；额外补充特权即将上线
+    wx.showToast({
+      title: '今日2次已用完，明日自动恢复～ 广告补给即将上线',
+      icon: 'none',
+      duration: 2200
+    });
+  },
+
+  /**
+   * 取消消除锤激活模式
+   */
+  cancelHammer() {
+    if (this._engine) {
+      this._engine.cancelHammer();
+    }
+  },
+
+  /**
+   * 启动消除锤敲击补间动画
+   */
+  _startHammerAnimation(target, item, x, y) {
+    this._hammerAnim = {
+      target,
+      item,
+      x,
+      y,
+      elapsed: 0,
+      duration: 0.34, // 严格对标斗鱼 3 段砸击时序 (0.12s + 0.10s + 0.12s)
+      hasHit: false
+    };
+  },
+
+  /**
+   * 绘制并推进消除锤敲击动效 (Canvas 2D 纯原生补间渲染，零 setData 损耗)
+   */
+  _updateAndDrawHammer(ctx, dt = 0.016) {
+    const anim = this._hammerAnim;
+    if (!anim) return;
+
+    anim.elapsed += dt;
+    const t = anim.elapsed;
+
+    // 1:1 对标斗鱼 Cocos 关键帧补间角度：
+    // 0.00s ~ 0.12s: 28° -> -22° (QuadIn)
+    // 0.12s ~ 0.22s: -22° -> 18° (QuadOut)
+    // 0.22s ~ 0.34s: 18° -> -22° (QuadIn)
+    let angleDeg = 28;
+    if (t < 0.12) {
+      const p = t / 0.12;
+      const ease = p * p;
+      angleDeg = 28 + (-22 - 28) * ease;
+    } else if (t < 0.22) {
+      const p = (t - 0.12) / 0.10;
+      const ease = p * (2 - p);
+      angleDeg = -22 + (18 - (-22)) * ease;
+    } else if (t < 0.34) {
+      const p = (t - 0.22) / 0.12;
+      const ease = p * p;
+      angleDeg = 18 + (-22 - 18) * ease;
+    } else {
+      angleDeg = -22;
+    }
+
+    const angleRad = (angleDeg * Math.PI) / 180;
+    const radius = (anim.target && anim.target.radius) || 20;
+
+    // 绘制战术重工消除锤
+    ctx.save();
+    ctx.translate(anim.x, anim.y - radius * 0.3);
+    ctx.rotate(angleRad);
+
+    // 1. 战术锤柄 (防滑金属灰 + 防脱橡胶圈)
+    ctx.fillStyle = '#374151';
+    ctx.fillRect(-4, -62, 8, 56);
+    ctx.fillStyle = '#1f2937';
+    ctx.fillRect(-5, -36, 10, 24);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(-4, -22, 8, 3);
+
+    // 2. 战术重装方头锤 (暗黑合金 + 金色警示边框)
+    ctx.fillStyle = '#111827';
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.rect(-24, -86, 48, 26);
+    ctx.fill();
+    ctx.stroke();
+
+    // 锤头击打面金属高光
+    ctx.fillStyle = '#9ca3af';
+    ctx.fillRect(16, -84, 6, 22);
+
+    ctx.restore();
+
+    // 0.34s 触底敲击命中结算
+    if (t >= 0.34 && !anim.hasHit) {
+      anim.hasHit = true;
+      const { target, item, x, y } = anim;
+
+      // 1. 物理移除刚体并重力沉降周围小球
+      if (this._engine) {
+        this._engine.executeHammerClear(target);
+      }
+
+      // 2. 扣除今日消除锤配额 (方案 A: 复用 DAILY_RECORDS)
+      const remaining = Storage.consumeTodayHammer ? Storage.consumeTodayHammer() : 0;
+      this.setData({
+        hammerCount: remaining,
+        isHammerActive: false
+      });
+
+      // 3. 1:1 触发爆汁碎屑与中心强光遮瑕粒子
+      const colorHex = (item && item.colorHex) || '#fbbf24';
+      this._createMergeBurstEffects(x, y, radius, colorHex);
+
+      // 4. 重度触感震动反馈
+      Feedback.vibrateShort(this._vibrationEnabled, 'heavy');
+
+      // 5. 浮动击碎提示文字
+      this._floatingTexts.push({
+        x: x,
+        y: y - radius - 10,
+        text: '💥 敲碎消除!',
+        color: '#fbbf24',
+        alpha: 1.0,
+        scale: 1.2
+      });
+
+      this._hammerAnim = null;
+    }
   },
 
   /**
@@ -1040,14 +1281,20 @@ Page({
    * 重新开始游戏
    */
   restartGame() {
+    const hammerCount = Storage.getTodayHammerCount ? Storage.getTodayHammerCount() : 2;
+
     this.setData({
       showResultModal: false,
       score: 0,
       moneyFormatted: '0',
       watermelonCount: 0,
       combo: 0,
-      isWarning: false
+      isWarning: false,
+      isHammerActive: false,
+      hammerCount
     });
+
+    this._hammerAnim = null;
 
     // 重新抽取下一局战术地图切片
     MapManager.pickSession({ width: this._width, height: this._height });

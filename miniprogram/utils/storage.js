@@ -416,6 +416,55 @@ const Storage = {
   },
 
   /**
+   * 获取今日消除锤剩余数量 (每日首次进入自动赠送 2 把补给)
+   * 纯离线单机运行，完全复用 DAILY_RECORDS 跨天自愈
+   * @returns {number}
+   */
+  getTodayHammerCount() {
+    try {
+      const today = getTodayString();
+      const dailyMap = wx.getStorageSync(STORAGE_KEYS.DAILY_RECORDS) || {};
+      const todayData = dailyMap[today] || { plays: 0, totalScore: 0 };
+      if (!todayData.tools || typeof todayData.tools.hammer !== 'number') {
+        todayData.tools = todayData.tools || {};
+        todayData.tools.hammer = 2; // 每日赠送 2 把水果消除锤
+        dailyMap[today] = todayData;
+        wx.setStorageSync(STORAGE_KEYS.DAILY_RECORDS, dailyMap);
+      }
+      return todayData.tools.hammer;
+    } catch (e) {
+      console.error('获取今日消除锤数量失败:', e);
+      return 2;
+    }
+  },
+
+  /**
+   * 消耗一把今日消除锤
+   * @returns {number} 剩余消除锤数量
+   */
+  consumeTodayHammer() {
+    try {
+      const today = getTodayString();
+      const dailyMap = wx.getStorageSync(STORAGE_KEYS.DAILY_RECORDS) || {};
+      const todayData = dailyMap[today] || { plays: 0, totalScore: 0 };
+      if (!todayData.tools || typeof todayData.tools.hammer !== 'number') {
+        todayData.tools = todayData.tools || {};
+        todayData.tools.hammer = 2;
+      }
+      if (todayData.tools.hammer > 0) {
+        todayData.tools.hammer -= 1;
+        dailyMap[today] = todayData;
+        wx.setStorageSync(STORAGE_KEYS.DAILY_RECORDS, dailyMap);
+        return todayData.tools.hammer;
+      }
+      return 0;
+    } catch (e) {
+      console.error('消耗今日消除锤失败:', e);
+      return 0;
+    }
+  },
+
+  /**
    * 获取系统设置 (支持音乐开关 musicEnabled 及兼容历史 soundEnabled)
    */
   getSettings() {

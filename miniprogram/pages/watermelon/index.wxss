@@ -298,3 +298,108 @@ game-result-modal {
 .primary-btn:active {
   opacity: 0.85;
 }
+
+/* 顶部状态栏：消除锤道具项 (与“下一个”并列对齐) */
+.hammer-item-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80rpx;
+  transition: transform 0.1s ease;
+}
+
+.hammer-item-box:active {
+  transform: scale(0.94);
+}
+
+.hammer-preview-circle {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx solid #30363d;
+  background: #161b22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.4);
+  position: relative;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.hammer-preview-circle.active {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #fbbf24;
+  box-shadow: 0 0 16rpx rgba(251, 191, 36, 0.6);
+  animation: toolPulse 1.2s infinite alternate ease-in-out;
+}
+
+.hammer-circle-icon {
+  font-size: 26rpx;
+  line-height: 1;
+}
+
+/* 核心要求：消除锤图标右下角显示数量角标 */
+.hammer-count-badge {
+  position: absolute;
+  right: -8rpx;
+  bottom: -6rpx;
+  min-width: 26rpx;
+  height: 26rpx;
+  line-height: 26rpx;
+  padding: 0 4rpx;
+  border-radius: 13rpx;
+  background: #f59e0b;
+  color: #111827;
+  font-size: 18rpx;
+  font-weight: 700;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.6);
+  border: 1rpx solid rgba(17, 24, 39, 0.8);
+}
+
+.hammer-count-badge.empty {
+  background: #4b5563;
+  color: #d1d5db;
+}
+
+/* 消除锤道具激活提示条 */
+.tool-active-tag {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1rpx solid #fbbf24;
+  border-radius: 20rpx;
+  padding: 4rpx 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(251, 191, 36, 0.3);
+  animation: toolPulse 1.2s infinite alternate ease-in-out;
+}
+
+.tool-active-text {
+  font-size: 22rpx;
+  color: #fbbf24;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+.tool-cancel-btn {
+  font-size: 20rpx;
+  color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12rpx;
+  padding: 2rpx 14rpx;
+  margin: 0;
+  line-height: 32rpx;
+}
+
+.tool-cancel-btn:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes toolPulse {
+  0% { transform: scale(0.98); box-shadow: 0 0 6rpx rgba(251, 191, 36, 0.3); }
+  100% { transform: scale(1.02); box-shadow: 0 0 16rpx rgba(251, 191, 36, 0.6); }
+}
+

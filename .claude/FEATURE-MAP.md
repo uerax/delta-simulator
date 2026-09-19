@@ -17,8 +17,8 @@
   - 游戏元数据与配置：`manifest.js`（自描述配置与今日运势状态展示适配）
 - **游戏 2：合成非洲之心 (Watermelon / 非洲之心)**：`miniprogram/games/watermelon/`
   - 11 级阶梯道具元数据：`items.js`（官方已备案 CDN 道具、尺寸、物理质量与交易行身价）
-  - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，1:1 对标斗鱼 Cocos 物理参数与 120Hz 子步长累加器，摩擦力0.2，角阻尼0.22，低弹性0.1，偏心防发呆与休眠机制，彻底根除小球无限自旋）
-  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，直接绑定 Planck.js 物理世界，动态下落池难度曲线、搜刮身价、连击算法与状态机）
+  - 工业级 Planck.js (Box2D) 物理引擎适配层：`physicsPlanck.js`（`PhysicsWorldPlanck`，1:1 对标斗鱼 Cocos 物理参数与 120Hz 子步长累加器，摩擦力0.2，角阻尼0.22，低弹性0.1，偏心防发呆与休眠机制，彻底根除小球无限自旋；支持 `findBodyAt` 精准坐标半径拾取与 `wakeBodiesInRadius` 重力沉降批量唤醒）
+  - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，直接绑定 Planck.js 物理世界，动态下落池难度曲线、搜刮身价、连击算法、道具模式状态机 `toolMode: 'none' | 'hammer'` 与消除闭环）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，6级红品专属底色与高光）
   - 第三方物理核心库：`miniprogram/lib/planck.min.js`（Erin Catto 官方 Box2D 纯 JS 移植版，零 eval，零 new Function，适配微信环境）
 - **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`（大厅展示隐藏）
@@ -48,7 +48,7 @@
   - 职责定位：占位页面（施工与方案对齐中），图标接入官方CDN“海洋之泪”。
 - **页面 2：合成非洲之心**：`miniprogram/pages/watermelon/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
-  - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入通用弹窗组件与触感反馈。
+  - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入消除锤悬浮道具与三段敲击动效，接入通用弹窗组件与触感反馈。
 - **页面 3：极速反应挑战**：`miniprogram/pages/game/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
   - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。
@@ -67,11 +67,12 @@
   - 玩家配置：`getUserProfile`, `setUserProfile`
   - 游戏命名空间隔离存储：`getGameRecord(gameId)`, `saveGameRecord(gameId, data)`, `recordGamePlay(gameId, options)`
   - 兼容战绩持久化：`recordReactionResult`, `recordSchulteResult`, `getTodayRecord`, `getGameStats`
+  - 道具每日补给：`getTodayHammerCount`, `consumeTodayHammer`（复用 DAILY_RECORDS 跨天自愈）
   - 系统偏好：`getSettings`, `saveSettings`
   - 付费特权管理：`getPrivileges`, `savePrivileges`, `isPrivilegeUnlocked`, `unlockPrivilege`
   - 存储清空：`clearAll`
 - **道具全局管理器 (ItemManager)**：`miniprogram/utils/itemManager.js`
-  - 核心能力：`LEVEL_THEMES` 1~6 级主题与颜色枚举（底色/高光/渐变）、全局 `itemMap` 双键索引（按 ID 与名称 O(1) 检索）、1~6 级专属双键 Map（`level1Map` ~ `level6Map`）与身价降序列表、道具对象内置 `priceFormatted` 千分位金额与 `theme` 主题、按等级随机抽取 `getRandomByLevel`。
+  - 核心能力：`LEVEL_THEMES` 1~6 级主题与颜色枚举（底色/高光/渐变）、全局 `itemMap` 双键索引（按 ID 与名称 O(1) 检索）、1~6 级专属双键 Map（`level1Map` ~ `level6Map`）与身价降序列表、道具对象内置 `priceFormatted` 千分位金额与 `theme` 主题、支持高低价半区分档与 0 元过滤的随机抽取 `getRandomByLevel`。
 - **战术地图背景管理器 (MapManager)**：`miniprogram/utils/mapManager.js`
   - 核心能力：6 大战术地图双键索引（按 Key 与名称 O(1) 检索）、开局独立战术背景会话（`pickSession` 随机抽取 96 张官方切片之一）、Canvas 2D 独立渲染适配（`drawBackground`，自带图象内存缓存、深色遮罩与军事经纬十字刻度）、DOM 样式生成器（`getRandomBackgroundStyle`，供非 Canvas 页面一键绑定）。
 - **战区物资点管理器 (SupplyManager)**：`miniprogram/utils/supplyManager.js`

@@ -23,9 +23,13 @@ class WatermelonEngine {
     this.onGameOver = options.onGameOver || null;
     this.onFeedback = options.onFeedback || null;
     this.onAimTrail = options.onAimTrail || null; // 瞄准滑动残影拖尾回调
+    this.onToolModeChange = options.onToolModeChange || null; // 道具模式变更回调
+    this.onHammerHit = options.onHammerHit || null; // 消除锤命中水果回调
 
     // 核心游戏状态
     this.gameState = 'ready'; // ready | playing | ended
+    this.toolMode = 'none';   // 'none' | 'hammer' (道具使用模式)
+    this.isToolInProgress = false; // 道具动画执行互斥锁
     this.score = 0;
     this.money = 0; // 搜刮总身价 (金币)
     this.watermelonCount = 0; // 当前局合成非洲之心(大西瓜)个数
@@ -319,6 +323,8 @@ class WatermelonEngine {
     this._recentDropHistory = [];
     this.isDropping = false;
     this.isAimSliding = false;
+    this.toolMode = 'none';
+    this.isToolInProgress = false;
     this.dropCooldownTimer = 0;
     this.heldFruitAlpha = 1.0;
     this.heldFruitAppearDuration = 0;
@@ -554,11 +560,115 @@ class WatermelonEngine {
   }
 
   /**
+   * 检查场内是否存在可被消除的水果目标
+   * @returns {boolean}
+   */
+  hasUsableTargets() {
+    if (!this.physics || !this.physics.bodies) return false;
+    return this.physics.bodies.some(b => b && !b.isMerging && b._pBody);
+  }
+
+  /**
+   * 激活消除锤使用模式
+   * @returns {boolean} 是否成功激活
+   */
+  activateHammer() {
+    if (this.gameState !== 'playing' || this.isToolInProgress) return false;
+    if (!this.hasUsableTargets()) return false;
+    this.toolMode = 'hammer';
+    this._emitToolMode();
+    return true;
+  }
+
+  /**
+   * 取消消除锤使用模式
+   */
+  cancelHammer() {
+    if (this.toolMode !== 'hammer' || this.isToolInProgress) return;
+    this.toolMode = 'none';
+    this._emitToolMode();
+  }
+
+  /**
+   * 在指定屏幕坐标使用消除锤
+   * @param {number} x
+   * @param {number} y
+   * @returns {{ success: boolean, reason?: string, target?: object, item?: object }}
+   */
+  useHammerAt(x, y) {
+    if (this.gameState !== 'playing') {
+      return { success: false, reason: 'not_playing' };
+    }
+    if (this.toolMode !== 'hammer') {
+      return { success: false, reason: 'not_hammer_mode' };
+    }
+    if (this.isToolInProgress) {
+      return { success: false, reason: 'tool_in_progress' };
+    }
+
+    const target = this.physics.findBodyAt(x, y);
+    if (!target) {
+      return { success: false, reason: 'miss' };
+    }
+
+    this.isToolInProgress = true;
+    const item = this._getItem(target.level);
+
+    // 触发命中事件，由页面驱动锤子敲击补间与碎裂动效
+    if (typeof this.onHammerHit === 'function') {
+      this.onHammerHit({
+        target,
+        item,
+        x: target.x,
+        y: target.y,
+        touchX: x,
+        touchY: y
+      });
+    }
+
+    return {
+      success: true,
+      target,
+      item
+    };
+  }
+
+  /**
+   * 敲击动画执行完毕，正式移除目标刚体并重力沉降周围小球
+   * @param {object} target 目标小球刚体
+   */
+  executeHammerClear(target) {
+    if (!target) {
+      this.toolMode = 'none';
+      this.isToolInProgress = false;
+      this._emitToolMode();
+      return;
+    }
+
+    const tx = target.x;
+    const ty = target.y;
+    const tr = target.radius || 20;
+
+    // 物理世界注销刚体
+    this.physics.removeBody(target);
+
+    // 唤醒周围刚体，在重力作用下自然沉降并产生连锁碰撞
+    this.physics.wakeBodiesInRadius(tx, ty, tr * 3);
+
+    this.toolMode = 'none';
+    this.isToolInProgress = false;
+    this._emitToolMode();
+  }
+
+  /**
    * 结束游戏
    */
   end() {
     if (this.gameState === 'ended') return;
     this.gameState = 'ended';
+    this.toolMode = 'none';
+    this.isToolInProgress = false;
+    this._emitToolMode();
     this._triggerFeedback('gameover');
 
     const highestItem = this._getItem(this.highestLevel);
@@ -588,6 +698,9 @@ class WatermelonEngine {
     this.physics.clear();
     this.gameState = 'ended';
     this.isAimSliding = false;
+    this.toolMode = 'none';
+    this.isToolInProgress = false;
+    this._emitToolMode();
   }
 
   /**
@@ -599,6 +712,8 @@ class WatermelonEngine {
 
     return {
       gameState: this.gameState,
+      toolMode: this.toolMode,
+      isToolInProgress: this.isToolInProgress,
       score: this.score,
       money: this.money,
       moneyFormatted: '0',
@@ -611,6 +726,15 @@ class WatermelonEngine {
       nextItem: nextItem,
       highestLevel: this.highestLevel
     };
+  }
+
+  _emitToolMode() {
+    if (typeof this.onToolModeChange === 'function') {
+      this.onToolModeChange({
+        toolMode: this.toolMode,
+        isToolInProgress: this.isToolInProgress
+      });
+    }
   }
 
   _emitState() {

@@ -1,5 +1,5 @@
 <view class="watermelon-container {{pageReady ? 'page-ready' : ''}}">
-  <!-- 顶部状态栏：搜刮身价、得分与下一个道具预览 -->
+  <!-- 顶部状态栏：搜刮身价、得分、消除锤道具与下一个预览 -->
   <view class="status-bar">
     <view class="status-item money-item">
       <text class="label">搜刮总身价</text>
@@ -9,6 +9,15 @@
       <text class="label">合成非洲之心数</text>
       <text class="value score-value">{{watermelonCount}}</text>
     </view>
+    <!-- 消除锤特权与局内道具 (右下角显示数量) -->
+    <view class="status-item hammer-item-box {{isHammerActive ? 'active' : ''}}" bindtap="toggleHammer">
+      <text class="label">消除锤</text>
+      <view class="hammer-preview-circle {{isHammerActive ? 'active' : ''}}">
+        <text class="hammer-circle-icon">🔨</text>
+        <view class="hammer-count-badge {{hammerCount <= 0 ? 'empty' : ''}}">{{hammerCount}}</view>
+      </view>
+    </view>
+    <!-- 下一个道具预览 -->
     <view class="status-item next-item-box" wx:if="{{nextItem}}" bindtap="onNextItemTap">
       <text class="label">下一个</text>
       <view class="next-preview-circle">
@@ -20,12 +29,16 @@
     </view>
   </view>
 
-  <!-- 连击提示与警戒浮动提示 -->
+  <!-- 连击提示、警戒浮动提示与消除锤激活提示条 -->
   <view class="floating-banner-container">
-    <view class="combo-tag {{combo > 1 ? 'show' : ''}}">
+    <view class="tool-active-tag {{isHammerActive ? 'show' : ''}}" wx:if="{{isHammerActive}}">
+      <text class="tool-active-text">🔨 请点击场内任意水果敲碎</text>
+      <text class="tool-cancel-btn" catchtap="cancelHammer">取消</text>
+    </view>
+    <view class="combo-tag {{combo > 1 && !isHammerActive ? 'show' : ''}}" wx:if="{{!isHammerActive}}">
       <text class="combo-text">⚡ {{combo}} 连击！</text>
     </view>
-    <view class="danger-warning-tag {{isWarning ? 'show' : ''}}">
+    <view class="danger-warning-tag {{isWarning && !isHammerActive ? 'show' : ''}}" wx:if="{{!isHammerActive}}">
       <text class="warning-text">⚠️ 堆叠过高，请尽快合成！</text>
     </view>
   </view>

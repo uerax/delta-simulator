@@ -207,18 +207,18 @@ function getItemByLevel(level, stageWidth = null) {
 
 /**
  * 从 ItemManager 随机刷新本局道具组合
- * 严格按照 grade 映射抽取对应等级道具，本局内 ID 互不重复，Lv.11 固定为非洲之心
- * 映射规则:
- * 1 -> grade 1
- * 2 -> grade 2
- * 3 -> grade 2
- * 4 -> grade 3
- * 5 -> grade 3
- * 6 -> grade 4
- * 7 -> grade 4
- * 8 -> grade 5
- * 9 -> grade 5
- * 10 -> grade 6
+ * 严格按照 grade 映射与价格半区分档抽取对应等级道具，本局内 ID 互不重复，Lv.11 固定为非洲之心
+ * 映射与身价分档规则 (方案 A: 2~5 级道具半区分档，彻底解决小球比大球贵的身价倒挂):
+ * 1  -> grade 1 (全池白品)
+ * 2  -> grade 2 (平价绿品: slice mid~end)
+ * 3  -> grade 2 (高价绿品: slice 0~mid)
+ * 4  -> grade 3 (平价蓝品: slice mid~end)
+ * 5  -> grade 3 (高价蓝品: slice 0~mid)
+ * 6  -> grade 4 (平价紫品: slice mid~end)
+ * 7  -> grade 4 (高价紫品: slice 0~mid)
+ * 8  -> grade 5 (平价橙品: slice mid~end)
+ * 9  -> grade 5 (高价橙品: slice 0~mid)
+ * 10 -> grade 6 (全池红品，排除非洲之心)
  * 11 -> 非洲之心
  * @returns {Array<Object>} 刷新后的 WATERMELON_ITEMS
  */
@@ -230,11 +230,25 @@ function refreshWatermelonItems() {
     // 初始排除非洲之心（专属留给 Lv.11），并用于记录本局已抽中道具以全局去重
     const usedIds = new Set([HEART_OF_AFRICA_NAME, HEART_OF_AFRICA_ID, String(HEART_OF_AFRICA_ID)]);
 
+    // 2~5 级对应大西瓜 level 2~9 的双阶半区分档配置表 (方案 A)
+    const TIER_MAP = {
+      2: 'low',
+      3: 'high',
+      4: 'low',
+      5: 'high',
+      6: 'low',
+      7: 'high',
+      8: 'low',
+      9: 'high'
+    };
+
     for (let i = 0; i < WATERMELON_ITEMS.length; i++) {
       const it = WATERMELON_ITEMS[i];
+      const tier = TIER_MAP[it.level] || 'all';
+
       const picked = (it.level === 11)
         ? (ItemManager.getByName(HEART_OF_AFRICA_NAME) || ItemManager.getById(HEART_OF_AFRICA_ID))
-        : ItemManager.getRandomByLevel(it.grade, usedIds);
+        : ItemManager.getRandomByLevel(it.grade, usedIds, tier);
 
       if (picked) {
         usedIds.add(picked.id);

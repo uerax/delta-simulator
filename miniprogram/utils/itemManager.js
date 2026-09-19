@@ -282,14 +282,33 @@ class ItemManagerService {
   }
 
   /**
-   * 从指定等级的道具池中随机抽取一件道具 (支持可选的排除集合)
+   * 从指定等级的道具池中随机抽取一件道具 (支持可选的排除集合与价格半区分档)
    * @param {number} level 1~6
    * @param {Set|Array|null} excludeSet 可选的排除 ID 或名称集合
+   * @param {'all'|'high'|'low'} tier 价格半区分档: 'high'高价半区, 'low'平价半区, 'all'全池
+   * @param {boolean} filterZeroPrice 是否过滤 0 元未挂牌非交易道具 (默认 true)
    * @returns {Object|null}
    */
-  getRandomByLevel(level, excludeSet = null) {
+  getRandomByLevel(level, excludeSet = null, tier = 'all', filterZeroPrice = true) {
     let pool = this.getLevelList(level);
     if (!pool || pool.length === 0) return null;
+
+    // 防御性过滤 0 元未挂牌道具
+    if (filterZeroPrice) {
+      const validPool = pool.filter(it => it.price > 0);
+      if (validPool.length > 0) {
+        pool = validPool;
+      }
+    }
+
+    // 价格半区分段 (高价区在左 slice 0~mid, 平价区在右 slice mid~end)
+    if (tier === 'high' || tier === 'low') {
+      const mid = Math.floor(pool.length / 2);
+      const subPool = tier === 'high' ? pool.slice(0, mid) : pool.slice(mid);
+      if (subPool.length > 0) {
+        pool = subPool;
+      }
+    }
 
     if (excludeSet) {
       const hasExclude = (it) => {

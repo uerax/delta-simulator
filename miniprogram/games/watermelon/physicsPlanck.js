@@ -205,6 +205,49 @@ class PhysicsWorldPlanck {
   }
 
   /**
+   * 唤醒指定中心点与半径范围内的所有休眠刚体，使其受重力自然沉降碰撞
+   * @param {number} cx 中心 X 坐标
+   * @param {number} cy 中心 Y 坐标
+   * @param {number} radius 唤醒影响半径 (像素)
+   */
+  wakeBodiesInRadius(cx, cy, radius) {
+    for (let i = 0; i < this.bodies.length; i++) {
+      const b = this.bodies[i];
+      if (!b || b.isMerging || !b._pBody) continue;
+
+      const dist = Math.hypot(b.x - cx, b.y - cy);
+      if (dist <= radius + b.radius) {
+        this.wakeBody(b);
+      }
+    }
+  }
+
+  /**
+   * 根据屏幕像素坐标查找命中的水果刚体 (欧氏距离小于等于半径且距离最近)
+   * 排除正在合成 (isMerging) 或无物理刚体的小球
+   * @param {number} x
+   * @param {number} y
+   * @returns {object|null}
+   */
+  findBodyAt(x, y) {
+    let target = null;
+    let minDistance = Infinity;
+
+    for (let i = 0; i < this.bodies.length; i++) {
+      const b = this.bodies[i];
+      if (!b || b.isMerging || !b._pBody) continue;
+
+      const dist = Math.hypot(b.x - x, b.y - y);
+      if (dist <= b.radius && dist < minDistance) {
+        target = b;
+        minDistance = dist;
+      }
+    }
+
+    return target;
+  }
+
+  /**
    * 移除特定刚体
    */
   removeBody(body) {
