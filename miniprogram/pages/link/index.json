@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "鼠鼠连连看",
+  "navigationBarBackgroundColor": "#0d1117",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0d1117",
+  "pageOrientation": "landscape",
+  "usingComponents": {
+    "game-result-modal": "/components/game-result-modal/index"
+  },
+  "disableScroll": true
+}

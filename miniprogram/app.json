@@ -12,12 +12,19 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "pages/link",
+      "name": "link",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["pages/watermelon"]
+      "packages": ["pages/watermelon", "pages/link"]
     }
   },
   "window": {

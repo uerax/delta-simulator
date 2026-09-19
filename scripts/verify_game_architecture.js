@@ -141,9 +141,9 @@ console.log('  ✔ SchulteEngine 乱序洗牌、步进校验、自动结算通�
 
 // 3. 验证 WatermelonEngine & PhysicsWorld (合成大西瓜物理与逻辑引擎)
 console.log('▶ [3/6] 测试 WatermelonEngine 逻辑与 PhysicsWorld 刚体物理引擎...');
-const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL, refreshWatermelonItems } = require('../miniprogram/games/watermelon/items');
-const PhysicsWorld = require('../miniprogram/games/watermelon/physicsPlanck');
-const WatermelonEngine = require('../miniprogram/games/watermelon/engine');
+const { WATERMELON_ITEMS, getItemByLevel, MAX_LEVEL, refreshWatermelonItems } = require('../miniprogram/pages/watermelon/items');
+const PhysicsWorld = require('../miniprogram/pages/watermelon/physicsPlanck');
+const WatermelonEngine = require('../miniprogram/pages/watermelon/engine');
 
 // 3.1 道具元数据 11 阶与动态随机池验证
 assert.strictEqual(WATERMELON_ITEMS.length, 11, '道具清单应包含严格 11 个品阶');
@@ -351,37 +351,46 @@ console.log('▶ [4/6] 测试 GameRegistry 游戏注册中心...');
 const GameRegistry = require('../miniprogram/games/registry');
 
 const games = GameRegistry.getAllGames();
-assert(Array.isArray(games) && games.length === 4, '当前应注册 4 款小游戏');
+assert(Array.isArray(games) && games.length === 5, '当前应注册 5 款小游戏');
 
-// 重点验证顺序：首位为今日鼠鼠运势，第二位为合成非洲之心！
+// 重点验证顺序：1.今日鼠鼠运势 2.合成非洲之心 3.鼠鼠连连看 4.极速反应(hidden) 5.舒尔特方格(hidden)
 assert.strictEqual(games[0].id, 'fortune', '首位游戏应为今日鼠鼠运势');
 assert(games[0].iconUrl.includes('15080050142.png'), '今日鼠鼠运势图标应为海洋之泪官方CDN');
-assert.strictEqual(games[1].id, 'watermelon', '核心需求验证：第二位游戏应放置合成非洲之心');
+assert.strictEqual(games[1].id, 'watermelon', '第二位游戏应为合成非洲之心');
 assert.strictEqual(games[1].title, '合成非洲之心', '第二位游戏标题应为合成非洲之心');
 assert(games[1].bgGradient.includes('#361a1c'), '合成非洲之心图标背景色应换成6级大红专属底色');
 assert(games[1].boxStyle.includes('#E03A3E'), '合成非洲之心边框高光应为6级大红颜色');
-assert.strictEqual(games[2].id, 'reaction', '第三位游戏应为极速反应挑战');
-assert.strictEqual(games[2].hidden, true, '极速反应挑战应标记为hidden');
-assert.strictEqual(games[3].id, 'schulte', '第四位游戏应为舒尔特方格');
-assert.strictEqual(games[3].hidden, true, '舒尔特方格应标记为hidden');
+assert.strictEqual(games[2].id, 'link', '第三位游戏应为鼠鼠连连看');
+assert.strictEqual(games[2].title, '鼠鼠连连看', '第三位游戏标题应为鼠鼠连连看');
+assert(games[2].iconUrl.includes('15080050097.png'), '鼠鼠连连看图标必须为复苏呼吸机官方CDN');
+assert.strictEqual(games[3].id, 'reaction', '第四位游戏应为极速反应挑战');
+assert.strictEqual(games[3].hidden, true, '极速反应挑战应标记为hidden');
+assert.strictEqual(games[4].id, 'schulte', '第五位游戏应为舒尔特方格');
+assert.strictEqual(games[4].hidden, true, '舒尔特方格应标记为hidden');
 
 const mockStats = { highScore: 260, schulteBestTime: 14.5 };
 const mockRecords = {
   fortune: { todayFortune: '大吉·今日必出大金' },
   watermelon: { bestMoney: 12484244, bestMoneyFormatted: '12,484,244', todayWatermelonCount: 3 },
+  link: { maxStageCleared: 8, bestScore: 5200000 },
   reaction: { bestScore: 260 },
   schulte: { bestTime: 14.5 }
 };
 
 const lobbyList = GameRegistry.getLobbyList(mockStats, mockRecords);
-assert.strictEqual(lobbyList.length, 2, '大厅卡片数据项数应为 2 (隐藏其余两个游戏)');
+assert.strictEqual(lobbyList.length, 3, '大厅卡片数据项数应为 3 (隐藏其余两个游戏)');
 assert.strictEqual(lobbyList[0].id, 'fortune');
 assert(lobbyList[0].iconUrl.includes('15080050142.png'), '大厅首项图标应为海洋之泪');
 assert.strictEqual(lobbyList[1].id, 'watermelon', '大厅第 2 张卡片应为合成非洲之心');
 assert.strictEqual(lobbyList[1].title, '合成非洲之心', '大厅第 2 张卡片标题应为合成非洲之心');
 assert.strictEqual(lobbyList[1].recordLabel, '合成非洲之心数', '战绩标签应为合成非洲之心数');
 assert.strictEqual(lobbyList[1].recordVal, '3 个', '合成非洲之心战绩应正确展现合成非洲之心个数');
-console.log('  ✔ GameRegistry 集中管理、非洲之心红品配置、今日合成数战绩与大厅隐藏其他游戏测试通过！\n');
+assert.strictEqual(lobbyList[2].id, 'link', '大厅第 3 张卡片应为鼠鼠连连看');
+assert.strictEqual(lobbyList[2].title, '鼠鼠连连看', '大厅第 3 张卡片标题应为鼠鼠连连看');
+assert(lobbyList[2].iconUrl.includes('15080050097.png'), '鼠鼠连连看图标必须为复苏呼吸机');
+assert.strictEqual(lobbyList[2].recordLabel, '最高通关', '战绩标签应为最高通关');
+assert.strictEqual(lobbyList[2].recordVal, '8 关', '战绩应正确展现最高通关关卡数');
+console.log('  ✔ GameRegistry 集中管理、非洲之心与连连看红品配置、最高通关战绩与大厅过滤测试通过！\n');
 
 // 5. 验证 Storage 数据层解耦与平滑兼容
 console.log('▶ [5/6] 测试 Storage 数据层解耦与平滑兼容...');

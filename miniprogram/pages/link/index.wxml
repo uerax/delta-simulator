@@ -1,0 +1,78 @@
+<view class="link-container {{pageReady ? 'page-ready' : ''}}">
+  <!-- 顶部战术状态与道具栏 -->
+  <view class="top-status-bar">
+    <!-- 左侧：关卡与倒计时 -->
+    <view class="status-group left-group">
+      <view class="status-badge stage-badge">
+        <text class="badge-icon">🚩</text>
+        <text class="badge-text">第 {{stage}} 关</text>
+      </view>
+      <view class="status-badge timer-badge {{timeLeft <= 20 ? 'timer-danger' : ''}}">
+        <text class="badge-icon">⏱️</text>
+        <text class="badge-text">{{timeLeftFormatted}}</text>
+      </view>
+    </view>
+
+    <!-- 中间：搜刮身价与连击 -->
+    <view class="status-group center-group">
+      <view class="money-box">
+        <text class="money-label">搜刮总身价</text>
+        <text class="money-val">¥ {{scoreFormatted}}</text>
+      </view>
+      <view class="combo-pill {{combo > 1 ? 'show' : ''}}" wx:if="{{combo > 1}}">
+        <text class="combo-text">⚡ {{combo}} 连击！</text>
+      </view>
+    </view>
+
+    <!-- 右侧：特权与辅助道具 (极简战术设计：唯一破局神器消除锤 + 重开) -->
+    <view class="status-group right-group">
+      <!-- 战术消除锤 (商业化预留特权) -->
+      <view class="tool-btn hammer-tool {{isHammerActive ? 'active' : ''}}" bindtap="toggleHammer">
+        <view class="hammer-icon-wrap">
+          <text class="tool-icon">🔨</text>
+          <view class="hammer-count-badge {{hammerCount <= 0 ? 'empty' : ''}}">{{hammerCount}}</view>
+        </view>
+        <text class="tool-label">消除锤</text>
+      </view>
+
+      <!-- 重新开始 (紧跟消除锤之后) -->
+      <view class="tool-btn restart-tool" bindtap="confirmRestart">
+        <text class="tool-icon">↺</text>
+        <text class="tool-label">重开</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 核心游戏画布容器 (Canvas 2D) -->
+  <view
+    class="canvas-wrap {{showResultModal ? 'canvas-hidden' : ''}}"
+    id="canvasWrap"
+    style="visibility: {{showResultModal ? 'hidden' : 'visible'}}; pointer-events: {{showResultModal ? 'none' : 'auto'}};"
+  >
+    <!-- 消除锤激活精致微型胶囊提示 (不占布局空间，轻盈悬浮) -->
+    <view class="floating-hammer-pill" wx:if="{{isHammerActive}}">
+      <text class="pill-text">🔨 点击场内任意方块击碎</text>
+      <view class="pill-cancel-btn" catchtap="cancelHammer">✕ 取消</view>
+    </view>
+
+    <canvas
+      type="2d"
+      id="gameCanvas"
+      class="game-canvas {{showResultModal ? 'canvas-hidden' : ''}}"
+      bindtouchstart="onTouchStart"
+    />
+  </view>
+
+  <!-- 通用结算弹窗组件 -->
+  <game-result-modal
+    visible="{{showResultModal}}"
+    title="{{modalTitle}}"
+    isNewRecord="{{isNewRecord}}"
+    badgeText="🏆 刷新最高通关记录！"
+    items="{{resultItems}}"
+    primaryBtnText="重新开局"
+    secondaryBtnText="返回大厅"
+    bindrestart="onModalRestart"
+    bindhome="goHome"
+  />
+</view>

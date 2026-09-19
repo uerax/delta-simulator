@@ -21,10 +21,13 @@
   - 纯 JS 核心逻辑引擎：`engine.js`（`WatermelonEngine`，直接绑定 Planck.js 物理世界，动态下落池难度曲线、搜刮身价、连击算法、道具模式状态机 `toolMode: 'none' | 'hammer'` 与消除闭环）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，6级红品专属底色与高光）
   - 第三方物理核心库：`miniprogram/lib/planck.min.js`（Erin Catto 官方 Box2D 纯 JS 移植版，零 eval，零 new Function，适配微信环境）
-- **游戏 3：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`（大厅展示隐藏）
+- **游戏 3：鼠鼠连连看 (Link)**：`miniprogram/games/link/`
+  - 游戏元数据与配置：`manifest.js`（自描述配置，6级绝密红品复苏呼吸机图标直连，大厅最高通关战绩展示适配）
+  - 独立分包实现路径：`miniprogram/pages/link/`（`root: "pages/link"`）
+- **游戏 4：极速反应挑战 (Reaction)**：`miniprogram/games/reaction/`（大厅展示隐藏）
   - 纯 JS 核心逻辑引擎：`engine.js`（`ReactionEngine`，管理状态机、目标生成、计分连击与回调事件）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，已配置 hidden: true）
-- **游戏 4：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`（大厅展示隐藏）
+- **游戏 5：舒尔特专注方格 (Schulte)**：`miniprogram/games/schulte/`（大厅展示隐藏）
   - 纯 JS 核心逻辑引擎：`engine.js`（`SchulteEngine`，管理乱序洗牌、步进按序校验、0.1s 计时与评级算法）
   - 游戏元数据与配置：`manifest.js`（自描述配置与大厅战绩展示适配，已配置 hidden: true）
 
@@ -51,6 +54,11 @@
   - 视图与控制器：`index.wxml`、`index.wxss`、`index.js`、`index.json`
   - 专属物理库与引擎：`planck.min.js` (290KB Box2D 物理库)、`physicsPlanck.js`、`engine.js`、`items.js`
   - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入消除锤悬浮道具与三段敲击动效，接入通用弹窗组件与触感反馈；分包 root 直接对齐为 `pages/watermelon`，彻底自启动主包剥离，主包暴瘦 60.4% 且绝无编译器 ENOENT 报错。
+- **分包 2：鼠鼠连连看 (pages/link 独立分包)**：`miniprogram/pages/link/`
+  - 路由路径：`/pages/link/index`
+  - 视图与控制器：`index.wxml`、`index.wxss`、`index.js`、`index.json`
+  - 核心逻辑引擎与道具：`engine.js` (PCG 候选生成、Forward Solver 求解、Solution Certificate、确定性保底、死局双重洗牌与 Recovery)、`items.js` (房卡精准过滤、单等级独占、难度自适应成对生成)
+  - 职责定位：横屏 `landscape` Canvas 2D 高性能控制器，零 setData 渲染主循环，战术地图切片随机背景，长方形贴图 aspectFit 等比缩放与对应等级品质底色/边框底托，1:1 复刻 QQ 连连看高亮激光折线束、拐角光核与爆汁碎片动效，消除锤击碎道具，断点续玩离线存档，通用弹窗组件；独立分包仅 63KB，零主包体积开销。
 - **页面 3：极速反应挑战 (主包)**：`miniprogram/pages/game/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
   - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。

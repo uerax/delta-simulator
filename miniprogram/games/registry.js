@@ -6,13 +6,15 @@
 
 const fortuneManifest = require('./fortune/manifest');
 const watermelonManifest = require('./watermelon/manifest');
+const linkManifest = require('./link/manifest');
 const reactionManifest = require('./reaction/manifest');
 const schulteManifest = require('./schulte/manifest');
 
-// 全量已注册小游戏列表（维护大厅展示顺序：1.今日鼠鼠运势 2.合成大西瓜 3.极速反应 4.舒尔特方格）
+// 全量已注册小游戏列表（维护大厅展示顺序：1.今日鼠鼠运势 2.合成大西瓜 3.鼠鼠连连看 4.极速反应 5.舒尔特方格）
 const REGISTERED_GAMES = [
   fortuneManifest,
   watermelonManifest,
+  linkManifest,
   reactionManifest,
   schulteManifest
 ];

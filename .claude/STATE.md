@@ -1,6 +1,190 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.9.3`（唯一权威事实源）
+> **当前全局版本号**：`v2.0.7`（唯一权威事实源）
+
+## [2026-09-20] 彻底修复真机routeDone系统错误与Native Canvas崩溃不渲染Bug
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **排查并根治真机 routeDone with a webviewId is not found 致命系统报错**：
+     - 根因定位：`index.js` 中显式定义了非标准的同名 `onRouteDone()` 钩子，与微信基础库底层横屏 WebView 路由事件分发产生时序冲突与未就绪中断；
+     - 修复：彻底拔除 `onRouteDone()`，改用微信官方标准的 `onReady` 配合 100ms 避峰转场延迟调度，确保真机路由与 webview 实例稳定握手。
+  2. **排查并根治真机 Native Canvas 2D 崩溃黑屏不渲染**：
+     - 根因 1（API 缺失）：`_drawTile` 中调用了 `ctx.roundRect`，此新特性在移动端微信 Canvas 2D 上未受支持，引发 `TypeError: ctx.roundRect is not a function` 导致渲染循环第一帧直接崩溃中断；
+     - 修复 1：引入 100% 跨平台真机兼容的 `drawRoundRect`（经典 `arcTo` 路径闭环），彻底消除 TypeError；
+     - 根因 2（非法参数与尺寸崩溃）：图片加载未完成时 `img.width === 0`，计算得到 `scale = Infinity`，导致 `ctx.drawImage` 传入无穷大与非法参数使真机 Canvas 崩溃发黑；
+     - 修复 2：严格前置 `img.width > 0 && isFinite(...)` 校验与整数安全保护；
+     - 根因 3（横屏避峰）：`_initCanvas` 增加横屏稳定尺寸校验（`rawW > 50 && rawH > 50`），并在 `_renderFrame` 顶层注入全局 try-catch 容灾防护。
+  3. **全套自动化测试回归 100% 绿色通过**：
+     - 8 组全量测试套件全部通过。
+  4. **版本号维护**：
+     - 版本号由 `v2.0.6` 递增至 `v2.0.7`。
+- 涉及文件：
+  - `miniprogram/pages/link/index.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 修复大厅最高通关战绩暂无与关卡通过实时持久化落盘
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **排查并根治大厅最高通关显示“暂无”**：
+     - 根因 1（战绩格式化）：`manifest.js` 中在未通关或初始状态下直接返回了 `val: '暂无'`，体验不佳；
+     - 修复 1：对标大西瓜模式，初始默认格式化为 `最高通关: 0 关`，通关即为 `最高通关: X 关`；
+     - 根因 2（存档触发时机）：此前仅在倒计时耗尽死亡时才调用 `Storage.recordGamePlay`，若玩家正常通关第 1/2 关后中途退出大厅，战绩库未写入 `maxStageCleared`；
+     - 修复 2：在 `_handleStageClear` 关卡突破的一瞬间立即执行 `Storage.recordGamePlay` 实时落盘，保证通关任何一关后返回大厅均能实时展现最新最高通关关卡数。
+  2. **全套自动化测试回归 100% 绿色通过**：
+     - 8 组全量测试套件（解耦架构、连连看引擎等）全部通过。
+  3. **版本号维护**：
+     - 版本号由 `v2.0.5` 递增至 `v2.0.6`。
+- 涉及文件：
+  - `miniprogram/games/link/manifest.js`
+  - `miniprogram/pages/link/index.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 落地8大经典战术异形版型与对称雕刻系统、彻底终结死板长方形
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底终结全满长方形，引入 8 大战术异形版型**：
+     - 在 `engine.js` 中完整构建 8 种战术版型与掩码矩阵生成器（`_createLayoutMask`）：
+       * `CORNER_HOLLOW`：钻石八角四角镂空（第 1 关默认，开阔透光）
+       * `CENTER_HOLLOW`：回字形中心空井（内圈与外圈双走廊）
+       * `CORRIDOR`：战术双岛长廊（中央贯通峡谷通道，隔空对消）
+       * `CROSS`：十字交叉阵地（四通八达战术交叉火网）
+       * `STAIRS`：战术金字塔阶梯
+       * `HOURGLASS`：战术沙漏（上下宽中间收腰）
+       * `HYBRID`：复合侵蚀（微中空 + 四角切削）
+       * `FULL`：经典全满战术平原
+  2. **数学严密性与解题证书 100% 跑通**：
+     - 8 大版型对称雕刻严格保证有效方块总数恒为偶数，且无孤岛；
+     - 每一关异形棋盘直接送入 Forward Solver 求解验证并颁发 Solution Certificate，初始可用步高达 15~70+ 组，开局即畅快；
+     - 支持断点续玩快照保存与恢复 `layoutType`。
+  3. **自动化单测专项扩充与回归**：
+     - `scripts/verify_link_engine.js` 扩展第 7 项专项测试，断言 8 大版型在 50 轮生成中 100% 全覆盖、有效格全偶数且 100% 成功生成有效通关证书；
+     - 全量 8 组测试套件回归 100% 绿色通过。
+  4. **版本号维护**：
+     - 版本号由 `v2.0.4` 递增至 `v2.0.5`。
+- 涉及文件：
+  - `miniprogram/pages/link/engine.js`
+  - `scripts/verify_link_engine.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 修复消除锤扣减与无限使用Bug、重构通栏横条为悬浮微型胶囊并砍掉提示与重排按钮
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **彻底排查并根治消除锤无限使用 Bug**：
+     - 根因定位：触控敲碎后未在视图控制器接收 `hammer_hit` 并调用 `Storage.consumeTodayHammer()`，导致次数一直停留在 2；
+     - 修复：触控击碎方块后真实扣除持久化次数，并更新页面 `hammerCount`，自动关闭激活态；次数为 0 时拦截并提示即将上线；
+     - 注入强化击碎视效：爆发 20 颗红金双色高压火花粒子与 `🔨 +¥XXXX` 升腾飘字，并触发 `Feedback.vibrateShort('heavy')` 重度震动。
+  2. **消除锤激活大通栏重构为精致悬浮微胶囊 (Floating Tactical Pill)**：
+     - 根除此前横跨全屏、遮挡视线的笨重大通栏；
+     - 重构为轻盈悬浮于画布上方中央的精致小胶囊（高度仅 26px，深色磨砂加红色发光微边框：`🔨 点击场内任意方块击碎 ✕ 取消`），完全不挤占 Canvas 任何布局空间。
+  3. **砍掉【提示】与【重排】功能，实现极致战术提纯**：
+     - 依据用户要求彻底移除【提示】和【重排】按钮及相关事件逻辑；
+     - 顶部右侧只保留唯一破局神兵【🔨 消除锤】与【↺ 重开】，视觉极致清爽纯粹。
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 8 组测试套件全部通过。
+  5. **版本号维护**：
+     - 版本号由 `v2.0.2` 递增至 `v2.0.4`。
+- 涉及文件：
+  - `miniprogram/pages/link/index.wxml`
+  - `miniprogram/pages/link/index.wxss`
+  - `miniprogram/pages/link/index.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 移除底部多余返回大厅按钮、精简整栏释放垂直空间并将重新开始收纳至顶部消除锤后
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **界面交互精简化与整行底部栏彻底释放**：
+     - 依据用户要求，小程序横屏模式下左上角已有原生返回键 `<`，彻底删除底部多余的“返回大厅”按钮；
+     - 彻底移除整行 `bottom-action-bar`，使中间 Canvas 核心视窗向下扩充填满，消除多余遮挡，垂直空间最大化；
+  2. **重新开始按钮优雅归位**：
+     - 将【重开】按钮（`↺ 重开`）收纳至顶部战术状态栏右侧，紧跟在消除锤按钮后方；
+     - 配置专属战术微红暗调样式，点击调起战术重置确认弹窗，确认后清除档案并全新开局。
+  3. **全套自动化测试回归 100% 绿色通过**：
+     - 8 组测试套件全部绿色通过，语法与体积无任何异常。
+  4. **版本号维护**：
+     - 版本号由 `v2.0.1` 递增至 `v2.0.2`。
+- 涉及文件：
+  - `miniprogram/pages/link/index.wxml`
+  - `miniprogram/pages/link/index.wxss`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 修复横屏rpx超大挤压换行与底部截断、补齐物资pic贴图与求解器网格作用域
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **排查并根治横屏顶底栏挤压与截断**：
+     - 根因：横屏下 `1rpx = windowWidth / 750 ≈ 1.125px`，导致 `90rpx` 占满屏幕一半高度，文字纵向折叠且底部按钮溢出可视区；
+     - 修复：全量改用精准 `px` 单位（顶部 42px、底部 36px，文字 `white-space: nowrap` 严禁折行），释放出超过 80% 的开阔 Canvas 视野。
+  2. **排查并修复方块贴图缺失与空心圈**：
+     - 根因：`items.js` 中使用了 `item.iconUrl`，而底层 `ItemManager` 标准完整 CDN 字段名为 `item.pic`；
+     - 修复：修正为 `iconUrl: item.pic || item.iconUrl || ''`，方块圆角优化为 `Math.round(size * 0.12)` 并补齐深暗底色与高光发光边框，长方形贴图等比缩放居中展示。
+  3. **排查并修复棋盘单调平铺与求解器网格作用域**：
+     - 根因：`engine.js` 中 `canConnect` 内部写死了 `this.grid`，导致候选关卡求解时未能读取临时网格引发假死局并回退至单调保底；
+     - 修复：`canConnect`、`_isLineEmpty`、`findAvailableMoves` 全面支持传入目标网格，候选求解率瞬间回升至 100%，棋盘自然散布、色彩绚丽且 100% 可解。
+  4. **全套自动化测试回归 100% 绿色通过**：
+     - 运行 8 组全量测试套件全部通过。
+  5. **版本号维护**：
+     - 版本号由 `v2.0.0` 递增至 `v2.0.1`。
+- 涉及文件：
+  - `miniprogram/pages/link/index.wxss`
+  - `miniprogram/pages/link/items.js`
+  - `miniprogram/pages/link/engine.js`
+  - `miniprogram/pages/link/index.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-20] 新增横屏小游戏“鼠鼠连连看”(pages/link独立分包)、PCG可解验证与高辨识度消除落地
+- 状态：已完成
+- 优先级：P0
+- 描述：
+  1. **架构与分包落地 (pages/link)**：
+     - 新建官方标准分包 `pages/link`（`root: "pages/link"`, `pages: ["index"]`），大厅配置 `preloadRule` 静默预下载；
+     - `pageOrientation: "landscape"` 原生横屏沉浸体验，退出返回大厅自动无缝恢复竖屏；
+     - 独立分包体积仅 **63.23 KB**，冷启动主包依然保持在 **392.73 KB（暴降 60.0%）** 极致水平。
+  2. **PCG 候选生成 + Forward Solver + 确定性保底架构**：
+     - 依据严格设计哲学：“不是随机摆放后赌它有解，而是每一关必须通过 Forward Solver 正向模拟跑通并颁发 Solution Certificate 通关证书”；
+     - 候选生成与正向推演双闭环，设置 MAX_ATTEMPTS 上限，若失败则启动 Deterministic Generator 确定性可解保底构造，彻底根除无限重试；
+     - **死局双层保护**：最多 20 次有限随机洗牌（通过 `availableMoves > 0` 且通过 `isSolvable` 残局完整解验证），若全部失败触发 Deterministic Recovery 确定性重构残局，永不卡死。
+  3. **高辨识度物资体系与单等级独占规则 (items.js)**：
+     - 精准过滤全部 80 件 `1505` 钥匙房卡、15 件扑克牌与 4 件地图，保留自带高辨识度的军事通行证与鎏金卡牌；
+     - 主动回填机制：每个等级最多只抽取 1 件房卡，其余全由高反差实体装备大件填补；
+     - 方块渲染包含外壳内陷微立体投影、对应等级专属高饱和底色（红/金/紫/蓝/绿/白）与发光边框，长方形图片 `aspectFit` 等比居中缩放不拉伸。
+  4. **1:1 复刻 QQ 连连看高品质打击感动效**：
+     - Canvas 2D 零 setData 满帧绘制双层高亮脉冲激光束（外层半透明品质光雾 + 内芯白炽激光 + 折弯处聚光圆核，持续 150ms）；
+     - 爆开产生 14 颗向外飞溅的多彩水滴火花粒子、扩张冲击波光环与向上升腾的身价浮动文本 `+¥XXXX`；同频触发 `Feedback.vibrateShort` 硬件震动。
+  5. **三大专属特调需求闭环**：
+     - **无限关卡与失败重置**：从 Stage 1 递进闯关（36格 ➔ 48格 ➔ 60格主力 ➔ 72格高难），时间耗尽失败从头开始；大厅战绩展示 `最高通关: X 关`；
+     - **断点续玩与底部双按钮**：中途退出自动将对局快照持久化至 `delta_link_active_session`，再次进入自动恢复；底部提供【返回大厅】（暂存退出）与【重新开始】（放弃开新局）；
+     - **消除锤商业化预留**：每日免费赠送 2 次补给，耗尽提示即将上线并规范预留 `@AdHook` 与 `@PayHook` 接口，支持击碎方块成对消除并自动残局自愈；
+     - **大厅展示**：卡片图标直连 6 级红品复苏呼吸机（ID: 15080050097），战绩展示最高通关关卡数。
+  6. **全套自动化测试 100% 绿色通过**：
+     - 新建 `scripts/verify_link_engine.js`，覆盖过滤、成对配平、0/1/2折寻路、100/100 独立 Seed 关卡求解与通关证书、死局双重脱困、消除锤与断点续玩恢复；
+     - 全量 8 组测试套件（连连看引擎、解耦架构、分包体积、用户管理、运势算法、物资管理、西瓜分档、西瓜消除锤）全部 100% 绿色通过。
+  7. **版本号维护**：
+     - 独立全新子游戏上线，版本号由 `v1.9.3` 升级至主版本号 `v2.0.0`。
+- 涉及文件：
+  - `miniprogram/games/link/manifest.js`
+  - `miniprogram/pages/link/*` (engine.js, items.js, index.js, index.wxml, index.wxss, index.json)
+  - `miniprogram/app.json`
+  - `miniprogram/games/registry.js`
+  - `miniprogram/utils/storage.js`
+  - `scripts/verify_link_engine.js`
+  - `scripts/verify_game_architecture.js`
+  - `scripts/verify_bundle_optimization.js`
+  - `scripts/verify_watermelon_hammer.js`
+  - `package.json`
+  - `.claude/STATE.md`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/BUGS.md`
 
 ## [2026-09-20] 按照微信官方文档将分包root对齐为pages/watermelon彻底消除编译器ENOENT
 - 状态：已完成

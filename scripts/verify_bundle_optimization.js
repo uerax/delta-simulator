@@ -98,15 +98,21 @@ assert.strictEqual(watermelonManifest.path, '/pages/watermelon/index', '大西�
 
 const appJson = require('../miniprogram/app.json');
 assert.ok(!appJson.pages.includes('pages/watermelon/index'), 'app.json pages 不应再包含大西瓜主包路由');
+assert.ok(!appJson.pages.includes('pages/link/index'), 'app.json pages 不应包含鼠鼠连连看主包路由');
 const subpackages = appJson.subPackages || appJson.subpackages;
 assert.ok(Array.isArray(subpackages), 'app.json 应配置 subPackages 数组');
 const wmSubpkg = subpackages.find(s => s.root === 'pages/watermelon');
 assert.ok(wmSubpkg, 'subPackages 应包含 pages/watermelon 节点');
 assert.ok(wmSubpkg.pages.includes('index'), 'pages/watermelon 应包含 index 页面');
 
+const linkSubpkg = subpackages.find(s => s.root === 'pages/link');
+assert.ok(linkSubpkg, 'subPackages 应包含 pages/link 节点');
+assert.ok(linkSubpkg.pages.includes('index'), 'pages/link 应包含 index 页面');
+
 assert.ok(appJson.preloadRule, 'app.json 应配置 preloadRule 预下载规则');
 assert.ok(appJson.preloadRule['pages/index/index'], '首页应配置分包预下载');
 assert.ok(appJson.preloadRule['pages/index/index'].packages.includes('pages/watermelon'), '首页应预下载 pages/watermelon');
+assert.ok(appJson.preloadRule['pages/index/index'].packages.includes('pages/link'), '首页应预下载 pages/link');
 console.log('✔ app.json 分包与预下载规则断言通过！');
 
 // -------------------------------------------------------------
@@ -132,20 +138,26 @@ const miniprogramDir = path.resolve(__dirname, '../miniprogram');
 const allFiles = walk(miniprogramDir);
 const totalSize = allFiles.reduce((acc, f) => acc + f.size, 0);
 
-const subpackageDir = path.resolve(__dirname, '../miniprogram/pages/watermelon');
-const subpkgFiles = allFiles.filter(f => f.path.startsWith(subpackageDir));
-const subpkgSize = subpkgFiles.reduce((acc, f) => acc + f.size, 0);
+const wmDir = path.resolve(__dirname, '../miniprogram/pages/watermelon');
+const wmFiles = allFiles.filter(f => f.path.startsWith(wmDir));
+const wmSize = wmFiles.reduce((acc, f) => acc + f.size, 0);
 
-const mainPkgSize = totalSize - subpkgSize;
+const linkDir = path.resolve(__dirname, '../miniprogram/pages/link');
+const linkFiles = allFiles.filter(f => f.path.startsWith(linkDir));
+const linkSize = linkFiles.reduce((acc, f) => acc + f.size, 0);
+
+const allSubpkgSize = wmSize + linkSize;
+const mainPkgSize = totalSize - allSubpkgSize;
 
 console.log('\n📊 === 体积优化成果报告 ===');
 console.log(`- 优化前总代码包体积: 982.71 KB (1,006,299 bytes)`);
-console.log(`- 优化后总代码包体积: ${(totalSize / 1024).toFixed(2)} KB (${totalSize} bytes)`);
-console.log(`  └─ 全包总减少体积: ${((1006299 - totalSize) / 1024).toFixed(2)} KB (缩减 ${(((1006299 - totalSize) / 1006299) * 100).toFixed(1)}%)`);
+console.log(`- 当前总代码包体积: ${(totalSize / 1024).toFixed(2)} KB (${totalSize} bytes)`);
+
 console.log(`\n- 优化前主包 (冷启动) 体积: 982.71 KB`);
-console.log(`- 优化后主包 (冷启动) 体积: ${(mainPkgSize / 1024).toFixed(2)} KB (${mainPkgSize} bytes)`);
-console.log(`  └─ 主包锐减瘦身体积: ${((1006299 - mainPkgSize) / 1024).toFixed(2)} KB (主包暴瘦 ${(((1006299 - mainPkgSize) / 1006299) * 100).toFixed(1)}%!)`);
-console.log(`- 大西瓜独立分包体积: ${(subpkgSize / 1024).toFixed(2)} KB (${subpkgSize} bytes)`);
+console.log(`- 当前主包 (冷启动) 体积: ${(mainPkgSize / 1024).toFixed(2)} KB (${mainPkgSize} bytes)`);
+console.log(`  └─ 主包实际瘦身体积: ${((982.71 * 1024 - mainPkgSize) / 1024).toFixed(2)} KB (主包暴降 ${(((982.71 * 1024 - mainPkgSize) / (982.71 * 1024)) * 100).toFixed(1)}%!)`);
+console.log(`- 大西瓜独立分包体积: ${(wmSize / 1024).toFixed(2)} KB (${wmSize} bytes)`);
+console.log(`- 鼠鼠连连看独立分包体积: ${(linkSize / 1024).toFixed(2)} KB (${linkSize} bytes)`);
 console.log('============================\n');
 
 console.log('🎉 所有校验与体积对比全部 100% 成功完成！');

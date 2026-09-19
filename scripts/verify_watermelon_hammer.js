@@ -30,8 +30,8 @@ global.wx = {
   }
 };
 
-const PhysicsWorldPlanck = require('../miniprogram/games/watermelon/physicsPlanck');
-const WatermelonEngine = require('../miniprogram/games/watermelon/engine');
+const PhysicsWorldPlanck = require('../miniprogram/pages/watermelon/physicsPlanck');
+const WatermelonEngine = require('../miniprogram/pages/watermelon/engine');
 const Storage = require('../miniprogram/utils/storage');
 
 console.log('🔨 开始水果消除锤 (Hammer) 自动化验证套件...\n');

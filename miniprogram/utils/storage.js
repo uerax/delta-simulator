@@ -9,7 +9,8 @@ const STORAGE_KEYS = {
   GAME_RECORDS: 'delta_game_records', // [新增] 基于 gameId 的各游戏独立战绩命名空间
   DAILY_RECORDS: 'delta_daily_records',
   SETTINGS: 'delta_settings',
-  PRIVILEGES: 'delta_privileges'       // [新增] 付费特权状态命名空间
+  PRIVILEGES: 'delta_privileges',       // [新增] 付费特权状态命名空间
+  LINK_ACTIVE_SESSION: 'delta_link_active_session' // [新增] 鼠鼠连连看未完成对局断点暂存
 };
 
 // 获取今天的日期字符串 YYYY-MM-DD
@@ -585,6 +586,48 @@ const Storage = {
    */
   unlockPrivilege(privilegeKey) {
     return this.savePrivileges({ [privilegeKey]: true });
+  },
+
+  /**
+   * 获取当前鼠鼠连连看未完成的对局暂存 (断点续玩)
+   * @returns {object|null}
+   */
+  getLinkSession() {
+    try {
+      return wx.getStorageSync(STORAGE_KEYS.LINK_ACTIVE_SESSION) || null;
+    } catch (e) {
+      console.error('读取连连看对局暂存失败:', e);
+      return null;
+    }
+  },
+
+  /**
+   * 保存鼠鼠连连看当前对局进度暂存 (断点续玩)
+   * @param {object} sessionData
+   */
+  saveLinkSession(sessionData) {
+    try {
+      if (!sessionData) return null;
+      const data = { ...sessionData, savedAt: Date.now() };
+      wx.setStorageSync(STORAGE_KEYS.LINK_ACTIVE_SESSION, data);
+      return data;
+    } catch (e) {
+      console.error('保存连连看对局暂存失败:', e);
+      return null;
+    }
+  },
+
+  /**
+   * 清除鼠鼠连连看对局暂存 (游戏结算或主动重开时调用)
+   */
+  clearLinkSession() {
+    try {
+      wx.removeStorageSync(STORAGE_KEYS.LINK_ACTIVE_SESSION);
+      return true;
+    } catch (e) {
+      console.error('清除连连看对局暂存失败:', e);
+      return false;
+    }
   },
 
   /**
