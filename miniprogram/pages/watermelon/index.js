@@ -4,11 +4,12 @@
  * 高性能 Canvas 2D 渲染，主循环完全零 setData，物理引擎与状态机驱动
  */
 
-const WatermelonEngine = require('../../games/watermelon/engine');
-const { WATERMELON_ITEMS, getItemByLevel, refreshWatermelonItems } = require('../../games/watermelon/items');
-const Storage = require('../../utils/storage');
-const Feedback = require('../../utils/feedback');
-const MapManager = require('../../utils/mapManager');
+const WatermelonEngine = require('@/games/watermelon/engine');
+const { WATERMELON_ITEMS, getItemByLevel, refreshWatermelonItems } = require('@/games/watermelon/items');
+const Storage = require('@/utils/storage');
+const Feedback = require('@/utils/feedback');
+const MapManager = require('@/utils/mapManager');
+const BgmManager = require('@/utils/bgmManager');
 
 const defaultFirstItem = getItemByLevel(1);
 
@@ -106,6 +107,9 @@ Page({
     const settings = Storage.getSettings ? Storage.getSettings() : {};
     this._vibrationEnabled = settings.vibrationEnabled !== false;
 
+    // 进入游戏播放背景音乐 (含 1 秒渐入)
+    BgmManager.play();
+
     // 如果切后台暂停，恢复帧循环
     if (this._engine && this._engine.gameState === 'playing' && !this._rafId && this._canvas) {
       this._lastFrameTime = Date.now();
@@ -115,9 +119,11 @@ Page({
 
   onHide() {
     this._stopRenderLoop();
+    BgmManager.pause();
   },
 
   onUnload() {
+    BgmManager.stop();
     if (this._routeDoneTimer) {
       clearTimeout(this._routeDoneTimer);
       this._routeDoneTimer = null;

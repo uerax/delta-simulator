@@ -1,7 +1,8 @@
 // pages/game/index.js
-const Storage = require('../../utils/storage');
-const Feedback = require('../../utils/feedback');
-const ReactionEngine = require('../../games/reaction/engine');
+const Storage = require('@/utils/storage');
+const Feedback = require('@/utils/feedback');
+const ReactionEngine = require('@/games/reaction/engine');
+const BgmManager = require('@/utils/bgmManager');
 
 Page({
   data: {
@@ -26,7 +27,12 @@ Page({
     this.setData(this._engine.getInitialState());
   },
 
+  onShow() {
+    BgmManager.play();
+  },
+
   onUnload() {
+    BgmManager.stop();
     if (this._engine) {
       this._engine.destroy();
       this._engine = null;
@@ -34,6 +40,7 @@ Page({
   },
 
   onHide() {
+    BgmManager.pause();
     if (this._engine && this.data.gameState === 'playing') {
       this._engine.end();
     }

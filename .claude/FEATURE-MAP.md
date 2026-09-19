@@ -33,10 +33,16 @@
   - 视图与逻辑：`index.wxml`, `index.wxss`, `index.js`, `index.json`
   - 核心能力：支持新纪录勋章、自定义结算成绩明细数组、再玩一局与返回大厅统一操作。
 
+## 静态与媒体资源 (Assets)
+- **音频资源 (Audio)**：`miniprogram/assets/audio/`
+  - `bgm.m4a`：大厅背景音乐（64kbps / 44.1kHz 立体声，大小约 266KB）
+- **离线与高保真备份 (Backup)**：`assets_backup/`（工程根目录，不打入小程序包）
+  - `assets_backup/audio/bgm.m4a`：未压缩剪辑原版（128kbps，大小 524KB）
+
 ## 业务模块与页面 (View Controllers)
 - **大厅 / 入口汇集**：`miniprogram/pages/index/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局音效/震动开关、数据重置。
+  - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局游戏音乐(20%音量/循环)/震动开关、数据重置。
 - **页面 1：今日鼠鼠运势**：`miniprogram/pages/fortune/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
   - 职责定位：占位页面（施工与方案对齐中），图标接入官方CDN“海洋之泪”。
@@ -51,6 +57,8 @@
   - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
 
 ## 工具库与数据层
+- **纯离线背景音乐管理器 (BgmManager)**：`miniprogram/utils/bgmManager.js`
+  - 核心能力：单例生命周期管理，大厅保持安静，仅在点击进入游戏后播放；统一 20% 音量限制；防重入播放守卫，杜绝切页打断；离开游戏/返回大厅即时 pause/stop，杜绝漏音与内存泄露。
 - **用户管理与微信登录服务 (UserManager)**：`miniprogram/utils/userManager.js`
   - 核心能力：独立用户模块单例，封装 `wx.login` 临时凭证与微信登录状态机（未登录、登录中、已登录、登录失败），提供 `checkSession` 会话检测、`updateProfile` 资料同步（头像/昵称）、`logout` 登出与全局观察者（`on`/`off`/`_notify`）事件总线。
 - **触感与交互反馈 (Feedback)**：`miniprogram/utils/feedback.js`

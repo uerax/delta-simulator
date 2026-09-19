@@ -1,8 +1,9 @@
 // pages/index/index.js
-const Storage = require('../../utils/storage');
-const Feedback = require('../../utils/feedback');
-const GameRegistry = require('../../games/registry');
-const UserManager = require('../../utils/userManager');
+const Storage = require('@/utils/storage');
+const Feedback = require('@/utils/feedback');
+const GameRegistry = require('@/games/registry');
+const UserManager = require('@/utils/userManager');
+const BgmManager = require('@/utils/bgmManager');
 
 // 获取初始游戏卡片列表（声明期即刻绑定最新游戏元数据与战绩适配）
 function getInitialGameList() {
@@ -35,7 +36,7 @@ Page({
       coins: 0
     },
     settings: {
-      soundEnabled: true,
+      musicEnabled: true,
       vibrationEnabled: true
     },
     gameList: getInitialGameList(),
@@ -64,6 +65,11 @@ Page({
       UserManager.off('change', this._onUserChange);
       this._onUserChange = null;
     }
+    BgmManager.stop();
+  },
+
+  onHide() {
+    // 切出大厅
   },
 
   onShow() {
@@ -72,6 +78,9 @@ Page({
     // 静默校验微信会话
     UserManager.checkSession();
     this.refreshAllData();
+
+    // 背景音乐仅作用在游戏内：返回大厅时停止播放
+    BgmManager.stop();
 
     // 首屏冷启动检测：若未登录则主动弹出登录提醒弹窗 (单次 session 仅主动提醒一次，不骚扰用户)
     if (!this._hasPromptedLogin) {
@@ -108,13 +117,15 @@ Page({
     });
   },
 
-  // 卡片点击触感反馈 (异步延后触发，0ms 不阻塞原生路由派发)
+  // 卡片点击触感反馈与音频渐入预热 (异步延后触发，0ms 不阻塞原生路由派发)
   onCardTap() {
     if (this.data.settings && this.data.settings.vibrationEnabled) {
       setTimeout(() => {
         Feedback.vibrateShort(true, 'light');
       }, 0);
     }
+    // 点击进入游戏后播放背景音乐 (含 1 秒平滑渐入，防止惊吓)
+    BgmManager.play();
   },
 
   // 阻止蒙层触摸穿透
@@ -191,6 +202,9 @@ Page({
       }
     });
 
+    // 点击进入游戏后播放背景音乐 (含 1 秒平滑渐入)
+    BgmManager.play();
+
     // 触感反馈异步触发
     if (this.data.settings && this.data.settings.vibrationEnabled) {
       setTimeout(() => {
@@ -241,10 +255,16 @@ Page({
     Feedback.vibrateShort(vibrationEnabled, 'light');
   },
 
-  // 开关音效
-  onToggleSound(e) {
-    const soundEnabled = e.detail.value;
-    const updated = Storage.saveSettings({ soundEnabled });
+  // 开关游戏音乐
+  onToggleMusic(e) {
+    const musicEnabled = e.detail.value;
+    const updated = Storage.saveSettings({ musicEnabled });
     this.setData({ settings: updated });
+    BgmManager.onToggle(musicEnabled);
+  },
+
+  // 兼容保留旧事件名
+  onToggleSound(e) {
+    this.onToggleMusic(e);
   }
 });

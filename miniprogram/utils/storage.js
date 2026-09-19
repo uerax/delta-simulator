@@ -416,17 +416,23 @@ const Storage = {
   },
 
   /**
-   * 获取系统设置
+   * 获取系统设置 (支持音乐开关 musicEnabled 及兼容历史 soundEnabled)
    */
   getSettings() {
     try {
       const data = wx.getStorageSync(STORAGE_KEYS.SETTINGS);
-      return data || {
-        soundEnabled: true,
-        vibrationEnabled: true
+      if (!data) {
+        return {
+          musicEnabled: true,
+          vibrationEnabled: true
+        };
+      }
+      return {
+        musicEnabled: data.musicEnabled !== undefined ? data.musicEnabled : (data.soundEnabled !== undefined ? data.soundEnabled : true),
+        vibrationEnabled: data.vibrationEnabled !== undefined ? data.vibrationEnabled : true
       };
     } catch (e) {
-      return { soundEnabled: true, vibrationEnabled: true };
+      return { musicEnabled: true, vibrationEnabled: true };
     }
   },
 

@@ -91,8 +91,8 @@
       <switch checked="{{settings.vibrationEnabled}}" bindchange="onToggleVibration" color="#89b4fa" />
     </view>
     <view class="setting-item">
-      <text class="setting-text">游戏音效</text>
-      <switch checked="{{settings.soundEnabled}}" bindchange="onToggleSound" color="#89b4fa" />
+      <text class="setting-text">游戏音乐</text>
+      <switch checked="{{settings.musicEnabled}}" bindchange="onToggleMusic" color="#89b4fa" />
     </view>
   </view>
 

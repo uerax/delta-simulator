@@ -1,6 +1,146 @@
 # 项目任务状态记录
 
-> **当前全局版本号**：`v1.8.15`（唯一权威事实源）
+> **当前全局版本号**：`v1.8.21`（唯一权威事实源）
+
+## [2026-09-19] BGM源文件物理级烘焙1秒半正弦淡入，彻底消除开头突发性大音量与炸耳感
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **音频工程级物理波形重构**：
+     - 摒弃前端 JS 定时器软调音逻辑，直接通过 ffmpeg 在音频 PCM 原始波形上注入 1 秒半正弦平滑起步淡入曲线（`afade=t=in:ss=0:d=1.0:curve=hsin`）；
+     - 第 0 毫秒从绝对静音（-85dB）平滑爬升至正常电平，将原音频第 0.08 秒瞬态爆发的 -8.7dB 强拍完全抹平，听感极其自然、柔顺；
+  2. **小程序生产资源即时替换**：
+     - 将处理好的 1 秒淡入音频覆盖至 `miniprogram/assets/audio/bgm.m4a`（大小 267KB，64kbps 立体声）；
+     - 配合已做防重入守卫的 `BgmManager`，在真机与开发者工具上实现零延迟、零爆音、零卡顿的静音大厅与游戏内平稳起步播放体验；
+  3. **版本号维护**：
+     - 版本号由 `v1.8.20` 递增至 `v1.8.21`。
+- 涉及文件：
+  - `miniprogram/assets/audio/bgm.m4a`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-19] BgmManager精炼重构：移除音量渐变、统一20%音量基准、引入防重入播放保护
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **彻底移除渐入定时器与异步竞态**：
+     - 拔除 `_startFadeIn`、`_fadeTimer` 及定时器步进逻辑，直启播放，消除异步解码期间 `_isPlaying` 状态不同步导致的定时器误杀；
+  2. **防重入播放守卫 (Idempotent Play Guard)**：
+     - 增加 `if (this._isPlaying) return;`，彻底根除大厅卡片点击与进入子游戏页面 `onShow` 双重触发导致的音频打嗝与重新播放；
+  3. **参数与文案基准统一**：
+     - `TARGET_VOLUME` 全局统一为 `0.2`（20% 音量）；
+     - 同步修正 `FEATURE-MAP.md` 与工程注释；
+  4. **全套自动化单元测试与架构验证 100% 绿色通过**；
+  5. **版本号维护**：
+     - 版本号由 `v1.8.19` 递增至 `v1.8.20`。
+- 涉及文件：
+  - `miniprogram/utils/bgmManager.js`
+  - `.claude/FEATURE-MAP.md`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 严格贯彻微信官方resolveAlias规范，全项目页面全面整改替换为@/别名路径
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **问题排查与根因反思**：
+     - 在最近几次功能迭代中，大厅及各子游戏页面控制器引入了大量旧式的 `../../` 跨层级相对路径，未能严格贯彻此前已在 `app.json` 中配置的官方规范 `"resolveAlias": { "@/*": "/*" }`；
+  2. **全量页面模块路径标准化整改**：
+     - `miniprogram/pages/index/index.js`：将 `Storage`、`Feedback`、`GameRegistry`、`UserManager`、`BgmManager` 引用彻底替换为 `@/...`；
+     - `miniprogram/pages/watermelon/index.js`：将核心物理引擎、道具清单、存储、触感、地图、音频全量收敛至 `@/...`；
+     - `miniprogram/pages/fortune/index.js`：将运势引擎、触感、道具与物资管理器、老黄历词库、音频全量收敛至 `@/...`；
+     - `miniprogram/pages/game/index.js`：将反应力引擎与工具全量收敛至 `@/...`；
+     - `miniprogram/pages/schulte/index.js`：将舒尔特引擎与工具全量收敛至 `@/...`；
+     - `miniprogram/utils/bgmManager.js`：引入存储层统一使用 `@/utils/storage`。
+  3. **自动化测试套件全量绿色通过**：
+     - 运行 `verify_game_architecture.js`、`verify_user_manager.js`、`verify_fortune_algorithm.js`、`verify_supply_manager.js` 均 100% 绿色通过；
+     - 运行别名解析验证脚本，全项目所有 `@/` 引用模块均成功加载。
+  4. **版本号维护**：
+     - 版本号由 `v1.8.18` 递增至 `v1.8.19`。
+- 涉及文件：
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/pages/game/index.js`
+  - `miniprogram/pages/schulte/index.js`
+  - `miniprogram/utils/bgmManager.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 背景音乐体验升级：全局BgmManager单例、大厅静音、点击进入游戏触发、40%音量与1秒平滑渐入防惊吓
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **架构解耦与独立单例封装 (`BgmManager`)**：
+     - 新建 `miniprogram/utils/bgmManager.js` 统一接管全局背景音乐生命周期与音频通道；
+     - 限制背景音乐默认仅在玩家“点击进入游戏后”播放，大厅冷启动与返回大厅彻底静音（`BgmManager.stop()`）；
+  2. **1 秒音量平滑渐入 (Fade-In) 与 40% 音量上限**：
+     - 目标音量调整为 40%（`TARGET_VOLUME = 0.4`）；
+     - 设计基于高精度时间戳插值的 1000ms 平滑渐入算法，从音量 0 逐帧平滑上升到 0.4，彻底消除系统定时器抖动与玩家突发性听觉惊吓；
+     - 遇返回/切后台时立即 `clearInterval` 并重置音量，杜绝内存泄漏与异步越界调音；
+  3. **各游戏页面与大厅全面接入**：
+     - `pages/index/index.js`：大厅冷启动不播音乐，点击卡片进入游戏时触发 `BgmManager.play()`，返回大厅时自动 stop 恢复静音；
+     - `pages/watermelon/index.js`、`pages/fortune/index.js`、`pages/game/index.js`、`pages/schulte/index.js`：`onShow` 唤醒播放，`onHide` 暂停，`onUnload` 停止；
+  4. **自动化单元测试 100% 通过**：
+     - 覆盖音量 0 启动、1050ms 精准渐入到 0.4、stop 音量归零与状态一致性。
+  5. **版本号维护**：
+     - 版本号由 `v1.8.17` 递增至 `v1.8.18`。
+- 涉及文件：
+  - `miniprogram/utils/bgmManager.js`
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/pages/watermelon/index.js`
+  - `miniprogram/pages/fortune/index.js`
+  - `miniprogram/pages/game/index.js`
+  - `miniprogram/pages/schulte/index.js`
+  - `package.json`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 首页设置调整为“游戏音乐”、默认自动循环播放与50%音量控制
+- 状态：已完成
+- 优先级：P1
+- 描述：
+  1. **UI 改造与语义升级**：
+     - 将大厅底部快捷设置“游戏音效”文案升级为“游戏音乐”，开关绑定键升级为 `musicEnabled`，并平滑向前兼容历史 `soundEnabled` 缓存；
+  2. **音频引擎接入与生命周期严谨管理**：
+     - 基于 `wx.createInnerAudioContext` 建立音频管理器，加载代码包内压缩音频 `/assets/audio/bgm.m4a`；
+     - 配置 `loop: true`，并将音量严格限制在 50%（`volume: 0.5`）；
+     - 接入 `wx.setInnerAudioOption({ obeyMuteSwitch: false, mixWithOther: true })`，确保 iOS 静音模式也能享受背景乐；
+     - 生命周期严密联动：
+       * `onLoad`：首屏加载即自动播放背景音乐；
+       * `onShow`：返回大厅时恢复播放；
+       * `onHide`：离开大厅进入子游戏或切入后台时及时 pause 暂停，避免干扰游戏音效；
+       * `onUnload`：销毁时 stop + destroy 彻底清理音频实例，防止内存泄漏；
+       * 内部状态与实例挂载在 `this._bgmContext` 上，杜绝污染 `data`。
+  3. **自动化逻辑校验通过**：
+     - 完成存储层读写、兼容性与状态流转单测。
+  4. **版本号维护**：
+     - 版本号由 `v1.8.16` 递增至 `v1.8.17`。
+- 涉及文件：
+  - `miniprogram/pages/index/index.wxml`
+  - `miniprogram/pages/index/index.js`
+  - `miniprogram/utils/storage.js`
+  - `package.json`
+  - `.claude/STATE.md`
+
+## [2026-09-19] 背景音乐资源标准化：64k高保真压缩入包与高保真原版归档备份
+- 状态：已完成
+- 优先级：P2
+- 描述：
+  1. **原版归档备份**：
+     - 将 524KB 原版剪辑音频文件存放至工程根目录下的权威备份目录 `assets_backup/audio/bgm.m4a`，由 `miniprogramRoot: "miniprogram/"` 严格隔离，完全不占用小程序 2MB 主包空间；
+  2. **轻量化 64kbps 立体声音频压制与落地**：
+     - 将音频经 ffmpeg 压制为 64kbps / 44.1kHz 双声道立体声 M4A（AAC-LC）容器，体积由 524KB 降至 266KB；
+     - 落地至小程序源码目录 `miniprogram/assets/audio/bgm.m4a`，使得整体主包代码体积严格控制在 1.1MB，完美避开 2MB 强制限制；
+  3. **功能地图与版本维护**：
+     - 同步更新 `.claude/FEATURE-MAP.md` 索引；
+     - 全局版本号由 `v1.8.15` 递增至 `v1.8.16`。
+- 涉及文件：
+  - `assets_backup/audio/bgm.m4a`
+  - `miniprogram/assets/audio/bgm.m4a`
+  - `package.json`
+  - `.claude/FEATURE-MAP.md`
+  - `.claude/STATE.md`
 
 ## [2026-09-19] 修复大厅卡片底部超长物资名挤爆换行并实现单行省略号截断
 - 状态：已完成

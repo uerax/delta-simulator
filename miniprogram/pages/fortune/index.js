@@ -1,11 +1,12 @@
 // pages/fortune/index.js
-const FortuneEngine = require('../../games/fortune/engine');
-const Feedback = require('../../utils/feedback');
-const itemManager = require('../../utils/itemManager');
-const supplyManager = require('../../utils/supplyManager');
-const Storage = require('../../utils/storage');
-const { calculateDailyFortune } = require('../../games/fortune/fortuneAlgorithm');
-const { MAP_LANDMARKS } = require('../../games/fortune/fortuneCopywriting');
+const FortuneEngine = require('@/games/fortune/engine');
+const Feedback = require('@/utils/feedback');
+const itemManager = require('@/utils/itemManager');
+const supplyManager = require('@/utils/supplyManager');
+const Storage = require('@/utils/storage');
+const { calculateDailyFortune } = require('@/games/fortune/fortuneAlgorithm');
+const { MAP_LANDMARKS } = require('@/games/fortune/fortuneCopywriting');
+const BgmManager = require('@/utils/bgmManager');
 
 Page({
   data: {
@@ -31,7 +32,17 @@ Page({
     this._initEngine();
   },
 
+  onShow() {
+    // 进入运势界面播放背景音乐 (含 1 秒平滑渐入)
+    BgmManager.play();
+  },
+
+  onHide() {
+    BgmManager.pause();
+  },
+
   onUnload() {
+    BgmManager.stop();
     if (this._moveTimer) {
       clearTimeout(this._moveTimer);
       this._moveTimer = null;
