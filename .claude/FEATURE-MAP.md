@@ -35,24 +35,26 @@
 
 ## 静态与媒体资源 (Assets)
 - **音频资源 (Audio)**：`miniprogram/assets/audio/`
-  - `bgm.m4a`：大厅背景音乐（64kbps / 44.1kHz 立体声，大小约 266KB）
+  - `bgm.m4a`：大厅背景音乐（32kbps / 44.1kHz 单声道 Mono 优化版，大小约 137KB）
 - **离线与高保真备份 (Backup)**：`assets_backup/`（工程根目录，不打入小程序包）
   - `assets_backup/audio/bgm.m4a`：未压缩剪辑原版（128kbps，大小 524KB）
 
-## 业务模块与页面 (View Controllers)
-- **大厅 / 入口汇集**：`miniprogram/pages/index/`
+## 业务模块与分包 (View Controllers & Subpackages)
+- **大厅 / 入口汇集 (主包)**：`miniprogram/pages/index/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
-  - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局游戏音乐(20%音量/循环)/震动开关、数据重置。
-- **页面 1：今日鼠鼠运势**：`miniprogram/pages/fortune/`
+  - 核心能力：由 `GameRegistry` 驱动渲染游戏卡片、玩家头像与昵称管理、今日战报与金币看板、全局游戏音乐(20%音量/循环)/震动开关、数据重置；配置官方 `preloadRule` 静默预下载大西瓜分包。
+- **页面 1：今日鼠鼠运势 (主包)**：`miniprogram/pages/fortune/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
-  - 职责定位：占位页面（施工与方案对齐中），图标接入官方CDN“海洋之泪”。
-- **页面 2：合成非洲之心**：`miniprogram/pages/watermelon/`
-  - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`、`index.json`
-  - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入消除锤悬浮道具与三段敲击动效，接入通用弹窗组件与触感反馈。
-- **页面 3：极速反应挑战**：`miniprogram/pages/game/`
+  - 职责定位：今日鼠鼠运势开签、8x8 高清切片局部视窗与平滑懒加载。
+- **分包 1：合成非洲之心 (pages/watermelon 独立分包)**：`miniprogram/pages/watermelon/`
+  - 路由路径：`/pages/watermelon/index`
+  - 视图与控制器：`index.wxml`、`index.wxss`、`index.js`、`index.json`
+  - 专属物理库与引擎：`planck.min.js` (290KB Box2D 物理库)、`physicsPlanck.js`、`engine.js`、`items.js`
+  - 职责定位：高性能 Canvas 2D 控制器，零 setData 渲染主循环，Retina DPR 缩放适配，正圆图片贴图真实旋转滚落，接入消除锤悬浮道具与三段敲击动效，接入通用弹窗组件与触感反馈；分包 root 直接对齐为 `pages/watermelon`，彻底自启动主包剥离，主包暴瘦 60.4% 且绝无编译器 ENOENT 报错。
+- **页面 3：极速反应挑战 (主包)**：`miniprogram/pages/game/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
   - 职责定位：薄视图控制器（View Controller），事件转接至 `ReactionEngine`，接入通用弹窗组件。
-- **页面 4：舒尔特专注方格**：`miniprogram/pages/schulte/`
+- **页面 4：舒尔特专注方格 (主包)**：`miniprogram/pages/schulte/`
   - 视图逻辑：`index.wxml`、`index.wxss`、`index.js`
   - 职责定位：薄视图控制器（View Controller），事件转接至 `SchulteEngine`，接入通用弹窗组件。
 

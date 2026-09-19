@@ -136,11 +136,14 @@ class ItemManagerService {
 
       for (let i = 0; i < rawList.length; i++) {
         const raw = rawList[i];
-        const id = raw.id;
-        const name = raw.name;
-        const level = Number(raw.level) || 1;
-        const price = Number(raw.price) || 0;
-        const fileName = raw.pic || `${id}.png`;
+        const isTuple = Array.isArray(raw);
+        const id = isTuple ? raw[0] : raw.id;
+        const level = Number(isTuple ? raw[1] : raw.level) || 1;
+        const name = isTuple ? raw[2] : raw.name;
+        const price = Number(isTuple ? raw[3] : raw.price) || 0;
+        const length = Number(isTuple ? raw[4] : raw.length);
+        const width = Number(isTuple ? raw[5] : raw.width);
+        const fileName = (isTuple ? null : raw.pic) || `${id}.png`;
         const fullPicUrl = fileName.startsWith('http') ? fileName : (cdnBase + fileName);
 
         // 构建挂载了衍生字段的标准化道具对象
@@ -151,8 +154,8 @@ class ItemManagerService {
           pic: fullPicUrl,
           fileName: fileName,
           price: price,
-          length: Number(raw.length),
-          width: Number(raw.width),
+          length: length,
+          width: width,
           priceFormatted: formatPrice(price),
           theme: LEVEL_THEMES[level] || LEVEL_THEMES[1]
         };

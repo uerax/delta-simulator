@@ -4,8 +4,8 @@
  * 高性能 Canvas 2D 渲染，主循环完全零 setData，物理引擎与状态机驱动
  */
 
-const WatermelonEngine = require('@/games/watermelon/engine');
-const { WATERMELON_ITEMS, getItemByLevel, refreshWatermelonItems } = require('@/games/watermelon/items');
+const WatermelonEngine = require('./engine');
+const { WATERMELON_ITEMS, getItemByLevel, refreshWatermelonItems } = require('./items');
 const Storage = require('@/utils/storage');
 const Feedback = require('@/utils/feedback');
 const MapManager = require('@/utils/mapManager');

@@ -1,11 +1,25 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/watermelon/index",
     "pages/game/index",
     "pages/schulte/index",
     "pages/fortune/index"
   ],
+  "subPackages": [
+    {
+      "root": "pages/watermelon",
+      "name": "watermelon",
+      "pages": [
+        "index"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["pages/watermelon"]
+    }
+  },
   "window": {
     "backgroundColor": "#1e1e2e",
     "backgroundTextStyle": "light",

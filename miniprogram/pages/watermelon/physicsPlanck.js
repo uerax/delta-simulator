@@ -21,7 +21,7 @@ let Vec2 = null;
  */
 function ensurePlanck() {
   if (!planck) {
-    const planckRaw = require('../../lib/planck.min.js');
+    const planckRaw = require('./planck.min.js');
     planck = (planckRaw && planckRaw.World) ? planckRaw : ((planckRaw && planckRaw.default) ? planckRaw.default : planckRaw);
     Vec2 = planck.Vec2 || (planckRaw && planckRaw.Vec2);
   }
