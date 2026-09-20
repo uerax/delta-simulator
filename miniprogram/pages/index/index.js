@@ -36,7 +36,7 @@ Page({
       coins: 0
     },
     settings: {
-      musicEnabled: true,
+      musicEnabled: false,
       vibrationEnabled: true
     },
     gameList: getInitialGameList(),
@@ -46,7 +46,6 @@ Page({
 
   _isNavigating: false,
   _onUserChange: null,
-  _hasPromptedLogin: false,
 
   onLoad() {
     // 监听全局用户状态与资料更新
@@ -81,19 +80,6 @@ Page({
 
     // 背景音乐仅作用在游戏内：返回大厅时停止播放
     BgmManager.stop();
-
-    // 首屏冷启动检测：若未登录则主动弹出登录提醒弹窗 (单次 session 仅主动提醒一次，不骚扰用户)
-    if (!this._hasPromptedLogin) {
-      this._hasPromptedLogin = true;
-      const userProfile = UserManager.getUserInfo();
-      if (!userProfile || !userProfile.isLoggedIn) {
-        setTimeout(() => {
-          if (!this.data.userProfile.isLoggedIn) {
-            this.setData({ showLoginModal: true });
-          }
-        }, 350);
-      }
-    }
   },
 
   refreshAllData() {

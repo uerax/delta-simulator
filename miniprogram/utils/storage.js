@@ -473,16 +473,16 @@ const Storage = {
       const data = wx.getStorageSync(STORAGE_KEYS.SETTINGS);
       if (!data) {
         return {
-          musicEnabled: true,
+          musicEnabled: false,
           vibrationEnabled: true
         };
       }
       return {
-        musicEnabled: data.musicEnabled !== undefined ? data.musicEnabled : (data.soundEnabled !== undefined ? data.soundEnabled : true),
+        musicEnabled: data.musicEnabled !== undefined ? data.musicEnabled : (data.soundEnabled !== undefined ? data.soundEnabled : false),
         vibrationEnabled: data.vibrationEnabled !== undefined ? data.vibrationEnabled : true
       };
     } catch (e) {
-      return { musicEnabled: true, vibrationEnabled: true };
+      return { musicEnabled: false, vibrationEnabled: true };
     }
   },
 
